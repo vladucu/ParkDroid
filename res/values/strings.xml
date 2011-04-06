@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, ParkDroidActivity!</string>
     <string name="app_name">ParkDroid</string>
+    <string name="tab_main_nav_res">Reservations</string>
+    <string name="map">Map</string>
+    <string name="preferences_search_radius">Search Radius</string>
+    <string name="preferences_search_radius_summary">Click to pop up a list to choose from</string>
+    <string name="preferences_search_radius_default">500</string>
 </resources>

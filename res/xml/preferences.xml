@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	
+		<ListPreference android:key="search_radius"
+		    android:defaultValue="@string/preferences_search_radius_default"
+			android:title="@string/preferences_search_radius" 
+			android:summary="@string/preferences_search_radius_summary"
+			android:entries="@array/search_radius_options" 
+			android:entryValues="@array/search_radius_values"			
+			android:dialogTitle="@string/preferences_search_radius" 
+		/>
+	
+
+</PreferenceScreen>

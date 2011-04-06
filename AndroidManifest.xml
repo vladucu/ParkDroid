@@ -4,8 +4,10 @@
       android:versionCode="1"
       android:versionName="1.0">
 
-
     <application android:icon="@drawable/icon" android:label="@string/app_name">
+    	
+    	<uses-library android:name="com.google.android.maps" />
+    	
         <activity android:name=".ParkDroidActivity"
                   android:label="@string/app_name">
             <intent-filter>
@@ -13,6 +15,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity android:name=".MapActivity"
+        		  android:label="@string/map">
+        </activity>
+        
+        <activity android:name=".PreferencesActivity"
+        		  android:label="@string/map">
+        </activity>
 
     </application>
+    
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
 </manifest>

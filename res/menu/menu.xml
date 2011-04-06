@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/add_res" android:icon="@android:drawable/ic_menu_add"
+		android:title="Add reservation" />
+	<item android:id="@+id/list_res" android:icon="@android:drawable/ic_menu_recent_history"
+		android:title="View reservations" />
+	<item android:id="@+id/list_park" android:icon="@android:drawable/ic_menu_search"
+		android:title="View parkings" />
+	<item android:id="@+id/preferences" android:icon="@android:drawable/ic_menu_preferences"
+		android:title="Preferences" />
+</menu>
