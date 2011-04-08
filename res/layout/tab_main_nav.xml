@@ -1,27 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-  <!-- Copyright 2010 Mark Wyszomierski -->
- 
- <!-- 
-<LinearLayout 
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/tabMainNav" 
-  android:layout_width="fill_parent" 
-  android:layout_height="fill_parent"
-  android:background="@drawable/tab_main_nav_selector"
-  android:padding="12dip"
-  android:gravity="center" >
-  
-  <TextView 
-    android:id="@+id/tvTitle" 
-    android:layout_width="wrap_content" 
-    android:layout_height="wrap_content"
-    android:text="Title" 
-    android:textAppearance="@style/TextViewStyleTabMainNav" />
-
-</LinearLayout>
--->
-
 <LinearLayout 
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:id="@+id/tabMainNav" 

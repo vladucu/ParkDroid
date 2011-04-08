@@ -4,7 +4,10 @@
       android:versionCode="1"
       android:versionName="1.0">
 
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
+    <application android:name="ParkDroid" 
+    			 android:icon="@drawable/icon" 
+    			 android:label="@string/app_name"
+    >
     	
     	<uses-library android:name="com.google.android.maps" />
     	
@@ -24,6 +27,14 @@
         		  android:label="@string/map">
         </activity>
 
+		<activity android:name="ParkingLotActivity"
+        		  android:label="@string/map">
+        </activity>
+        
+        <activity android:name="LoginActivity"
+        		  android:label="@string/map">
+        </activity>
+        
     </application>
     
     <uses-permission android:name="android.permission.INTERNET" />
