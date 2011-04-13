@@ -4,7 +4,6 @@
 package com.licenta.parkdroid;
 
 import com.licenta.park.Park;
-
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
@@ -18,6 +17,7 @@ public class Preferences {
     private static final boolean DEBUG = true;
     
     // Hacks for preference activity extra UI elements.
+    public static final String PREFERENCE_ADVANCED_SETTINGS = "advanced_settings";
     public static final String PREFERENCE_LOGOUT = "logout";
     
     // Credentials related preferences
@@ -33,20 +33,20 @@ public class Preferences {
     public static boolean loginUser(Park park, String login, String password, Editor editor) {
         if (DEBUG) Log.d(Preferences.TAG, "Trying to log in.");
 
-      //  park.setCredentials(login, password);
+        park.setCredentials(login, password);
         storeLoginAndPassword(editor, login, password);
         if (!editor.commit()) {
             if (DEBUG) Log.d(TAG, "storeLoginAndPassword commit failed");
             return false;
         }
 
-     /*   User user = foursquare.user(null, false, false, false, location);
+        Park.User user = park.user(login, password);
         storeUser(editor, user);
         if (!editor.commit()) {
             if (DEBUG) Log.d(TAG, "storeUser commit failed");
             return false;
-        }*/
-
+            		
+        }
         return true;
     }
 
@@ -56,7 +56,12 @@ public class Preferences {
         return editor.clear().commit();
     }
     
+    /**
+     * @param prefs
+     * @return
+     */
     public static String getUserId(SharedPreferences prefs) {
+        if (DEBUG) Log.d(TAG, "getUserId="+prefs.getString(PREFERENCE_ID, null));
         return prefs.getString(PREFERENCE_ID, null);
     }
         
@@ -72,6 +77,17 @@ public class Preferences {
         if (DEBUG) Log.d(TAG, "storeLoginAndPassword");
         editor.putString(PREFERENCE_LOGIN, login);
         editor.putString(PREFERENCE_PASSWORD, password);
+    }
+    
+    public static void storeUser(final Editor editor, Park.User user) {
+        if (DEBUG) Log.d(TAG, "storeUser");
+        if (user != null && user.getId() != null) {
+            editor.putString(PREFERENCE_ID, user.getId());
+            editor.putString(PREFERENCE_USER_EMAIL, user.getEmail());           
+            if (DEBUG) Log.d(TAG, "Setting user info");
+        } else {
+            if (DEBUG) Log.d(TAG, "Unable to lookup user.");
+        }
     }
 
 }

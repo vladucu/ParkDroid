@@ -10,6 +10,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 /**
@@ -27,7 +34,12 @@ public class ParkDroid extends Application {
     
     private SharedPreferences mPrefs;
     
+    private TaskHandler mTaskHandler;
+    private HandlerThread mTaskThread;
+    
     private Park mPark;
+    //sa vedem daca revenim de la login sau e start de aplicatie
+    //private static boolean isLoggedIn = false;
 
     /* (non-Javadoc)
      * @see android.app.Application#onCreate()
@@ -36,9 +48,41 @@ public class ParkDroid extends Application {
     public void onCreate() {
         // TODO finish ParkDroid
         
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        // Sometimes we want the application to do some work on behalf of the
+        // Activity. Lets do that
+        // asynchronously.
+        mTaskThread = new HandlerThread(TAG + "-AsyncThread");
+        mTaskThread.start();
+        mTaskHandler = new TaskHandler(mTaskThread.getLooper());
+        
         // Catch logins or logouts.
         new LoggedInOutBroadcastReceiver().register();
+        
+        // Log into Foursquare, if we can.
+        loadPark();
 
+    }
+    
+    public boolean isReady() {
+        // TODO Auto-generated method stub
+        /*if (isLoggedIn) return true;
+        else return false;*/
+        if (DEBUG) Log.d(TAG, "isReady()");
+        return getPark().hasLoginAndPassword() && !TextUtils.isEmpty(getUserId());
+    }
+
+    public Park getPark() {
+        return mPark;
+    }
+    
+    public String getUserId() {
+        return Preferences.getUserId(mPrefs);
+    }
+    
+    public void requestUpdateUser() {
+        mTaskHandler.sendEmptyMessage(TaskHandler.MESSAGE_UPDATE_USER);
     }
     
     private void loadPark() {
@@ -50,24 +94,16 @@ public class ParkDroid extends Application {
             mFoursquare = new Foursquare(Foursquare.createHttpApi(mVersion, false));
         }
 */
-        if (DEBUG) Log.d(TAG, "loadCredentials()");
+        mPark = new Park();
         String phoneNumber = mPrefs.getString(Preferences.PREFERENCE_LOGIN, null);
-        String password = mPrefs.getString(Preferences.PREFERENCE_PASSWORD, null);
+        String password = mPrefs.getString(Preferences.PREFERENCE_PASSWORD, null);        
         mPark.setCredentials(phoneNumber, password);
         if (mPark.hasLoginAndPassword()) {
+            if (DEBUG) Log.d(TAG, "loadCredentials() phoneNumber="+phoneNumber);
             sendBroadcast(new Intent(INTENT_ACTION_LOGGED_IN));
         } else {
             sendBroadcast(new Intent(INTENT_ACTION_LOGGED_OUT));
         }
-    }
-    
-    public boolean isReady() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public Park getPark() {
-        return mPark;
     }
     
     private class LoggedInOutBroadcastReceiver extends BroadcastReceiver {
@@ -75,7 +111,8 @@ public class ParkDroid extends Application {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (INTENT_ACTION_LOGGED_IN.equals(intent.getAction())) {
-               // requestUpdateUser();
+                //isLoggedIn = true;
+                requestUpdateUser();
             }
         }
 
@@ -89,4 +126,46 @@ public class ParkDroid extends Application {
             registerReceiver(this, intentFilter);
         }
     }    
+    
+    private class TaskHandler extends Handler {
+
+        private static final int MESSAGE_UPDATE_USER = 1;
+        //private static final int MESSAGE_START_SERVICE = 2;
+
+        public TaskHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (DEBUG) Log.d(TAG, "handleMessage: " + msg.what);
+
+            switch (msg.what) {
+                case MESSAGE_UPDATE_USER:
+                    try {
+                        // Update user info
+                        Log.d(TAG, "Updating user.");
+
+                       
+                        Park.User user = getPark().user(null, null);
+
+                        Editor editor = mPrefs.edit();
+                        Preferences.storeUser(editor, user);
+                        editor.commit();
+                    } catch (Error e) {
+                        if (DEBUG) Log.d(TAG, "FoursquareError", e);
+                    } catch (Exception e) {
+                        if (DEBUG) Log.d(TAG, "FoursquareException", e);
+                    }
+                    return;
+
+               /* case MESSAGE_START_SERVICE:
+                    Intent serviceIntent = new Intent(Foursquared.this, FoursquaredService.class);
+                    serviceIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                    startService(serviceIntent);
+                    return;*/
+            }
+        }
+    }
 }

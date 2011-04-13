@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
 	
-		<ListPreference android:key="search_radius"
+	 <PreferenceCategory android:title="@string/preferences_other_settings">
+    	<!--<com.licenta.ParkDroid.ClickPreference
+      		android:key="advanced_settings"
+      		android:title="@string/preferences_additional_settings"
+      		android:summary="@string/preferences_additional_settings_summary" />	
+		--><ListPreference android:key="search_radius"
 		    android:defaultValue="@string/preferences_search_radius_default"
 			android:title="@string/preferences_search_radius" 
 			android:summary="@string/preferences_search_radius_summary"
@@ -11,6 +15,11 @@
 			android:entryValues="@array/search_radius_values"			
 			android:dialogTitle="@string/preferences_search_radius" 
 		/>
-	
+		<com.licenta.parkdroid.ClickPreference
+			android:key="logout"
+			android:title="@string/preferences_logout_title"
+      		android:summary="@string/preferences_logout_summary"		
+		/> 
+	</PreferenceCategory>	
 
 </PreferenceScreen>

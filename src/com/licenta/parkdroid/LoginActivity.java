@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +32,10 @@ import android.widget.Toast;
  */
 public class LoginActivity extends Activity {
     
+    private static final String TAG = "LoginActivity";
+    private static final boolean DEBUG = true;
+    
+    //TODO drawable/main_logo.png trebuie facut 355*158
     private TextView mNewAccountTextView;
     private EditText mPhoneUsernameEditText;
     private EditText mPasswordEditText;
@@ -46,6 +51,7 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.login_activity);
 
         // Set up the UI.
@@ -80,6 +86,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mLoginTask = new LoginTask().execute();
+                if (DEBUG) Log.d(TAG, "onClick Fa login");
             }
         });
 
@@ -89,7 +96,7 @@ public class LoginActivity extends Activity {
             public void onClick(View v) {
                 //TODO implement "Need an account" link
                 //startActivity(new Intent(Intent.ACTION_VIEW, Uri
-                //        .parse(Foursquare.FOURSQUARE_MOBILE_SIGNUP)));
+                //        .parse(Foursquare.FOURSQUARE_MOBILE_SIGNUP)));s                
             }
         });
 
@@ -155,9 +162,10 @@ public class LoginActivity extends Activity {
                 boolean loggedIn = Preferences.loginUser(park, phoneNumber, password,
                         editor);
 
-                if (DEBUG) Log.d(TAG, "doInBackground() logged in");
+                if (DEBUG) Log.d(TAG, "doInBackground() logged in ="+loggedIn);
                 // Make sure prefs makes a round trip.
                 String userId = Preferences.getUserId(prefs);
+                if (DEBUG) Log.d(TAG, "doInBackground() userId="+userId);
                 if (TextUtils.isEmpty(userId)) {
                     if (DEBUG) Log.d(TAG, "Preference store calls failed");
                     throw new Exception(getResources().getString(
@@ -175,11 +183,11 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(Boolean loggedIn) {
-            if (DEBUG) Log.d(TAG, "onPostExecute(): " + loggedIn);
+            if (DEBUG) Log.d(TAG, "onPostExecute(): " + ParkDroid.INTENT_ACTION_LOGGED_IN);
             ParkDroid parkDroid = (ParkDroid) getApplication();
 
             if (loggedIn) {
-
+                //we are logged in, send the message
                 sendBroadcast(new Intent(ParkDroid.INTENT_ACTION_LOGGED_IN));
                 Toast.makeText(LoginActivity.this, getString(R.string.login_welcome_toast),
                         Toast.LENGTH_LONG).show();
@@ -189,6 +197,8 @@ public class LoginActivity extends Activity {
 
                 // Launch the main activity to let the user do anything.
                 Intent intent = new Intent(LoginActivity.this, ParkDroidActivity.class);
+                //if the activity exists in the current task, deliver this intent 
+                //and clear other activities on top of it 
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 

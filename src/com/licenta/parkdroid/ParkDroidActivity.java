@@ -1,16 +1,17 @@
 package com.licenta.parkdroid;
 
+import android.app.Activity;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.TabHost;
 
 public class ParkDroidActivity extends TabActivity {
@@ -35,28 +36,27 @@ public class ParkDroidActivity extends TabActivity {
         super.onCreate(savedInstanceState);
         
         if (DEBUG) Log.d(TAG, "onCreate()");
+       // setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL);
+        registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));
         
         // Don't start the main activity if we don't have credentials
         if (!((ParkDroid) getApplication()).isReady()) {
             if (DEBUG) Log.d(TAG, "Not ready for user.");
             redirectToLoginActivity();
         }
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        
+        if (DEBUG) Log.d(TAG, "Setting up main activity layout.");
+        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main_activity);
         initTabHost();
     }
     
-    private void redirectToLoginActivity() {
-        // TODO implement redirectToLogin
-        setVisible(false);
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mLoggedOutReceiver);
     }
-
+    
     private void initTabHost() {
         //TODO de aflat de ce nu apare pe toata imaginea harta 
         if (mTabHost != null) {
@@ -64,6 +64,9 @@ public class ParkDroidActivity extends TabActivity {
         }
 
         mTabHost = getTabHost();
+        TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
+                R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));
+        
    
        /* TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
                 R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));
@@ -72,11 +75,7 @@ public class ParkDroidActivity extends TabActivity {
         TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
                 R.drawable.tab_main_nav_tips_selector, 3, new Intent(this, ParkingLotActivity.class));
         */
-        TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
-                R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));
-        TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
-                R.drawable.tab_main_nav_tips_selector, 2, new Intent(this, LoginActivity.class));
-        mTabHost.setCurrentTabByTag("index1");
+       
         /*TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_todos),
                 R.drawable.tab_main_nav_todos_selector, 4, new Intent(this, TodosActivity.class));
 
@@ -93,4 +92,39 @@ public class ParkDroidActivity extends TabActivity {
                 .getDrawableForMeTabByGender(userGender), 5, intentTabMe);
 */
     }
+    
+    // Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }    
+    
+    /* 
+     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {        
+        // TODO Auto-generated method stub                
+        switch (item.getItemId()) {
+            case R.id.preferences:                
+                Log.d(TAG, "Preferences Tab selected");
+                startActivity(new Intent(this, PreferencesActivity.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    private void redirectToLoginActivity() {
+        // TODO implement redirectToLogin
+        setVisible(false);
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
 }

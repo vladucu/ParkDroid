@@ -15,5 +15,10 @@
     <string name="login_dialog_title">Logging in...</string>
     <string name="login_dialog_message">Please wait while logging into ParkDroid...</string>
     <string name="login_failed_login_toast">Unable to log in. Please check your phone number and password.</string>
-    <string name="login_welcome_toast">Welcome to Foursquare!</string>
+    <string name="login_welcome_toast">Welcome 2 ParkDroid!</string>
+    <string name="preferences_logout_title">Logout</string>
+    <string name="preferences_logout_summary">Sign out of ParkDroid.</string>
+    <string name="preferences_additional_settings">Additional Settings</string>
+    <string name="preferences_additional_settings_summary">Modify additional settings with foursquare.com.</string>
+    <string name="preferences_other_settings">Other Settings</string>
 </resources>
