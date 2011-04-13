@@ -26,7 +26,7 @@
         android:id="@android:id/tabcontent"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:paddingTop="5dip" />
+        android:paddingTop="0dip" />
         
   </LinearLayout>
 </TabHost>

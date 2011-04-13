@@ -66,7 +66,8 @@ public class ParkDroidActivity extends TabActivity {
         mTabHost = getTabHost();
         TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
                 R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));
-        
+        TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
+                R.drawable.tab_main_nav_tips_selector, 2, new Intent(this, ParkingLotActivity.class));
    
        /* TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
                 R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));
