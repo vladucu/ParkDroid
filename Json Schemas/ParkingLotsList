@@ -1,0 +1,68 @@
+{
+  "description" : "Example Parking Lots List Information Array JSON Schema",
+  "type" : "array",
+  "items" : {
+    "title" : "A Parking Lot Information object",
+    "type" : "object",
+    "properties" : {
+      "id" : {
+      	"title" : "Id of the parking lot"
+        "type" : "string"
+      }, 
+      "name" : {
+      	"title" : "Name of the parking lot"
+        "type" : "string"        
+      },
+      "phone" : {
+     	"title" : "Phone# of the parking lot",
+        "type" : "string",
+        "format" : "phone"
+      },
+      "address" : {
+        "title" : "Address of the parking lot",
+        "type" : "string"        
+      },
+      "city" : {
+        "title" : "City of the parking lot",
+        "type" : "string"
+      },
+      "zip" : {
+        "title" : "Zip Code of the parking lot",
+        "type" : "string"
+      },
+      "lat" : {
+        "title" : "Latitude coordinates of the parking lot",
+        "type" : "string"
+      },
+      "long" : {
+        "title" : "Longitude coordinates of the parking lot",
+        "type" : "string"
+      },     
+      "distance" : {
+        "title" : "Distance to the parking lot in meters",
+        "type" : "string"        
+      },
+      "eSpaces" : {
+        "title" : "Empty Spaces of the parking lot",
+        "type" : "string"
+      },
+      "spaces" : {
+        "title" : "Total# of spaces of the parking lot",
+        "type" : "string"
+      },
+      "price" : {
+        "title" : "Price/h for a parking space in the parking lot",
+        "type" : "string"        
+      },
+      "url" : {
+        "title" : "Url of the parking lot",
+        "type" : "string",
+        "optional" : true
+      },
+      "iconurl" : {
+        "title" : "Icon url for the parking lot",
+        "type" : "string"
+      }     
+  }
+  }
+}
