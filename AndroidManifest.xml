@@ -33,7 +33,7 @@
         		  </intent-filter>
         </activity>
 
-		<activity android:name="ParkingLotActivity"
+		<activity android:name="ParkingLotsListActivity"
         		  android:label="@string/map">
         </activity>
         

@@ -1,6 +1,5 @@
 package com.licenta.parkdroid;
 
-import android.app.Activity;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,7 +35,7 @@ public class ParkDroidActivity extends TabActivity {
         super.onCreate(savedInstanceState);
         
         if (DEBUG) Log.d(TAG, "onCreate()");
-       // setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL);
+        //setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL);
         registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));
         
         // Don't start the main activity if we don't have credentials
@@ -46,7 +45,7 @@ public class ParkDroidActivity extends TabActivity {
         }
         
         if (DEBUG) Log.d(TAG, "Setting up main activity layout.");
-        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main_activity);
         initTabHost();
     }
@@ -66,7 +65,8 @@ public class ParkDroidActivity extends TabActivity {
         mTabHost = getTabHost();
         TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
                 R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));
-        
+        TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
+                R.drawable.tab_main_nav_tips_selector, 2, new Intent(this, ParkingLotsListActivity.class));
    
        /* TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
                 R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));
