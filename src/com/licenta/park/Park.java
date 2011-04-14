@@ -3,11 +3,17 @@
  */
 package com.licenta.park;
 
+import com.licenta.park.types.Group;
+import com.licenta.park.types.ParkLot;
+
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.location.Location;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.logging.Level;
 
 /**
@@ -86,6 +92,19 @@ public class Park {
             return mEmail;
         }
         
+    }
+
+    public Group<ParkLot> parkLots(Location location, String Query, int limit) throws Exception, Error, IOException {
+        // TODO Auto-generated method stub
+        Group<ParkLot> mGPLot = new Group<ParkLot>();
+        ParkLot mParkLot = new ParkLot();
+        mParkLot.setName("Parking #1");
+        mParkLot.setGeolat("44.43472");
+        mParkLot.setGeolong("26.09704");
+        mParkLot.setDistance("300 meters");
+        mParkLot.setPrice(200);
+        mGPLot.add(mParkLot);
+        return (Group<ParkLot>) mGPLot;
     }
 
 }

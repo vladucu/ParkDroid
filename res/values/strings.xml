@@ -21,4 +21,10 @@
     <string name="preferences_additional_settings">Additional Settings</string>
     <string name="preferences_additional_settings_summary">Modify additional settings with foursquare.com.</string>
     <string name="preferences_other_settings">Other Settings</string>
+    <string name="no_search_results">No search results.</string>
+    <string name="parklots_search_activity_label">Parking Lots</string>
+    <string name="nearby_venues_no_location">Your location could not be found! Make sure network or GPS location services are turned on, then try refreshing the list again!</string>
+    <string name="nearby_venues_label_nearby">Nearby</string>
+    <string name="title_search_finished_noquery">Nearby - Foursquare</string>
+    <string name="title_search_inprogress_noquery">Searching Nearby - Foursquare</string>
 </resources>

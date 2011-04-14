@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.Location;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -167,5 +168,10 @@ public class ParkDroid extends Application {
                     return;*/
             }
         }
+    }
+
+    public Location getLastKnownLocation() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

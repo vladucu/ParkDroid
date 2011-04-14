@@ -1,6 +1,7 @@
 package com.licenta.parkdroid;
 
-import android.app.Activity;
+import com.licenta.parkdroid.utils.TabsUtil;
+
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,8 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.TabHost;
+import com.licenta.parkdroid.ParkLotsListActivity;
 
 public class ParkDroidActivity extends TabActivity {
     
@@ -67,7 +68,7 @@ public class ParkDroidActivity extends TabActivity {
         TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
                 R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));
         TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
-                R.drawable.tab_main_nav_tips_selector, 2, new Intent(this, ParkingLotActivity.class));
+                R.drawable.tab_main_nav_tips_selector, 2, new Intent(this, ParkLotsListActivity.class));
    
        /* TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
                 R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));

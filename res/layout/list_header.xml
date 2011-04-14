@@ -7,5 +7,6 @@
   android:paddingTop="3dip"
   android:paddingBottom="4dip"
   android:paddingLeft="9dip"
- 
+  android:background="@drawable/listview_header_background"
+  android:textAppearance="@style/TextViewStyleHeaderDivider"
   />
