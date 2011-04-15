@@ -5,7 +5,9 @@ package com.licenta.parkdroid;
 
 import com.licenta.park.types.ParkingLot;
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,39 +20,17 @@ import android.widget.TextView;
  *
  */
 public class ParkingLotListAdapter extends BaseAdapter {
+    
+    private static final String TAG = "ParkingLotListAdapter";
+    private static boolean DEBUG = true;
 
     private LayoutInflater mInflater;
     
     public ParkingLotListAdapter(Context context) {
-     // Cache the LayoutInflate to avoid asking for a new one each time.
-        mInflater = LayoutInflater.from(context);
-    }
+        super();
+        if (DEBUG) Log.d(TAG, "ParkingLotListAdapter()");
     
-    /* (non-Javadoc)
-     * @see android.widget.Adapter#getCount()
-     */
-    @Override
-    public int getCount() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    /* (non-Javadoc)
-     * @see android.widget.Adapter#getItem(int)
-     */
-    @Override
-    public Object getItem(int arg0) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see android.widget.Adapter#getItemId(int)
-     */
-    @Override
-    public long getItemId(int arg0) {
-        // TODO Auto-generated method stub
-        return 0;
+        this.registerDataSetObserver(mDataSetObserver);
     }
 
     /* 
@@ -59,7 +39,8 @@ public class ParkingLotListAdapter extends BaseAdapter {
      * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {        
+    public View getView(int position, View convertView, ViewGroup parent) {     
+        if (DEBUG) Log.d(TAG, "getView()");
         // A ViewHolder keeps references to children views to avoid unnecessary
         // calls to findViewById() on each row.
         ViewHolder holder;
@@ -70,7 +51,7 @@ public class ParkingLotListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.parking_lot_list_item, null);
 
-            // Creates a ViewHolder and store references to the two children views
+            // Creates a ViewHolder and store references to the children views
             // we want to bind data to.
             holder = new ViewHolder();            
             holder.icon = (ImageView) convertView.findViewById(R.id.icon);
@@ -121,5 +102,30 @@ public class ParkingLotListAdapter extends BaseAdapter {
         ImageView iconTrending;
         TextView parkingLotEmptySpaces;
         TextView parkingLotSpaces;
+    }
+    
+    private DataSetObserver mDataSetObserver = new DataSetObserver() {
+        @Override
+        public void onChanged() {
+            notifyDataSetChanged();
+        }
+    };
+
+    @Override
+    public int getCount() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }
