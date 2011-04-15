@@ -40,7 +40,7 @@
     android:layout_alignParentRight="true"
     android:layout_below="@+id/parkLotName"
     android:paddingLeft="7dip"
-    android:paddingRight="20dip"
+    android:paddingRight="10dip"
     android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
     android:singleLine="true"
     android:maxLines="1"
@@ -78,7 +78,7 @@
       android:paddingLeft="3dip"
       android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
       android:ellipsize="end" />
-      <TextView
+    <TextView
       android:id="@+id/parkingLotSpaces"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

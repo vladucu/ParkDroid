@@ -3,31 +3,36 @@
  */
 package com.licenta.parkdroid;
 
-import com.licenta.park.types.ParkingLot;
 
-import android.app.ListActivity;
+import com.licenta.park.types.ParkingLot;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
  * @author vladucu
  *
  */
-public class ParkingLotsListActivity extends ListActivity {
+public class ParkingLotsListActivity extends LoadableListActivity {
     
     private static final String TAG = "ParkingLotsListActivity";
     private static boolean DEBUG = true;
     
-    private ListView mListView;
-    private ListAdapter mListAdapter;
+    private StateHolder mStateHolder = new StateHolder();
+    private ArrayList<ParkingLot> parkingLots = null;
     private ParkingLotListAdapter mParkingLotListAdapter;
-    private Group<ParkingLot> mResults;
+    private ListView mListView;
+    private Handler mHandler;    
 
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -38,12 +43,22 @@ public class ParkingLotsListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         if (DEBUG) Log.d(TAG, "onCreate()");
       
-       /* mListView = getListView();
-        mParkingLotListAdapter = new ParkingLotListAdapter(this);  
-        putResultsInAdapter(mResults);
-        mListView.setAdapter(mParkingLotListAdapter);*/
-        setListAdapter(new ParkingLotListAdapter(this));
-      
+        setContentView(R.layout.loadable_list_activity);
+        mHandler = new Handler();
+        mListView = getListView();
+        mParkingLotListAdapter = new ParkingLotListAdapter(this, R.layout.parking_lot_list_item, mStateHolder.mResults);
+        mListView.setAdapter(mParkingLotListAdapter);
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (DEBUG) Log.d(TAG, "onCreate()+ on item click");
+                ParkingLot parkingLot = (ParkingLot) parent.getAdapter().getItem(position);
+                Toast.makeText(ParkingLotsListActivity.this, parkingLot.getName(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        // We can dynamically add a footer to our loadable listview.
+        LayoutInflater inflater = LayoutInflater.from(this);
     }
     
 /*    public void putResultsInAdapter(Group<ParkingLot> results) {
