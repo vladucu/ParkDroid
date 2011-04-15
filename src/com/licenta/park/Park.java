@@ -67,8 +67,9 @@ public class Park {
         user.mId = "1";
         user.mEmail = "x";
         user.mPassword = "x";
-        if (user.mEmail == login && user.mPassword == password) return user;
-        else return new User();
+        /*if (user.mEmail == login && user.mPassword == password) return user;
+        else return new User();*/
+        return user;
     }
     
     public class User {

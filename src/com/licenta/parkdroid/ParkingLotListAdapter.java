@@ -70,8 +70,8 @@ public class ParkingLotListAdapter extends ArrayAdapter<ParkingLot> {
             holder.parkingLotLocationLine1 = (TextView) convertView.findViewById(R.id.parkingLotLocationLine1);
             holder.parkingLotDistance = (TextView) convertView.findViewById(R.id.parkingLotDistance);
             holder.iconTrending = (ImageView) convertView.findViewById(R.id.iconTrending);
-            holder.parkingLotEmptySpaces = (TextView) convertView.findViewById(R.id.parkingLotEmptySpaces);
             holder.parkingLotSpaces = (TextView) convertView.findViewById(R.id.parkingLotSpaces);
+            holder.parkingPrice = (TextView) convertView.findViewById(R.id.parkingPrice);
             convertView.setTag(holder);
         } else {
             // Get the ViewHolder back to get fast access to the TextView
@@ -90,7 +90,7 @@ public class ParkingLotListAdapter extends ArrayAdapter<ParkingLot> {
         } else {
             holder.parkingLotLocationLine1.setText("");
         }
-        /*        
+                
         // Show parking lot distance.
         if (parkingLot.getDistance() != null) {
             holder.parkingLotDistance.setText(parkingLot.getDistance() + " meters");
@@ -98,9 +98,9 @@ public class ParkingLotListAdapter extends ArrayAdapter<ParkingLot> {
             holder.parkingLotDistance.setText("");
         }
         holder.iconTrending.setVisibility(View.VISIBLE);
-        holder.parkingLotEmptySpaces.setText(parkingLot.getEmptySpaces());
-        holder.parkingLotSpaces.setText(parkingLot.getTotalSpaces());
-*/
+        holder.parkingLotSpaces.setText(parkingLot.getEmptySpaces()+"/"+parkingLot.getTotalSpaces());        
+        holder.parkingPrice.setText(parkingLot.getPrice()+"/h");        
+
         return convertView;
     }
 
@@ -111,8 +111,8 @@ public class ParkingLotListAdapter extends ArrayAdapter<ParkingLot> {
         //ImageView iconSpecial;
         TextView parkingLotDistance;
         ImageView iconTrending;
-        TextView parkingLotEmptySpaces;
         TextView parkingLotSpaces;
+        TextView parkingPrice;
     }
     
     private DataSetObserver mDataSetObserver = new DataSetObserver() {

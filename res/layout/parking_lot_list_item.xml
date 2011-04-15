@@ -38,7 +38,7 @@
     android:layout_height="wrap_content"
     android:layout_toRightOf="@id/icon"
     android:layout_alignParentRight="true"
-    android:layout_below="@+id/parkLotName"
+    android:layout_below="@+id/parkingLotName"
     android:paddingLeft="7dip"
     android:paddingRight="10dip"
     android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
@@ -50,7 +50,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_below="@+id/parkLotLocationLine1"
+    android:layout_below="@+id/parkingLotLocationLine1"
     android:layout_toRightOf="@id/icon"
     android:paddingLeft="7dip"
     >
@@ -72,19 +72,21 @@
       android:scaleType="fitCenter" />
       
     <TextView
-      android:id="@+id/parkingLotEmptySpaces"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:paddingLeft="3dip"
-      android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
-      android:ellipsize="end" />
-    <TextView
       android:id="@+id/parkingLotSpaces"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:paddingLeft="3dip"
       android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
       android:ellipsize="end" />
+    <TextView
+      android:id="@+id/parkingPrice"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingLeft="40dip"
+      android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
+      android:layout_gravity="right"
+      android:ellipsize="end" />
+	
       
   </LinearLayout>
       

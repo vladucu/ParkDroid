@@ -93,7 +93,7 @@ public class ParkingLotsListActivity extends LoadableListActivity {
             mPark1.setId("123");
             mPark1.setName("Parcarea principala");
             mPark1.setPhone("0733683111");
-            mPark1.setAddress("Bulevardul Regina Elisabeta 23");
+            mPark1.setAddress("Bulevardul Regina Elisabeta 23 si o iei pe acolo pe unde vezi cu ochii");
             mPark1.setCity("Bucuresti");
             mPark1.setZip("050012");
             mPark1.setGeolat("44.43472");
@@ -116,9 +116,12 @@ public class ParkingLotsListActivity extends LoadableListActivity {
             mPark2.setTotalSpaces("1500");
             mPark2.setPrice("125");
             mPark2.setUrl("http://igoogle.com");
+            for (int index=0;index<10;index++) {
+                mResults.add(mPark1);mResults.add(mPark2); 
+            }
             
             
-            mResults.add(mPark1);mResults.add(mPark2);
+            
             /*mSearchTask = null;
             mFullyLoadedVenueIds = new HashSet<String>();*/
         }
