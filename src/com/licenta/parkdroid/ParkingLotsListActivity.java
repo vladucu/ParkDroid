@@ -3,8 +3,9 @@
  */
 package com.licenta.parkdroid;
 
-
 import com.licenta.park.types.ParkingLot;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -15,7 +16,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -28,8 +28,10 @@ public class ParkingLotsListActivity extends LoadableListActivity {
     private static final String TAG = "ParkingLotsListActivity";
     private static boolean DEBUG = true;
     
+    private static final int RESULT_CODE_ACTIVITY_PARKING_LOT = 1;
+    
     private StateHolder mStateHolder = new StateHolder();
-    private ArrayList<ParkingLot> parkingLots = null;
+    private Group<ParkingLot> parkingLots = null;
     private ParkingLotListAdapter mParkingLotListAdapter;
     private ListView mListView;
     private Handler mHandler;    
@@ -39,7 +41,6 @@ public class ParkingLotsListActivity extends LoadableListActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         if (DEBUG) Log.d(TAG, "onCreate()");
       
@@ -53,12 +54,23 @@ public class ParkingLotsListActivity extends LoadableListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (DEBUG) Log.d(TAG, "onCreate()+ on item click");
                 ParkingLot parkingLot = (ParkingLot) parent.getAdapter().getItem(position);
+                Toast.makeText(ParkingLotsListActivity.this, parkingLot.getId(), Toast.LENGTH_LONG).show();
+                startItemActivity(parkingLot);
                 Toast.makeText(ParkingLotsListActivity.this, parkingLot.getName(), Toast.LENGTH_LONG).show();
             }
         });
 
         // We can dynamically add a footer to our loadable listview.
         LayoutInflater inflater = LayoutInflater.from(this);
+        
+     // Check if we're returning from a configuration change.
+        if (getLastNonConfigurationInstance() != null) {
+            if (DEBUG) Log.d(TAG, "Restoring state.");
+            mStateHolder = (StateHolder) getLastNonConfigurationInstance();
+            //mStateHolder.setActivity(this);
+        } else {
+            mStateHolder = new StateHolder();            
+        }
     }
     
 /*    public void putResultsInAdapter(Group<ParkingLot> results) {
@@ -78,6 +90,13 @@ public class ParkingLotsListActivity extends LoadableListActivity {
         mListView.setAdapter(mArrayAdapter);
     }
 */
+    private void startItemActivity(ParkingLot parkingLot) {
+        if (DEBUG) Log.d(TAG, "startItemActivity()");
+        Intent intent = new Intent(ParkingLotsListActivity.this, ParkingLotActivity.class);
+        intent.putExtra(ParkingLotActivity.INTENT_EXTRA_PARKING_LOT, parkingLot);
+        startActivityForResult(intent, RESULT_CODE_ACTIVITY_PARKING_LOT);        
+    }
+    
     private static class StateHolder {
         private Group<ParkingLot> mResults;
         private String mQuery;

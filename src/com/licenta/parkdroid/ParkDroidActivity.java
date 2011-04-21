@@ -67,7 +67,11 @@ public class ParkDroidActivity extends TabActivity {
                 R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));
         TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
                 R.drawable.tab_main_nav_tips_selector, 2, new Intent(this, ParkingLotsListActivity.class));
+        TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
+                R.drawable.tab_main_nav_tips_selector, 3, new Intent(this, AddReservationActivity.class));
+        
    
+        mTabHost.setCurrentTab(0);
        /* TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
                 R.drawable.tab_main_nav_tips_selector, 1, new Intent(this, MapActivity.class));
         TabsUtil.addTab(mTabHost, getString(R.string.tab_main_nav_res),
@@ -106,7 +110,6 @@ public class ParkDroidActivity extends TabActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {        
-        // TODO Auto-generated method stub                
         switch (item.getItemId()) {
             case R.id.preferences:                
                 Log.d(TAG, "Preferences Tab selected");

@@ -28,11 +28,11 @@ public class ParkingLotListAdapter extends ArrayAdapter<ParkingLot> {
     private static final String TAG = "ParkingLotListAdapter";
     private static boolean DEBUG = true;
     
-    private ArrayList<ParkingLot> items;
+    private Group<ParkingLot> items;
     private LayoutInflater mInflater;
     private Handler mHandler;
 
-    public ParkingLotListAdapter(Context context, int textViewResourceId, ArrayList<ParkingLot> items) {
+    public ParkingLotListAdapter(Context context, int textViewResourceId, Group<ParkingLot> items) {
         super(context, textViewResourceId, items);
         
         this.items = items;

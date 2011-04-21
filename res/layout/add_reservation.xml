@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+    <LinearLayout 
+      android:id="@+id/linearLayout1" 
+      android:layout_width="fill_parent" 
+      android:layout_height="fill_parent"
+      android:orientation="vertical"
+      android:paddingTop="10dip">
+      
+      <TextView 
+        android:id="@+id/parkingLotNameLabel"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        style="@style/listSeparatorTextViewStyle"
+       	android:text="@string/parking_lot_name_label" 
+      />
+      <TextView 
+        android:id="@+id/parkingLotName"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
+      />
+      <TextView 
+        android:id="@+id/parkingLotLocationLabel"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        style="@style/listSeparatorTextViewStyle"
+        android:text="@string/parking_lot_location_label" 
+      />
+      <TextView 
+        android:id="@+id/parkingLotLocation"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content" 
+        android:layout_marginLeft="5dip"       
+        android:layout_marginRight="5dip"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
+      />
+      <TextView 
+        android:id="@+id/dateDisplayLabel"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        style="@style/listSeparatorTextViewStyle"
+        android:text="@string/date_display_label" 
+      />
+      <TextView
+      	android:id="@+id/dateDisplay"
+      	android:layout_width="wrap_content"
+      	android:layout_height="wrap_content"
+      	android:layout_weight="0.5"
+      	android:text="Starting date"
+      	android:layout_marginLeft="5dip"       
+        android:layout_marginRight="5dip"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
+      />
+      <TextView 
+        android:id="@+id/timeDisplayLabel"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        style="@style/listSeparatorTextViewStyle"
+        android:text="@string/time_display_label" 
+      />
+      <TextView
+      	android:id="@+id/timeDisplay"
+      	android:layout_width="wrap_content"
+      	android:layout_height="wrap_content"
+      	android:layout_weight="0.5"
+        android:text="starting time"
+        android:layout_marginLeft="5dip"       
+        android:layout_marginRight="5dip"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
+      />
+      <TextView 
+        android:id="@+id/selectTimeLabel"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        style="@style/listSeparatorTextViewStyle"
+        android:text="@string/select_time_label" 
+      />
+      	
+      <Button 
+      	  android:id="@+id/pickDate"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Change the date"
+      />
+    </LinearLayout>  
+</ScrollView>

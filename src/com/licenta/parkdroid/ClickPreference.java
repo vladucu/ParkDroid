@@ -63,21 +63,19 @@ public class ClickPreference extends Preference {
         return a.getInteger(index, 0);
     }
 
-    /* (non-Javadoc)
+   /*  (non-Javadoc)
      * @see android.preference.Preference#onSetInitialValue(boolean, java.lang.Object)
-     */
+     
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        // TODO Auto-generated method stub
         //super.onSetInitialValue(restorePersistedValue, defaultValue);
-    }
+    }*/
 
     /* (non-Javadoc)
      * @see android.preference.Preference#onRestoreInstanceState(android.os.Parcelable)
      */
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        // TODO Auto-generated method stub
         super.onRestoreInstanceState(state);
         notifyChanged();
     }    

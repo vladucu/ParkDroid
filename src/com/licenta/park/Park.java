@@ -3,6 +3,8 @@
  */
 package com.licenta.park;
 
+import com.licenta.park.types.ParkingLot;
+
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -87,6 +89,11 @@ public class Park {
             return mEmail;
         }
         
+    }
+
+    public ParkingLot parkingLot(String string) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

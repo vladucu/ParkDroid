@@ -31,6 +31,7 @@ public class ParkDroid extends Application {
     
     public static final String INTENT_ACTION_LOGGED_OUT = "com.licenta.parkdroid.intent.action.LOGGED_OUT";
     public static final String INTENT_ACTION_LOGGED_IN = "com.licenta.parkdroid.intent.action.LOGGED_IN";
+    public static final String PACKAGE_NAME = "com.licenta.parkdroid";;
     
     private SharedPreferences mPrefs;
     
@@ -66,7 +67,6 @@ public class ParkDroid extends Application {
     }
     
     public boolean isReady() {
-        // TODO Auto-generated method stub
         /*if (isLoggedIn) return true;
         else return false;*/
         if (DEBUG) Log.d(TAG, "isReady()");

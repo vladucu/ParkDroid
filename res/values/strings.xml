@@ -22,4 +22,14 @@
     <string name="preferences_additional_settings_summary">Modify additional settings with foursquare.com.</string>
     <string name="preferences_other_settings">Other Settings</string>
     <string name="no_search_results">No search results! Sorry.</string>
+    <string name="parking_lot_activity_reserve_now_button">Reserve Now</string>
+    <string name="addressLabel">Address:</string>
+    <string name="freeSpacesLabel">Free Spaces</string>
+    <string name="distanceLabel">Distance</string>
+    <string name="priceLabel">Price</string>
+    <string name="parking_lot_name_label">Parking Space</string>
+    <string name="parking_lot_location_label">Address</string>
+    <string name="date_display_label">Starting date</string>
+    <string name="time_display_label">Starting time</string>
+    <string name="select_time_label">Select time</string>
 </resources>

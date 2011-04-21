@@ -40,7 +40,6 @@ public class PreferencesActivity extends android.preference.PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));
         
@@ -68,7 +67,6 @@ public class PreferencesActivity extends android.preference.PreferenceActivity {
      
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-        // TODO Auto-generated method stub
         if (DEBUG) Log.d(TAG, "onPreferenceTreeClick");
         String key = preference.getKey();
         if (Preferences.PREFERENCE_LOGOUT.equals(key)) {
