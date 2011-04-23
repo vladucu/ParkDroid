@@ -58,6 +58,9 @@
         
         <activity android:name="AddReservationActivity">
         </activity>
+        
+        <activity android:name="ActiveReservationActivity">
+        </activity>
         		  
     </application>
     

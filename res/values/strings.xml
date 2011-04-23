@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ParkDroid</string>
-    <string name="tab_main_nav_res">Reservations</string>
+    <string name="tab_main_nav_map">Map</string>
     <string name="map">Map</string>
     <string name="preferences_search_radius">Search Radius</string>
     <string name="preferences_search_radius_summary">Click to pop up a list to choose from</string>
@@ -29,7 +29,12 @@
     <string name="priceLabel">Price</string>
     <string name="parking_lot_name_label">Parking Space</string>
     <string name="parking_lot_location_label">Address</string>
-    <string name="date_display_label">Starting date</string>
-    <string name="time_display_label">Starting time</string>
-    <string name="select_time_label">Select time</string>
+    <string name="add_reservation_starting_from_label">Starting from</string>
+    <string name="add_reservation_until_label">Until</string>
+    <string name="add_reservation_parking_price_label">Price per hour</string>
+    <string name="add_reservation_action_label">Please wait</string>
+    <string name="add_reservation_activity_progress_bar_message">Making reservation...</string>
+    <string name="add_reservation_reserve_now">Reserve Now</string>
+    <string name="tab_main_nav_parking_lots_list">Parkings List</string>
+    <string name="tab_main_nav_active_reservations">Active Reservations</string>
 </resources>

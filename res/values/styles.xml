@@ -53,4 +53,8 @@
 	    <item name="android:background">@drawable/listview_header_background</item>
 	    <item name="android:textAppearance">@style/TextViewStyleHeaderDivider</item>
   	</style>
+    <style name="TextViewStyleTabMainNav">
+        <item name="android:textSize">12dip</item>
+        <item name="android:textColor">@drawable/tab_main_nav_text_selector</item>
+    </style>
 </resources>
