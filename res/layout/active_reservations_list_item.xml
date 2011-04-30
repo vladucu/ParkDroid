@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="?android:attr/listPreferredItemHeight"
+  android:paddingTop="0dip"
+  android:paddingRight="0dip"
+  android:paddingBottom="6dip">
+
+  <TextView
+    android:id="@+id/parkingLotName"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"    
+    android:layout_alignParentRight="true"
+    android:layout_alignParentTop="true"
+    android:layout_alignWithParentIfMissing="true"
+    android:paddingLeft="7dip"
+    android:paddingRight="7dip"
+    android:textAppearance="@style/TextViewStyleParkLotNameListItem"
+    />
+
+  <TextView
+    android:id="@+id/parkingLotLocationLine1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_below="@+id/parkingLotName"
+    android:paddingLeft="7dip"
+    android:paddingRight="10dip"
+    android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
+    android:singleLine="true"
+    android:maxLines="1"
+    android:ellipsize="marquee" />
+  
+  <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_below="@+id/parkingLotLocationLine1"
+    android:paddingLeft="7dip"
+    >
+  
+    <TextView
+      android:id="@+id/parkingLotDistance"
+      android:layout_width="90dip"
+      android:layout_height="wrap_content"
+      android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
+      android:ellipsize="end" />
+    
+    <ImageView
+      android:id="@+id/iconTrending"
+      android:layout_width="9dip"
+      android:layout_height="9dip"
+      android:src="@drawable/people_icon"
+      android:layout_gravity="center_vertical"
+      android:layout_marginTop="1dip"
+      android:scaleType="fitCenter" />
+      
+    <TextView
+      android:id="@+id/parkingLotSpaces"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingLeft="3dip"
+      android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
+      android:ellipsize="end" />
+      
+    <TextView
+      android:id="@+id/parkingPrice"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingLeft="40dip"
+      android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
+      android:layout_gravity="right"
+      android:ellipsize="end" />
+	
+      
+  </LinearLayout>
+      
+</RelativeLayout>

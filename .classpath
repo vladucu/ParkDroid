@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+<<<<<<< HEAD
 	<classpathentry excluding="com/licenta/parkdroid/User.java" kind="src" path="src"/>
+=======
+	<classpathentry excluding="com/licenta/parkdroid/TabsUtil4.java|com/licenta/parkdroid/TabsUtil3.java" kind="src" path="src"/>
+>>>>>>> dev4
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="output" path="bin"/>

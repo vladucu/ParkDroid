@@ -1,0 +1,8 @@
+1. Despre imbunatatiri aduse prin trecerea de la LinearLayout la
+RelativeLayout
+  http://android-developers.blogspot.com/2009/02/android-layout-tricks-1.html
+
+2. Patternuri
+	http://stackoverflow.com/questions/2614936/android-how-to-center-buttons-on-screen-horizontally-and-vertically-plus-equidi
+
+   

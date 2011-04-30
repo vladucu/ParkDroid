@@ -3,8 +3,12 @@
  */
 package com.licenta.park;
 
+<<<<<<< HEAD
 import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkLot;
+=======
+import com.licenta.park.types.ParkingLot;
+>>>>>>> dev4
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -73,8 +77,9 @@ public class Park {
         user.mId = "1";
         user.mEmail = "x";
         user.mPassword = "x";
-        if (user.mEmail == login && user.mPassword == password) return user;
-        else return new User();
+        /*if (user.mEmail == login && user.mPassword == password) return user;
+        else return new User();*/
+        return user;
     }
     
     public class User {
@@ -94,6 +99,7 @@ public class Park {
         
     }
 
+<<<<<<< HEAD
     public Group<ParkLot> parkLots(Location location, String Query, int limit) throws Exception, Error, IOException {
         // TODO Auto-generated method stub
         Group<ParkLot> mGPLot = new Group<ParkLot>();
@@ -105,6 +111,11 @@ public class Park {
         mParkLot.setPrice(200);
         mGPLot.add(mParkLot);
         return (Group<ParkLot>) mGPLot;
+=======
+    public ParkingLot parkingLot(String string) {
+        // TODO Auto-generated method stub
+        return null;
+>>>>>>> dev4
     }
 
 }

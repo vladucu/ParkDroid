@@ -3,128 +3,401 @@
  */
 package com.licenta.parkdroid;
 
+import com.licenta.park.types.ParkingLot;
+import com.licenta.park.types.Reservation;
+
 import android.app.Activity;
-import android.app.ListActivity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import android.view.Window;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author vladucu
  *
  */
-public class ParkingLotActivity extends ListActivity {
+public class ParkingLotActivity extends Activity {
     
     public static final String TAG = "ParkingLotActivity";
     //debug mode
     public static final boolean DEBUG = true;
     
     private Handler mHandler;
-    private ListView mListView;
-    private SeparatedListAdapter mListAdapter;
+    private StateHolder mStateHolder;
+    
+    public static final String INTENT_EXTRA_PARKING_LOT_ID = ParkDroid.PACKAGE_NAME + ".ParkingLotActivity.INTENT_EXTRA_PARKING_LOT_ID";
+    public static final String INTENT_EXTRA_PARKING_LOT = ParkDroid.PACKAGE_NAME + ".ParkingLotActivity.INTENT_EXTRA_PARKING_LOT";
+    private static final String EXTRA_PARKKING_LOT_RETURNED = ParkDroid.PACKAGE_NAME + ".ParkingLotActivity.EXTRA_PARKKING_LOT_RETURNED";
+    
+    private static final int RESULT_CODE_ACTIVITY_ADD_RESERVATION = 1;
+    private static final int RESULT_CODE_ACTIVITY_RESERVATION = 2;
+    
+    private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (DEBUG) Log.d(TAG, "onReceive: " + intent);
+            finish();
+        }
+    };
+
+    //TODO add image to the view
     
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         
         if (DEBUG) Log.d(TAG, "onCreate()");
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(R.layout.parking_lot_activity);
+        registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));
+        
         mHandler = new Handler();
-        mListView = getListView();
-        mListAdapter = new SeparatedListAdapter(this);
         
-        mListView.setAdapter(mListAdapter);
-        mListView.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               // Venue venue = (Venue) parent.getAdapter().getItem(position);
-              //  startItemActivity(venue);
+        StateHolder holder = (StateHolder) getLastNonConfigurationInstance();
+        if (holder == null) {
+            mStateHolder = new StateHolder();
+            if (getIntent().hasExtra(INTENT_EXTRA_PARKING_LOT)) {
+                if (DEBUG) Log.d(TAG, "getIntent().hasExtra(INTENT_EXTRA_PARKING_LOT)");
+                mStateHolder.setLoadType(StateHolder.LOAD_TYPE_PARKING_LOT_FULL);
+                mStateHolder.setParkingLot((ParkingLot)getIntent().getParcelableExtra(INTENT_EXTRA_PARKING_LOT));                
             }
-        });
+            else if (getIntent().hasExtra(INTENT_EXTRA_PARKING_LOT_ID)) {
+                if (DEBUG) Log.d(TAG, "getIntent().hasExtra(INTENT_EXTRA_PARKING_LOT_ID)");
+                mStateHolder.setLoadType(StateHolder.LOAD_TYPE_PARKING_LOT_ID);
+                mStateHolder.setParkingLotId(getIntent().getStringExtra(INTENT_EXTRA_PARKING_LOT_ID));
+                mStateHolder.startTaskParkingLot(this);
+            }
+            else {
+                if (DEBUG) Log.d(TAG, "ParkingLotActivity needs an parking lot Id or parcelable extra");
+                finish();
+                return;
+            }
+        }
+        else {
+            if (DEBUG) Log.d(TAG, "mStateHolder != null");
+            mStateHolder = holder;
+            mStateHolder.setActivityForTasks(this);
+            prepareResultIntent();
+        }
         
-        setContentView(R.layout.parking_lot);
+        ensureUI();
     }
+
     
-    private class SeparatedListAdapter extends BaseAdapter {
+    
+    private void ensureUI() {        
+        if (DEBUG) Log.d(TAG, "ensureUI() mStateHolder.parkingLot="+mStateHolder.getParkingLot().getName());
+        TextView tvParkingkLotActivityName = (TextView)findViewById(R.id.parkingkLotActivityName);
+        TextView tvParkingLotActivityAddress = (TextView)findViewById(R.id.parkingLotActivityAddress);
+        Button btnReserveNow = (Button)findViewById(R.id.parkingLotActivityButtonReserveNow);
+        LinearLayout progress = (LinearLayout) findViewById(R.id.parkingLotActivityDetailsProgress);
         
-        public final Map<String, Adapter> sections = new LinkedHashMap<String, Adapter>();
-        public final ArrayAdapter<String> headers;
-        public final static int TYPE_SECTION_HEADER = 0;
-
-        public SeparatedListAdapter(Context context) {
-            super();
-            headers = new ArrayAdapter<String>(context, R.layout.list_header);
-        }
+        TextView tvParkingLotActivitySpaces = (TextView) findViewById(R.id.parkingLotActivitySpacesValue);
+        TextView tvParkingLotActivityDistance = (TextView) findViewById(R.id.parkingLotActivityDistanceValue);
+        TextView tvParkingLotActivityPrice = (TextView) findViewById(R.id.parkingLotActivityPriceValue);
         
-        @Override
-        public int getCount() {
-         // total together all sections, plus one for each section header
-            int total = 0;
-            for (Adapter adapter : this.sections.values())
-                total += adapter.getCount() + 1;
-            return total;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            // TODO Auto-generated method stub
-            for (Object section : this.sections.keySet()) {
-                Adapter adapter = sections.get(section);
-                int size = adapter.getCount() + 1;
-
-                // check if position inside this section
-                if (position == 0) return section;
-                if (position < size) return adapter.getItem(position - 1);
-
-                // otherwise jump into next section
-                position -= size;
+        View viewUrl = findViewById(R.id.parkingLotActivityUrlDetails);
+        TextView tvUrlText = (TextView) findViewById(R.id.parkingLotActivityUrl);
+        ImageView ivUrlArrow = (ImageView) findViewById(R.id.parkingLotActivityUrlArrow); 
+    /*
+        TextView tvParkingLotActivitySpaces = (TextView)findViewById(R.id.parkingLotActivitySpaces);
+        TextView tvParkingLotActivityDistance = (TextView)findViewById(R.id.parkingLotActivityDistance);
+        TextView tvParkingLoatActivityPrice = (TextView)findViewById(R.id.parkingLotActivityPrice);*/
+        
+        ParkingLot parkingLot = mStateHolder.getParkingLot();
+        
+        if (mStateHolder.getLoadType() == StateHolder.LOAD_TYPE_PARKING_LOT_FULL) {
+            if (DEBUG) Log.d(TAG, "ensureUI() LOAD_TYPE_PARKING_LOT_FULL");
+            tvParkingkLotActivityName.setText(parkingLot.getName());
+            tvParkingLotActivityAddress.setText(parkingLot.getAddress());
+            tvParkingLotActivitySpaces.setText(parkingLot.getEmptySpaces()+"/"+parkingLot.getTotalSpaces());
+            tvParkingLotActivityDistance.setText(parkingLot.getDistance()+"m");
+            tvParkingLotActivityPrice.setText(parkingLot.getPrice()+"$/h");
+            
+            if (mStateHolder.getParkingLot().getUrl() != null) {
+                tvUrlText.setText(parkingLot.getUrl());
+                setClickHandlerUrl(viewUrl, parkingLot.getUrl());
+                viewUrl.setVisibility(View.VISIBLE);
+            } else {
+                viewUrl.setVisibility(View.GONE);
             }
             
-            return null;
+            if (mStateHolder.getParkingLot().getHasReservation()) {                
+                btnReserveNow.setEnabled(false);
+            }
+            else {                
+                btnReserveNow.setEnabled(true);
+                btnReserveNow.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (DEBUG) Log.d(TAG, "ensureUI() button enabled clicked");
+                        Intent intent = new Intent(ParkingLotActivity.this, AddReservationActivity.class);
+                        intent.putExtra(AddReservationActivity.INTENT_EXTRA_PARKING_LOT, mStateHolder.getParkingLot());
+                        startActivityForResult(intent, RESULT_CODE_ACTIVITY_ADD_RESERVATION);                        
+                    }                    
+                });
+            }
         }
+        ensureUiReservationHere();
+        progress.setVisibility(View.GONE);
+    }
 
-        
-        /* 
-         * Get the row id associated with the specified position in the list.
-         * @see android.widget.Adapter#getItemId(int)
-         */
-        @Override
-        public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {            
-                int sectionnum = 0;
-                for (Object section : this.sections.keySet()) {
-                    Adapter adapter = sections.get(section);
-                    int size = adapter.getCount() + 1;
-
-                    if (position == 0) return headers.getView(sectionnum, convertView, parent);
-                    if (position < size) return adapter.getView(position - 1, convertView, parent);
-
-                    // otherwise jump into next section
-                    position -= size;
-                    sectionnum++;
+    private void ensureUiReservationHere() {
+        if (DEBUG) Log.d(TAG, "ensureUiReservationHere()");
+        final ParkingLot parkingLot = mStateHolder.getParkingLot();
+        RelativeLayout rlReservationHere = (RelativeLayout) findViewById(R.id.parkingLotActivityReservationHere); 
+        if (parkingLot != null && parkingLot.getHasReservation()) {
+            rlReservationHere.setVisibility(View.VISIBLE);
+            rlReservationHere.setOnClickListener(new OnClickListener() {
+                
+                @Override
+                public void onClick(View arg0) {
+                    if (DEBUG) Log.d(TAG, "ensureUiReservationHere() onclick");
+                    //TODO working I think....check when REST services ready
+                    /*Intent intent = new Intent(ParkingLotActivity.this, ReservationActivity.class);
+                    intent.putExtra(ReservationActivity.INTENT_EXTRA_RESERVATION, parkingLot.getReservation());
+                    startActivityForResult(intent, RESULT_CODE_ACTIVITY_RESERVATION);*/
                 }
-                return null;            
+            });
         }
-        
+        else {
+            rlReservationHere.setVisibility(View.GONE);
+        }
     }
     
+    /*
+     * Launches the browser and opens the parking lot url link
+     */
+    private void setClickHandlerUrl(View view, final String address) {
+        //TODO de rezolvat pentru linkuri lungi
+        view.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View arg0) {
+                Uri uriUrl = Uri.parse(address);
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                startActivity(launchBrowser);                
+            }
+        });       
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        //TODO process add reservation returned code
+        switch (requestCode) {
+            case RESULT_CODE_ACTIVITY_ADD_RESERVATION:
+                if (resultCode == Activity.RESULT_OK) {
+                    if (DEBUG) Log.d(TAG, "onActivityResult() returned with reservation done succesfully");
+                    Toast.makeText(ParkingLotActivity.this, "Returned from add reservation with succes", Toast.LENGTH_LONG);
+                    break;
+                }                
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onDestroy()
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mLoggedOutReceiver);
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onResume()
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //ensureUiCheckinButton();
+        // TODO: ensure mayor photo.
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onRetainNonConfigurationInstance()
+     */
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+        // TODO Auto-generated method stub
+        //return super.onRetainNonConfigurationInstance();
+        mStateHolder.setActivityForTasks(null);
+        return mStateHolder;
+    }
+    
+    private void prepareResultIntent() {
+        if (DEBUG) Log.d(TAG, "prepareResultIntent()");
+        ParkingLot parkingLot = mStateHolder.getParkingLot();
+
+        Intent intent = new Intent();
+        if (parkingLot != null) {
+            intent.putExtra(EXTRA_PARKKING_LOT_RETURNED, parkingLot);
+        }
+        setResult(Activity.RESULT_OK, intent);
+    }
+    
+    private static class TaskParkingLot extends AsyncTask<String, Void, ParkingLot> {
+
+        public static final String TAG = "TaskParkingLot";
+        //debug mode
+        public static final boolean DEBUG = true;
+        
+        private ParkingLotActivity mActivity;
+        
+        public TaskParkingLot(ParkingLotActivity activity) {
+            if (DEBUG) Log.d(TAG, "TaskParkingLot()");            
+            mActivity = activity;
+        }
+        
+        /* (non-Javadoc)
+         * @see android.os.AsyncTask#onPreExecute()
+         */
+        @Override
+        protected void onPreExecute() {   
+            if (DEBUG) Log.d(TAG, "onPreExecute()");
+        }
+        
+        @Override
+        protected ParkingLot doInBackground(String... params) {
+            if (DEBUG) Log.d(TAG, "onPreExecute()");
+            try {
+                ParkDroid parkDroid = (ParkDroid) mActivity.getApplication();
+                return parkDroid.getPark().parkingLot(params[0]);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                if (DEBUG) Log.d(TAG, "Error getting parking lot details");
+                e.printStackTrace();
+            }
+            return null;
+        }
+        
+        /* (non-Javadoc)
+         * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+         */
+        @Override
+        protected void onPostExecute(ParkingLot parkingLot) {
+            // TODO Auto-generated method stub
+            if (DEBUG) Log.d(TAG, "onPreExecute()"); 
+            
+            if (mActivity != null) {
+                mActivity.mStateHolder.setIsRunningTaskParkingLot(false);
+                if (parkingLot != null) {
+                    mActivity.mStateHolder.setLoadType(StateHolder.LOAD_TYPE_PARKING_LOT_FULL);
+                    mActivity.mStateHolder.setParkingLot(parkingLot);
+                    mActivity.prepareResultIntent();
+                    mActivity.ensureUI();
+                    
+                }
+                else {
+                    mActivity.finish();
+                }
+                //TODO verifica si asta la sfarsit
+                /*else {
+                    NotificationsUtil.ToastReasonForFailure(mActivity, mReason);
+                    mActivity.finish();
+                }*/
+            }
+        }
+
+        public void setActivity(ParkingLotActivity activity) {
+           mActivity = activity;            
+        }
+        
+        
+    }
+        
+    private static final class StateHolder {
+        
+        public static final String TAG = "StateHolder";
+        //debug mode
+        public static final boolean DEBUG = true;
+        
+        private boolean mIsRunningTaskParkingLot;
+        private ParkingLot mParkingLot;
+        private String mParkingLotId;
+        private TaskParkingLot mTaskParkingLot;
+        private int mLoadType;
+        
+        private static final int LOAD_TYPE_PARKING_LOT_ID = 0;
+        private static final int LOAD_TYPE_PARKING_LOT_FULL = 1;
+        
+        
+        public StateHolder() {
+            if (DEBUG) Log.d(TAG, "StateHolder()");
+            mIsRunningTaskParkingLot = false;
+        }
+        
+        public void setActivityForTasks(ParkingLotActivity activity) {
+            if (mTaskParkingLot != null) {
+                mTaskParkingLot.setActivity(activity);
+            }            
+        }
+
+        public void setParkingLot(ParkingLot parkingLot) {
+            if (DEBUG) Log.d(TAG, "setParkingLot()");
+            mParkingLot = parkingLot;
+        }
+        
+        public ParkingLot getParkingLot() {
+            if (DEBUG) Log.d(TAG, "getParkingLot()");
+            return mParkingLot;
+        }
+        
+        public void setParkingLotId(String id) {
+            if (DEBUG) Log.d(TAG, "setParkingLotId()");
+            mParkingLotId = id;
+        }
+        
+        public void setLoadType(int loadType) {
+            if (DEBUG) Log.d(TAG, "setLoadType()");
+            mLoadType = loadType;
+        }
+        
+        public int getLoadType() {
+            if (DEBUG) Log.d(TAG, "getLoadType()");
+            return mLoadType;
+        }
+        
+        public void setIsRunningTaskParkingLot(boolean mIsRunningTaskParkingLot) {
+            if (DEBUG) Log.d(TAG, "setIsRunningTaskParkingLot()");
+            mIsRunningTaskParkingLot = mIsRunningTaskParkingLot;
+        }
+        
+        public void startTaskParkingLot(ParkingLotActivity activity) {
+            if (DEBUG) Log.d(TAG, "startTaskParkingLot()");
+            if (!mIsRunningTaskParkingLot) {
+                mIsRunningTaskParkingLot = true;
+                mTaskParkingLot = new TaskParkingLot(activity);
+                if (mLoadType == LOAD_TYPE_PARKING_LOT_ID) {
+                    mTaskParkingLot.execute(mParkingLotId);
+                }
+                else {
+                    mTaskParkingLot.execute(mParkingLot.getId());
+                }
+            }
+        }
+    }
+    
+
 }

@@ -33,14 +33,42 @@
         		  </intent-filter>
         </activity>
 
+<<<<<<< HEAD
 		<activity android:name="ParkLotsListActivity"
+=======
+		<activity android:name=".ParkingLotsListActivity"
+>>>>>>> dev4
         		  android:label="@string/map">
+			<intent-filter>
+        		<action android:name="com.licenta.parkdroid.intent.action.LOGGED_OUT" />
+        	</intent-filter>        		  
         </activity>
+        
+        <activity android:name=".ParkingLotActivity"
+        		  android:label="@string/map">
+        	<intent-filter>
+        		<action android:name="android.intent.action.main" />
+        	</intent-filter>
+        	<intent-filter>
+        		<action android:name="com.licenta.parkdroid.intent.action.LOGGED_OUT" />
+        	</intent-filter>
+        </activity>
+        
+        <activity android:name=".ParkingLotMapActivity"></activity>
         
         <activity android:name="LoginActivity"
         		  android:launchMode="singleInstance">
         </activity>
         
+        <activity android:name="AddReservationActivity">
+        </activity>
+        
+        <activity android:name="ActiveReservationsListActivity">
+        </activity>
+        
+        <activity android:name="ReservationActivity">
+        </activity>
+        		  
     </application>
     
     <uses-permission android:name="android.permission.INTERNET" />
