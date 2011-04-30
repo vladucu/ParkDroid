@@ -4,7 +4,10 @@
 package com.licenta.parkdroid;
 
 import com.licenta.park.types.ParkingLot;
+import com.licenta.park.types.Reservation;
 import com.licenta.park.types.ReservationResult;
+import com.licenta.park.utils.FormatStrings;
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -17,6 +20,8 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -27,6 +32,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -39,6 +46,7 @@ public class AddReservationActivity extends Activity {
     private static boolean DEBUG = true;
     
     public static final String INTENT_EXTRA_PARKING_LOT = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_PARKING_LOT";
+    public static final String INTENT_EXTRA_RESERVATION = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_RESERVATION";
     public static final String INTENT_EXTRA_RETURNED_RESERVATION = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_RETURNED_RESERVATION";
     
     private static final int DIALOG_SELECT_START_DATE = 0;
@@ -92,6 +100,9 @@ public class AddReservationActivity extends Activity {
                 Log.e(TAG, "AddReservationActivity must be given a parking lot parcel as intent extras.");
                 finish();
                 return;
+            }
+            if (getIntent().hasExtra(INTENT_EXTRA_RESERVATION)) {
+                mStateHolder.setReservation((Reservation) getIntent().getParcelableExtra(INTENT_EXTRA_RESERVATION));
             }
         }
         
@@ -203,19 +214,26 @@ public class AddReservationActivity extends Activity {
             }
         });
 
-        //Get the current date
-        final Calendar c =  Calendar.getInstance();
-        mStartYear = mEndYear = c.get(Calendar.YEAR);
-        mStartMonth = mEndMonth = c.get(Calendar.MONTH);
-        mStartDay = mEndDay = c.get(Calendar.DAY_OF_MONTH);
-        updateDateDisplay(mPickStartDate, mStartYear, mStartMonth, mStartDay);
-        updateDateDisplay(mPickEndDate, mEndYear, mEndMonth, mEndDay);
-        
-        // get the current time        
-        mStartHour = mEndHour = c.get(Calendar.HOUR_OF_DAY);
-        mStartMinute = mEndMinute = c.get(Calendar.MINUTE);
-        updateTimeDisplay(mPickStartTime, mStartHour, mStartMinute);
-        updateTimeDisplay(mPickEndTime, mEndHour, mEndMinute);  
+        if (mStateHolder.getReservation() == null) {
+            //Get the current date
+            final Calendar c =  Calendar.getInstance();
+            mStartYear = mEndYear = c.get(Calendar.YEAR);
+            mStartMonth = mEndMonth = c.get(Calendar.MONTH);
+            mStartDay = mEndDay = c.get(Calendar.DAY_OF_MONTH);
+            // get the current time        
+            mStartHour = mEndHour = c.get(Calendar.HOUR_OF_DAY);
+            mStartMinute = mEndMinute = c.get(Calendar.MINUTE);
+            updateDateDisplay(mPickStartDate, mStartDay, mStartMonth, mStartYear);
+            updateDateDisplay(mPickEndDate, mEndDay, mEndMonth, mEndYear);       
+            updateTimeDisplay(mPickStartTime, mStartHour, mStartMinute);
+            updateTimeDisplay(mPickEndTime, mEndHour, mEndMinute);  
+        }
+        else {
+           /* mPickStartDate.setText(new String.)
+            final Calendar c = (Calendar) mStateHolder.getReservation().getStartTime();
+            mPickStartDate.setText(mStateHolder.getReservation().getStartTime());
+            //TODO aici atentie
+*/        }
         
         ensureUiReserveNowButton();
     }
@@ -224,15 +242,29 @@ public class AddReservationActivity extends Activity {
         if (DEBUG) Log.d( TAG, "ensureUiReserveNowButton()");
         Button btnReserveNow = (Button)findViewById(R.id.addReservationActivityButtonReserveNow);
         btnReserveNow.setEnabled(true);
-        btnReserveNow.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(AddReservationActivity.this, "Starting reservation", Toast.LENGTH_LONG);
-                mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());
+        if (mStateHolder.getReservation() != null) {
+            btnReserveNow.setText(R.string.reservation_activity_extend_button);
+            btnReserveNow.setOnClickListener(new OnClickListener() {
                 
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(AddReservationActivity.this, "Extending reservation", Toast.LENGTH_LONG);
+                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());
+                    
+                }
+            });
+        }
+        else {
+            btnReserveNow.setOnClickListener(new OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(AddReservationActivity.this, "Starting reservation", Toast.LENGTH_LONG);
+                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());
+                    
+                }
+            });
+        }
         
     }
 
@@ -406,6 +438,7 @@ public class AddReservationActivity extends Activity {
         private ParkingLot mParkingLot;
         private boolean mIsRunning;
         private ReservationTask mTask;
+        private Reservation mReservation;
         private ReservationResult mReservationResult;
         
         public StateHolder() {
@@ -414,6 +447,14 @@ public class AddReservationActivity extends Activity {
             mIsRunning = false;
         }
         
+        public void setReservation(Reservation reservation) {
+            mReservation = reservation;            
+        }
+        
+        public Reservation getReservation() {
+            return mReservation;
+        }
+
         public void startTask(AddReservationActivity activity, String parkingLotId) {
             if (DEBUG) Log.d( TAG, "startTask()");
             mIsRunning = true;

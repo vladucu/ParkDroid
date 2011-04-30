@@ -4,11 +4,14 @@
 package com.licenta.parkdroid;
 
 import com.licenta.park.types.ParkingLot;
+import com.licenta.park.types.Reservation;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +20,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +44,7 @@ public class ParkingLotActivity extends Activity {
     private static final String EXTRA_PARKKING_LOT_RETURNED = ParkDroid.PACKAGE_NAME + ".ParkingLotActivity.EXTRA_PARKKING_LOT_RETURNED";
     
     private static final int RESULT_CODE_ACTIVITY_ADD_RESERVATION = 1;
-        
+    private static final int RESULT_CODE_ACTIVITY_RESERVATION = 2;
     
     private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
         @Override
@@ -48,13 +54,13 @@ public class ParkingLotActivity extends Activity {
         }
     };
 
-
+    //TODO add image to the view
+    
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         
         if (DEBUG) Log.d(TAG, "onCreate()");
@@ -64,7 +70,7 @@ public class ParkingLotActivity extends Activity {
         
         mHandler = new Handler();
         
-        StateHolder holder = (StateHolder)getLastNonConfigurationInstance();
+        StateHolder holder = (StateHolder) getLastNonConfigurationInstance();
         if (holder == null) {
             mStateHolder = new StateHolder();
             if (getIntent().hasExtra(INTENT_EXTRA_PARKING_LOT)) {
@@ -101,6 +107,15 @@ public class ParkingLotActivity extends Activity {
         TextView tvParkingkLotActivityName = (TextView)findViewById(R.id.parkingkLotActivityName);
         TextView tvParkingLotActivityAddress = (TextView)findViewById(R.id.parkingLotActivityAddress);
         Button btnReserveNow = (Button)findViewById(R.id.parkingLotActivityButtonReserveNow);
+        LinearLayout progress = (LinearLayout) findViewById(R.id.parkingLotActivityDetailsProgress);
+        
+        TextView tvParkingLotActivitySpaces = (TextView) findViewById(R.id.parkingLotActivitySpacesValue);
+        TextView tvParkingLotActivityDistance = (TextView) findViewById(R.id.parkingLotActivityDistanceValue);
+        TextView tvParkingLotActivityPrice = (TextView) findViewById(R.id.parkingLotActivityPriceValue);
+        
+        View viewUrl = findViewById(R.id.parkingLotActivityUrlDetails);
+        TextView tvUrlText = (TextView) findViewById(R.id.parkingLotActivityUrl);
+        ImageView ivUrlArrow = (ImageView) findViewById(R.id.parkingLotActivityUrlArrow); 
     /*
         TextView tvParkingLotActivitySpaces = (TextView)findViewById(R.id.parkingLotActivitySpaces);
         TextView tvParkingLotActivityDistance = (TextView)findViewById(R.id.parkingLotActivityDistance);
@@ -112,12 +127,19 @@ public class ParkingLotActivity extends Activity {
             if (DEBUG) Log.d(TAG, "ensureUI() LOAD_TYPE_PARKING_LOT_FULL");
             tvParkingkLotActivityName.setText(parkingLot.getName());
             tvParkingLotActivityAddress.setText(parkingLot.getAddress());
-            /*tvParkingLotActivityPrice.setText(parkingLot.getPrice()+"$/h");
             tvParkingLotActivitySpaces.setText(parkingLot.getEmptySpaces()+"/"+parkingLot.getTotalSpaces());
-            tvParkingLotActivityDistance.setText(parkingLot.getDistance()+"m");*/
+            tvParkingLotActivityDistance.setText(parkingLot.getDistance()+"m");
+            tvParkingLotActivityPrice.setText(parkingLot.getPrice()+"$/h");
             
-            if (mStateHolder.getLoadType() == StateHolder.LOAD_TYPE_PARKING_LOT_ID) {
-                if (DEBUG) Log.d(TAG, "ensureUI() LOAD_TYPE_PARKING_LOT_ID");
+            if (mStateHolder.getParkingLot().getUrl() != null) {
+                tvUrlText.setText(parkingLot.getUrl());
+                setClickHandlerUrl(viewUrl, parkingLot.getUrl());
+                viewUrl.setVisibility(View.VISIBLE);
+            } else {
+                viewUrl.setVisibility(View.GONE);
+            }
+            
+            if (mStateHolder.getParkingLot().getHasReservation()) {                
                 btnReserveNow.setEnabled(false);
             }
             else {                
@@ -133,9 +155,48 @@ public class ParkingLotActivity extends Activity {
                 });
             }
         }
+        ensureUiReservationHere();
+        progress.setVisibility(View.GONE);
     }
 
+    private void ensureUiReservationHere() {
+        if (DEBUG) Log.d(TAG, "ensureUiReservationHere()");
+        final ParkingLot parkingLot = mStateHolder.getParkingLot();
+        RelativeLayout rlReservationHere = (RelativeLayout) findViewById(R.id.parkingLotActivityReservationHere); 
+        if (parkingLot != null && parkingLot.getHasReservation()) {
+            rlReservationHere.setVisibility(View.VISIBLE);
+            rlReservationHere.setOnClickListener(new OnClickListener() {
+                
+                @Override
+                public void onClick(View arg0) {
+                    if (DEBUG) Log.d(TAG, "ensureUiReservationHere() onclick");
+                    //TODO working I think....check when REST services ready
+                    /*Intent intent = new Intent(ParkingLotActivity.this, ReservationActivity.class);
+                    intent.putExtra(ReservationActivity.INTENT_EXTRA_RESERVATION, parkingLot.getReservation());
+                    startActivityForResult(intent, RESULT_CODE_ACTIVITY_RESERVATION);*/
+                }
+            });
+        }
+        else {
+            rlReservationHere.setVisibility(View.GONE);
+        }
+    }
     
+    /*
+     * Launches the browser and opens the parking lot url link
+     */
+    private void setClickHandlerUrl(View view, final String address) {
+        //TODO de rezolvat pentru linkuri lungi
+        view.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View arg0) {
+                Uri uriUrl = Uri.parse(address);
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                startActivity(launchBrowser);                
+            }
+        });       
+    }
 
     /* (non-Javadoc)
      * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
@@ -148,13 +209,12 @@ public class ParkingLotActivity extends Activity {
         switch (requestCode) {
             case RESULT_CODE_ACTIVITY_ADD_RESERVATION:
                 if (resultCode == Activity.RESULT_OK) {
+                    if (DEBUG) Log.d(TAG, "onActivityResult() returned with reservation done succesfully");
                     Toast.makeText(ParkingLotActivity.this, "Returned from add reservation with succes", Toast.LENGTH_LONG);
                     break;
                 }                
         }
     }
-
-
 
     /* (non-Javadoc)
      * @see android.app.Activity#onDestroy()
@@ -206,8 +266,7 @@ public class ParkingLotActivity extends Activity {
         private ParkingLotActivity mActivity;
         
         public TaskParkingLot(ParkingLotActivity activity) {
-            if (DEBUG) Log.d(TAG, "TaskParkingLot()");
-            //this.setActivity(activity);
+            if (DEBUG) Log.d(TAG, "TaskParkingLot()");            
             mActivity = activity;
         }
         
@@ -223,7 +282,7 @@ public class ParkingLotActivity extends Activity {
         protected ParkingLot doInBackground(String... params) {
             if (DEBUG) Log.d(TAG, "onPreExecute()");
             try {
-                ParkDroid parkDroid = (ParkDroid)mActivity.getApplication();
+                ParkDroid parkDroid = (ParkDroid) mActivity.getApplication();
                 return parkDroid.getPark().parkingLot(params[0]);
             } catch (Exception e) {
                 // TODO Auto-generated catch block

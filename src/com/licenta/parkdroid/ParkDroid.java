@@ -81,6 +81,9 @@ public class ParkDroid extends Application {
         return Preferences.getUserId(mPrefs);
     }
     
+    public String getUserEmail() {
+        return Preferences.getUserEmail(mPrefs);
+    }
     public void requestUpdateUser() {
         mTaskHandler.sendEmptyMessage(TaskHandler.MESSAGE_UPDATE_USER);
     }

@@ -120,10 +120,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:enabled="false"
-        style="@style/reserveNowButton" />
+        style="@style/actionButton" />
         
-    </LinearLayout><!--
-  
+    </LinearLayout>
+    
       
     <LinearLayout 
       android:layout_width="fill_parent" 
@@ -139,9 +139,9 @@
       <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-        
+         
     </LinearLayout>
-        
+
     <ScrollView
       android:layout_width="fill_parent"
       android:layout_height="0dip"
@@ -151,119 +151,120 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
-
-        <RelativeLayout 
-          android:id="@+id/venueActivityMayor"
+        
+        <LinearLayout 
+          android:id="@+id/parkingLotActivityDetails"
           android:layout_width="fill_parent" 
           android:layout_height="wrap_content"
-          android:padding="7dip"
-          android:visibility="gone"
-          android:focusable="true"
+          android:visibility="visible"
+          android:orientation="horizontal"
+          android:paddingTop="5dip"
+          android:paddingBottom="6dip"
           android:background="@drawable/listview_item_manual" >
           
-	      <ImageView
-	        android:id="@+id/venueActivityMayorPhoto"
-	        android:layout_width="44dip"
-	        android:layout_height="44dip"
-	        android:background="@drawable/photo_background"
-	        android:padding="3dip"
-	        android:layout_marginRight="7dip"
-	        android:src="@drawable/blank_boy"
-	        android:layout_alignParentLeft="true"
-	        android:scaleType="fitXY" />
-	  
-	      <ImageView
-	        android:id="@+id/crown"
-	        android:layout_width="16dip"
-	        android:layout_height="12dip"
-	        android:scaleType="fitXY" 
-	        android:layout_toRightOf="@id/venueActivityMayorPhoto"
-	        android:layout_alignParentTop="true"
-	        android:layout_marginRight="4dip"
-	        android:layout_marginTop="3dip"
-	        android:src="@drawable/crown_small"  />
-	
-	      <TextView 
-	        android:id="@+id/venueActivityMayorName"
-	        android:layout_width="wrap_content" 
-	        android:layout_height="wrap_content"
-	        android:text="@string/venue_activity_mayor_name_none"
-	        android:textAppearance="@style/TextViewStyleVenueActivityBold"
-	        android:layout_toRightOf="@id/crown"
-	        android:layout_alignParentTop="true" />
-	  
-	      <TextView 
-	        android:id="@+id/venueActivityMayorText"
-	        android:layout_width="wrap_content" 
-	        android:layout_height="wrap_content"
-	        android:layout_below="@id/crown"
-	        android:layout_toRightOf="@id/venueActivityMayorPhoto"
-  	        android:paddingTop="4dip"
-  	        android:text="@string/venue_activity_mayor_text_none"
-	        android:textAppearance="@style/TextViewStyleVenueActivityNormal" />
-	  
-	      <ImageView
-	        android:id="@+id/venueActivityMayorChevron"
-	        android:layout_width="9dip"
-	        android:layout_height="13dip"
-	        android:src="@drawable/arrow_grey"
-	        android:scaleType="fitCenter"  
-	        android:layout_marginLeft="3dip"
-	        android:layout_marginRight="3dip"
-	        android:layout_centerVertical="true"
-	        android:layout_alignParentRight="true"  />
-	    
-        </RelativeLayout>
-        
-        
-        <RelativeLayout 
-	      android:id="@+id/venueActivityCheckins"
-	      android:layout_width="fill_parent" 
-	      android:layout_height="wrap_content"
-	      android:padding="7dip"
-          android:visibility="gone"
-          android:focusable="true"
-          android:background="@drawable/listview_item_manual" >
-  
+	      <RelativeLayout 
+            android:id="@+id/parkingLotActivitySpaces"
+            android:layout_width="0dip" 
+            android:layout_height="wrap_content"
+            android:layout_weight="1"            
+            android:focusable="true"
+            android:padding="3dip"
+            android:layout_marginLeft="5dip"
+            android:background="@drawable/parking_lot_activity_space_selector" >  
+          
           <TextView 
-            android:id="@+id/venueActivityPeopleText"
+	        android:id="@+id/parkingLotActivitySpacesTitle"
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
-            android:text="N people are here."
-            android:textAppearance="@style/TextViewStyleVenueActivityBold"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="3dip" />
-    
-          <com.joelapenna.foursquared.widget.PhotoStrip
-            android:id="@+id/venueActivityPeoplePhotos"
-            android:layout_width="fill_parent"
+            android:text="@string/parking_lot_activity_spaces"
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerHorizontal="true"
+            android:paddingLeft="2dip"
+            android:textAppearance="@style/TextViewStyleParkingLotActivityTitle"  />
+        
+	      <TextView 
+	        android:id="@+id/parkingLotActivitySpacesValue"
+            android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
-            android:layout_below="@id/venueActivityPeopleText"
-            android:layout_alignParentLeft="true"
-            foursquared:photoSize="44dip"
-            foursquared:photoSpacing="10dip"
-            foursquared:photoBorder="2dip"
-            foursquared:photoBorderStroke="1dip"
-            foursquared:photoBorderColor="#FFFFFFFF"
-            foursquared:photoBorderStrokeColor="#FFD0D0D0"
-            /> 
-    
-          <ImageView
-            android:id="@+id/venueActivityPeopleChevron"
-            android:layout_width="9dip"
-            android:layout_height="13dip"
-            android:src="@drawable/arrow_grey"
-            android:scaleType="fitCenter"  
-            android:layout_marginLeft="3dip"
-            android:layout_marginRight="3dip"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"  />
-    
+            android:text="4"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/parkingLotActivitySpacesTitle"
+            android:textAppearance="@style/TextViewStyleParkingLotActivityValue" />
+        
         </RelativeLayout>
-
-
+        
         <RelativeLayout 
-          android:id="@+id/venueActivityTips"
+          android:id="@+id/parkingLotActivityDistance"
+          android:layout_width="0dip" 
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:focusable="true"
+          android:padding="3dip"
+          android:layout_marginLeft="5dip"
+          android:layout_marginRight="5dip"
+          android:background="@drawable/parking_lot_activity_space_selector" >  
+          
+          <TextView 
+	        android:id="@+id/parkingLotActivityDistanceTitle"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="@string/parking_lot_activity_distance_title"
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerHorizontal="true"
+            android:paddingLeft="2dip"
+            android:textAppearance="@style/TextViewStyleParkingLotActivityTitle"  />
+          
+	      <TextView 
+	        android:id="@+id/parkingLotActivityDistanceValue"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextViewStyleParkingLotActivityValue"
+	        android:layout_below="@+id/parkingLotActivityDistanceTitle" />
+	        
+        </RelativeLayout>
+        
+        <RelativeLayout 
+          android:id="@+id/parkingLotActivityPrice"
+          android:layout_width="0dip" 
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:focusable="true"
+          android:padding="3dip"
+          android:layout_marginRight="5dip"
+          android:background="@drawable/parking_lot_activity_space_selector" >  
+          
+          <TextView 
+	        android:id="@+id/parkingLotActivityPriceTitle"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="@string/parking_lot_activity_price_title"
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentLeft="true"
+	        android:gravity="center"
+            android:paddingLeft="2dip"
+            android:textAppearance="@style/TextViewStyleParkingLotActivityTitle"  />
+        
+	      <TextView 
+	        android:id="@+id/parkingLotActivityPriceValue"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextViewStyleParkingLotActivityValue"
+	        android:layout_below="@+id/parkingLotActivityPriceTitle" />
+              
+        </RelativeLayout>
+	    
+	  </LinearLayout>
+      
+      
+      
+        <RelativeLayout 
+          android:id="@+id/parkingLotActivityUrlDetails"
           android:layout_width="fill_parent" 
           android:layout_height="wrap_content"
           android:padding="7dip"
@@ -271,14 +272,27 @@
           android:focusable="true"
           android:background="@drawable/listview_item_manual" >
         
-          <TextView 
-            android:id="@+id/venueActivityTipsText"
-            android:layout_width="wrap_content" 
+          <TextView
+            android:id="@+id/parkingLotActivityUrlLabel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No tips here."
-            android:textAppearance="@style/TextViewStyleVenueActivityBold"
+            android:text="@string/parking_lot_activity_url_label"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+          />
+          <TextView 
+            android:id="@+id/parkingLotActivityUrl"
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            android:text="No url."
+            android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
+            android:layout_toRightOf="@+id/parkingLotActivityUrlLabel"
+            android:paddingLeft="5dip"
+            android:layout_marginRight="15dip"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:ellipsize="marquee"
+             /><!--
   
           <TextView 
             android:id="@+id/venueActivityTipsExtra"
@@ -289,8 +303,8 @@
             android:layout_below="@id/venueActivityTipsText"
             android:visibility="invisible" />
     
-          <ImageView
-            android:id="@+id/venueActivityTipsChevron"
+          --><ImageView
+            android:id="@+id/parkingLotActivityUrlArrow"
             android:layout_width="9dip"
             android:layout_height="13dip"
             android:src="@drawable/arrow_grey"
@@ -303,46 +317,13 @@
         </RelativeLayout>
         
         
-        <RelativeLayout 
-          android:id="@+id/venueActivityMoreInfo"
-          android:layout_width="fill_parent" 
-          android:layout_height="wrap_content"
-          android:padding="7dip"
-          android:visibility="gone"
-          android:focusable="true"
-          android:background="@drawable/listview_item_manual" >
-          
-          <TextView 
-            android:id="@+id/venueActivityMoreTitle"
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-            android:text="@string/venue_activity_more_info_title"
-            android:textAppearance="@style/TextViewStyleVenueActivityBold"
-            android:layout_alignParentLeft="true"
-            android:paddingTop="7dip"
-            android:paddingBottom="7dip"/>
-
-          <ImageView
-            android:id="@+id/venueActivityMoreChevron"
-            android:layout_width="9dip"
-            android:layout_height="13dip"
-            android:src="@drawable/arrow_grey"
-            android:scaleType="fitCenter"  
-            android:layout_marginLeft="3dip"
-            android:layout_marginRight="3dip"
-            android:columnWidth="60dip"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"  />
-
-        </RelativeLayout>
-        
-	  </LinearLayout>
+        </LinearLayout>
     </ScrollView>
     
-    
+     
     
     <RelativeLayout 
-      android:id="@+id/venueActivityTodoHere"
+      android:id="@+id/parkingLotActivityReservationHere"
       android:layout_width="fill_parent" 
       android:layout_height="wrap_content"
       android:layout_gravity="bottom"
@@ -351,15 +332,15 @@
       <TextView 
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextViewStyleVenueActivityTodoHere"
-        android:text="@string/venue_activity_todo_here"
+        android:textAppearance="@style/TextViewStyleParkingLotActivityReservationHere"
+        android:text="@string/parking_lot_activity_reservation_here"
         android:layout_alignParentLeft="true"
         android:paddingLeft="15dip"
         android:paddingTop="7dip"
         android:paddingBottom="5dip" />
             
       <ImageView
-        android:src="@drawable/tip_list_item_corner_todo"
+        android:src="@drawable/reservation_item_corner"
         android:layout_width="22dip"
         android:layout_height="22dip"
         android:scaleType="fitXY"
@@ -369,7 +350,7 @@
       
     </RelativeLayout>
 
-  --></LinearLayout><!--
+ </LinearLayout><!--
 
   <ImageView
     android:id="@+id/venueActivitySpecialHere"

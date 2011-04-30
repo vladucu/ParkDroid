@@ -12,7 +12,6 @@ import android.os.Parcelable;
  *
  */
 public class ParkingLot implements ParkTypes, Parcelable {
-    //TODO ??? eventual sa adaugam istorie a rezervarilor trecute si actuale
     
     private String mId;
     private String mName;
@@ -28,6 +27,8 @@ public class ParkingLot implements ParkTypes, Parcelable {
     private String mPrice;
     private String mUrl;
     private String mIconUrl;
+    private boolean mHasReservation;
+    private Reservation mReservation;
 
     public ParkingLot() {        
     }
@@ -47,6 +48,11 @@ public class ParkingLot implements ParkTypes, Parcelable {
         mPrice = ParcelUtils.readStringFromParcel(in);
         mUrl = ParcelUtils.readStringFromParcel(in);
         mIconUrl = ParcelUtils.readStringFromParcel(in);
+        mHasReservation = in.readInt() == 1;
+        if (in.readInt() == 1) {
+            mReservation = new Reservation();
+            mReservation = in.readParcelable(Reservation.class.getClassLoader());
+        }
     }
     
     /*
@@ -176,6 +182,22 @@ public class ParkingLot implements ParkTypes, Parcelable {
         mIconUrl = iconUrl;
     }
     
+    public boolean getHasReservation() {
+        return mHasReservation;
+    }
+    
+    public void setHasReservation(boolean hasReservation) {
+        mHasReservation = hasReservation;
+    }
+    
+    public Reservation getReservation() {
+        return mReservation;
+    }
+    
+    public void setReservation(Reservation reservation) {
+        mReservation = reservation;
+    }
+    
     /* (non-Javadoc)
      * @see android.os.Parcelable#describeContents()
      */
@@ -203,7 +225,13 @@ public class ParkingLot implements ParkTypes, Parcelable {
         ParcelUtils.writeStringToParcel(out, mPrice);
         ParcelUtils.writeStringToParcel(out, mUrl);
         ParcelUtils.writeStringToParcel(out, mIconUrl);
-
+        out.writeInt(mHasReservation ? 1 : 0);
+        if (mReservation != null ) {
+            out.writeInt(1);
+            out.writeParcelable(mReservation, flags);
+        }
+        else {
+            out.writeInt(0);
+        }
     }
-
 }

@@ -4,8 +4,10 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkingLot;
 import com.licenta.park.utils.GeoUtils;
+import com.licenta.parkdroid.maps.ParkingLotItemizedOverlay;
 
 import android.location.Location;
 import android.os.Bundle;

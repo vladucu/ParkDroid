@@ -59,7 +59,10 @@
         <activity android:name="AddReservationActivity">
         </activity>
         
-        <activity android:name="ActiveReservationActivity">
+        <activity android:name="ActiveReservationsListActivity">
+        </activity>
+        
+        <activity android:name="ReservationActivity">
         </activity>
         		  
     </application>

@@ -3,6 +3,7 @@
  */
 package com.licenta.parkdroid;
 
+import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkingLot;
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -23,19 +24,19 @@ import java.util.ArrayList;
  * @author vladucu
  *
  */
-public class ParkingLotListAdapter extends ArrayAdapter<ParkingLot> {
+public class ParkingLotListAdapter extends BaseParkingLotAdapter {
     
     private static final String TAG = "ParkingLotListAdapter";
     private static boolean DEBUG = true;
     
-    private Group<ParkingLot> items;
+   // private Group<ParkingLot> items;
     private LayoutInflater mInflater;
     private Handler mHandler;
 
-    public ParkingLotListAdapter(Context context, int textViewResourceId, Group<ParkingLot> items) {
-        super(context, textViewResourceId, items);
+    public ParkingLotListAdapter(Context context) {
+        super(context);
         
-        this.items = items;
+     //   this.items = items;
         mInflater = LayoutInflater.from(context);
         mHandler = new Handler();
         if (DEBUG) Log.d(TAG, "ParkingLotListAdapter()");
@@ -72,6 +73,7 @@ public class ParkingLotListAdapter extends ArrayAdapter<ParkingLot> {
             holder.iconTrending = (ImageView) convertView.findViewById(R.id.iconTrending);
             holder.parkingLotSpaces = (TextView) convertView.findViewById(R.id.parkingLotSpaces);
             holder.parkingPrice = (TextView) convertView.findViewById(R.id.parkingPrice);
+            holder.reservationHere = (ImageView) convertView.findViewById(R.id.reservationCorner);
             convertView.setTag(holder);
         } else {
             // Get the ViewHolder back to get fast access to the TextView
@@ -99,7 +101,14 @@ public class ParkingLotListAdapter extends ArrayAdapter<ParkingLot> {
         }
         holder.iconTrending.setVisibility(View.VISIBLE);
         holder.parkingLotSpaces.setText(parkingLot.getEmptySpaces()+"/"+parkingLot.getTotalSpaces());        
-        holder.parkingPrice.setText(parkingLot.getPrice()+"/h");        
+        holder.parkingPrice.setText(parkingLot.getPrice()+"/h");       
+        
+        // If we have a reservation here, show the corner folded over.
+        if (parkingLot.getHasReservation()) {
+            holder.reservationHere.setVisibility(View.VISIBLE);
+        } else {
+            holder.reservationHere.setVisibility(View.INVISIBLE);
+        }
 
         return convertView;
     }
@@ -113,6 +122,7 @@ public class ParkingLotListAdapter extends ArrayAdapter<ParkingLot> {
         ImageView iconTrending;
         TextView parkingLotSpaces;
         TextView parkingPrice;
+        ImageView reservationHere;
     }
     
     private DataSetObserver mDataSetObserver = new DataSetObserver() {

@@ -12,6 +12,7 @@ import android.os.Parcelable;
  */
 public class User implements Parcelable, ParkTypes {
 
+
     /* (non-Javadoc)
      * @see android.os.Parcelable#describeContents()
      */

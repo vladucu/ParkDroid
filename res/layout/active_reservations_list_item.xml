@@ -8,22 +8,10 @@
   android:paddingRight="0dip"
   android:paddingBottom="6dip">
 
-  <ImageView
-    android:id="@+id/icon"
-    android:layout_width="32dip"
-    android:layout_height="32dip"
-    android:layout_alignParentTop="true"
-    android:src="@drawable/category_none"
-    android:scaleType="fitCenter"  
-    android:gravity="center_horizontal"
-    android:layout_marginTop="4dip"
-    android:layout_marginLeft="5dip" />
-
   <TextView
     android:id="@+id/parkingLotName"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_toRightOf="@id/icon"
+    android:layout_height="wrap_content"    
     android:layout_alignParentRight="true"
     android:layout_alignParentTop="true"
     android:layout_alignWithParentIfMissing="true"
@@ -36,7 +24,6 @@
     android:id="@+id/parkingLotLocationLine1"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_toRightOf="@id/icon"
     android:layout_alignParentRight="true"
     android:layout_below="@+id/parkingLotName"
     android:paddingLeft="7dip"
@@ -51,7 +38,6 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_below="@+id/parkingLotLocationLine1"
-    android:layout_toRightOf="@id/icon"
     android:paddingLeft="7dip"
     >
   
@@ -78,6 +64,7 @@
       android:paddingLeft="3dip"
       android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
       android:ellipsize="end" />
+      
     <TextView
       android:id="@+id/parkingPrice"
       android:layout_width="wrap_content"
@@ -89,17 +76,5 @@
 	
       
   </LinearLayout>
-    
-  <ImageView
-    android:id="@+id/reservationCorner"
-    android:src="@drawable/reservation_item_corner"
-    android:layout_width="22dip"
-    android:layout_height="22dip"
-    android:scaleType="fitXY"
-    android:padding="0dip"
-    android:layout_alignParentTop="true"
-    android:layout_alignParentRight="true"
-    android:visibility="invisible"
-    />
       
 </RelativeLayout>
