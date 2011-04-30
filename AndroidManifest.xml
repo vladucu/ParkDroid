@@ -33,11 +33,7 @@
         		  </intent-filter>
         </activity>
 
-<<<<<<< HEAD
-		<activity android:name="ParkLotsListActivity"
-=======
 		<activity android:name=".ParkingLotsListActivity"
->>>>>>> dev4
         		  android:label="@string/map">
 			<intent-filter>
         		<action android:name="com.licenta.parkdroid.intent.action.LOGGED_OUT" />
