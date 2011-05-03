@@ -19,16 +19,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
@@ -40,7 +37,7 @@ import java.util.Set;
 public class ParkingLotsListActivity extends LoadableListActivity {
     
     private static final String TAG = "ParkingLotsListActivity";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     
     private static final int RESULT_CODE_ACTIVITY_PARKING_LOT = 1;
     
@@ -283,7 +280,7 @@ public class ParkingLotsListActivity extends LoadableListActivity {
                 mPark1.setEmptySpaces("150");
                 mPark1.setTotalSpaces("500");
                 mPark1.setPrice("25");
-                mPark1.setUrl("http://linkmailungpentruverificare.ro");
+                mPark1.setOpenHours("09-20");
                 mPark1.setHasReservation(true);
                 Reservation reservation = new Reservation();
                 reservation.setId("323213");
@@ -302,7 +299,7 @@ public class ParkingLotsListActivity extends LoadableListActivity {
                 mPark2.setEmptySpaces("550");
                 mPark2.setTotalSpaces("1500");
                 mPark2.setPrice("125");
-                mPark2.setUrl("http://magentocommerce.com");
+                mPark2.setOpenHours("09-20");
                 mPark2.setHasReservation(false);
                 mPark2.setReservation(null);
                 for (int index=0;index<10;index++) {
@@ -341,7 +338,7 @@ public class ParkingLotsListActivity extends LoadableListActivity {
         private String mQuery;
         private String mReverseGeoLoc;
         private SearchTask mSearchTask;
-        private Set<String> mFullyLoadedVenueIds;
+        private Set<String> mFullyLoadedParkingLotsIds;
         
 
         public StateHolder() {            

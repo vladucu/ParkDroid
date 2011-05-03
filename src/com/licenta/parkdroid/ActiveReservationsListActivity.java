@@ -157,7 +157,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
                 mPark1.setEmptySpaces("150");
                 mPark1.setTotalSpaces("500");
                 mPark1.setPrice("25");
-                mPark1.setUrl("http://google.com");
+                mPark1.setOpenHours("09-20");
                 mPark2.setId("523");
                 mPark2.setName("Parcarea secundara");
                 mPark2.setPhone("0733683444");
@@ -170,7 +170,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
                 mPark2.setEmptySpaces("550");
                 mPark2.setTotalSpaces("1500");
                 mPark2.setPrice("125");
-                mPark2.setUrl("http://igoogle.com");
+                mPark2.setOpenHours("09-20");
                 Reservation r1 = new Reservation();
                 Reservation r2 = new Reservation();
                 r1.setParkingLot(mPark1);r2.setParkingLot(mPark2);

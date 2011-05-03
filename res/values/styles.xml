@@ -25,7 +25,6 @@
     </style>
     <style name="actionButton">
         <item name="android:background">@drawable/reserve_now_button</item>
-        <item name="android:text">@string/parking_lot_activity_reserve_now_button</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:padding">5dip</item>

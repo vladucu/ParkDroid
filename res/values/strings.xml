@@ -51,4 +51,6 @@
     <string name="preference_activity_profile_settings_dlg_title">Profile Settings</string>
     <string name="preferences_profile_settings_label">Profile Settings</string>
     <string name="preferences_profile_settings_summary">Information about your ParkDroid account</string>
+    <string name="parking_lot_activity_button_back">Back</string>
+    <string name="parking_lot_activity_hour_label">Open hours:</string>
 </resources>

@@ -25,7 +25,7 @@ public class ParkingLot implements ParkTypes, Parcelable {
     private String mEmptySpaces;
     private String mTotalSpaces;
     private String mPrice;
-    private String mUrl;
+    private String mOpenHours;
     private String mIconUrl;
     private boolean mHasReservation;
     private Reservation mReservation;
@@ -46,7 +46,7 @@ public class ParkingLot implements ParkTypes, Parcelable {
         mEmptySpaces = ParcelUtils.readStringFromParcel(in);
         mTotalSpaces = ParcelUtils.readStringFromParcel(in);
         mPrice = ParcelUtils.readStringFromParcel(in);
-        mUrl = ParcelUtils.readStringFromParcel(in);
+        mOpenHours = ParcelUtils.readStringFromParcel(in);
         mIconUrl = ParcelUtils.readStringFromParcel(in);
         mHasReservation = in.readInt() == 1;
         if (in.readInt() == 1) {
@@ -165,15 +165,7 @@ public class ParkingLot implements ParkTypes, Parcelable {
     public void setPrice(String price) {
         mPrice = price;
     }
-    
-    public String getUrl() {
-        return mUrl;
-    }
-
-    public void setUrl(String url) {
-        mUrl = url;
-    }
-    
+  
     public String getIconUrl() {
         return mIconUrl;
     }
@@ -223,7 +215,7 @@ public class ParkingLot implements ParkTypes, Parcelable {
         ParcelUtils.writeStringToParcel(out, mEmptySpaces);
         ParcelUtils.writeStringToParcel(out, mTotalSpaces);
         ParcelUtils.writeStringToParcel(out, mPrice);
-        ParcelUtils.writeStringToParcel(out, mUrl);
+        ParcelUtils.writeStringToParcel(out, mOpenHours);
         ParcelUtils.writeStringToParcel(out, mIconUrl);
         out.writeInt(mHasReservation ? 1 : 0);
         if (mReservation != null ) {
@@ -233,5 +225,13 @@ public class ParkingLot implements ParkTypes, Parcelable {
         else {
             out.writeInt(0);
         }
+    }
+    
+    public void setOpenHours(String openHours) {
+        mOpenHours = openHours;
+    }
+
+    public String getOpenHours() {
+        return mOpenHours;
     }
 }

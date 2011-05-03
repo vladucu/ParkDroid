@@ -49,69 +49,9 @@
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextViewStyleTitleAddress"
-            android:text="" /><!--
+            android:text="" />
             
-          <RelativeLayout           
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"             
-            android:paddingTop="15dip" 
-            android:paddingBottom="15dip" >
-            
-            <TextView
-              android:id="@+id/freeSpacesLabel"
-		      android:layout_width="wrap_content"
-		      android:layout_height="wrap_content"
-		      android:textAppearance="@style/TextViewStyleBold"
-			  android:layout_toLeftOf="@+id/priceLabel"			  
-			  android:gravity="center_vertical|center_horizontal"
-			  android:layout_weight=".2"
-		      android:text="@string/freeSpacesLabel" />		
-            
-            <TextView 
-       	      android:id="@+id/parkingLotActivitySpaces"
-       	      android:layout_width="wrap_content"
-       	      android:layout_height="wrap_content"
-       	      android:textAppearance="@style/TextViewStyleInfo"          	      
-       	      android:layout_below="@+id/freeSpacesLabel"
-       	    />
-       	         	   
-       	    <TextView
-              android:id="@+id/priceLabel"
-		      android:layout_width="fill_parent"
-		      android:layout_height="wrap_content"
-		      android:textAppearance="@style/TextViewStyleBold"
-		      android:layout_weight=".2"
-		      android:layout_centerHorizontal="true"		      
-		      android:text="@string/priceLabel" />		
-		      
-       		<TextView 
-       	      android:id="@+id/parkingLotActivityPrice"
-       	      android:layout_width="wrap_content"
-       	      android:layout_height="wrap_content"
-       	      android:layout_below="@+id/priceLabel"
-       	      android:textAppearance="@style/TextViewStyleInfoPrice"       	      
-       	    />
-       	    
-       	    <TextView
-              android:id="@+id/distanceLabel"
-		      android:layout_width="wrap_content"
-		      android:layout_height="wrap_content"
-		      android:textAppearance="@style/TextViewStyleBold"
-		      android:layout_toRightOf="@+id/priceLabel"
-		      android:gravity="center_vertical|center_horizontal"
-		      android:layout_weight=".2"
-		      android:text="@string/distanceLabel" />		
-		      
-    	    <TextView 
-       	      android:id="@+id/parkingLotActivityDistance"
-       	      android:layout_width="wrap_content"
-       	      android:layout_height="wrap_content"
-       	      android:layout_below="@+id/distanceLabel"
-       	      android:textAppearance="@style/TextViewStyleInfo"       	      
-       	    />  
-          </RelativeLayout>
-                 	  
-        --></LinearLayout>     
+          </LinearLayout>     
        	  
         </LinearLayout>     
     
@@ -119,7 +59,17 @@
         android:id="@+id/parkingLotActivityButtonReserveNow"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
         android:enabled="false"
+        style="@style/actionButton" />
+        
+      <Button
+        android:id="@+id/parkingLotActivityButtonBack"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:layout_gravity="center"
+        android:enabled="true"
         style="@style/actionButton" />
         
     </LinearLayout>
@@ -259,52 +209,7 @@
               
         </RelativeLayout>
 	    
-	  </LinearLayout>
-      
-      
-      
-        <RelativeLayout 
-          android:id="@+id/parkingLotActivityUrlDetails"
-          android:layout_width="fill_parent" 
-          android:layout_height="wrap_content"
-          android:padding="7dip"
-          android:visibility="gone"
-          android:focusable="true"
-          android:background="@drawable/listview_item_manual" >
-        
-          <TextView
-            android:id="@+id/parkingLotActivityUrlLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/parking_lot_activity_url_label"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-          />
-          <TextView 
-            android:id="@+id/parkingLotActivityUrl"
-            android:layout_width="fill_parent" 
-            android:layout_height="wrap_content"
-            android:text="No url."
-            android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
-            android:layout_toRightOf="@+id/parkingLotActivityUrlLabel"
-            android:paddingLeft="5dip"
-            android:layout_marginRight="15dip"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:ellipsize="marquee" />
-          
-          <ImageView
-            android:id="@+id/parkingLotActivityUrlArrow"
-            android:layout_width="9dip"
-            android:layout_height="13dip"
-            android:src="@drawable/arrow_grey"
-            android:scaleType="fitCenter"  
-            android:layout_marginLeft="3dip"
-            android:layout_marginRight="3dip"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"  />
-
-        </RelativeLayout>
+	  </LinearLayout>            
         
         <RelativeLayout 
           android:id="@+id/parkingLotActivityPhoneDetails"
@@ -327,9 +232,10 @@
             android:id="@+id/parkingLotActivityPhone"
             android:layout_width="fill_parent" 
             android:layout_height="wrap_content"
-            android:text="No url."
+            android:text="No phone number. Sorry."
             android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
             android:layout_toRightOf="@+id/parkingLotActivityPhoneLabel"
+            android:gravity="center"
             android:paddingLeft="5dip"
             android:layout_marginRight="15dip"
             android:singleLine="true"
@@ -337,7 +243,7 @@
             android:ellipsize="marquee" />
           
           <ImageView
-            android:id="@+id/parkingLotActivityUrlArrow"
+            android:id="@+id/parkingLotActivityPhoneArrow"
             android:layout_width="9dip"
             android:layout_height="13dip"
             android:src="@drawable/arrow_grey"
@@ -348,10 +254,54 @@
             android:layout_alignParentRight="true"  />
 
         </RelativeLayout>
-        </LinearLayout>
-    </ScrollView>
-    
-     
+        
+         <RelativeLayout 
+          android:id="@+id/parkingLotActivityHourDetails"
+          android:layout_width="fill_parent" 
+          android:layout_height="wrap_content"
+          android:padding="7dip"
+          android:visibility="gone"
+          android:focusable="true"
+          android:background="@drawable/listview_item_manual" >
+        
+          <TextView
+            android:id="@+id/parkingLotActivityHourLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/parking_lot_activity_hour_label"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+          />
+          
+          <TextView 
+            android:id="@+id/parkingLotActivityHour"
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            android:text="No information available."
+            android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
+            android:layout_toRightOf="@+id/parkingLotActivityHourLabel"
+            android:gravity="center"
+            android:paddingLeft="5dip"
+            android:layout_marginRight="15dip"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:ellipsize="marquee" />
+            
+        </RelativeLayout>
+        
+        <ImageView
+            android:id="@+id/parkingLotActivityPhoto"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:src="@drawable/parking"
+            android:scaleType="centerCrop"  
+            android:layout_margin="3dip"
+            android:layout_centerVertical="true"
+          />
+            
+      </LinearLayout>      
+        
+    </ScrollView>     
     
     <RelativeLayout 
       android:id="@+id/parkingLotActivityReservationHere"

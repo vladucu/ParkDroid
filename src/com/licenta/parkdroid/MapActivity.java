@@ -198,7 +198,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
             mPark1.setEmptySpaces("150");
             mPark1.setTotalSpaces("500");
             mPark1.setPrice("25");
-            mPark1.setUrl("http://google.com");
+            mPark1.setOpenHours("09-20");
             mPark2.setId("523");
             mPark2.setName("Parcarea secundara");
             mPark2.setPhone("0733683444");
@@ -211,7 +211,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
             mPark2.setEmptySpaces("550");
             mPark2.setTotalSpaces("1500");
             mPark2.setPrice("125");
-            mPark2.setUrl("http://igoogle.com");  
+            mPark2.setOpenHours("09-20"); 
             mParkingLots = new Group<ParkingLot>();
             mParkingLots.add(mPark1);mParkingLots.add(mPark2);       
            /* Log.d(TAG, "p1="+mParkingLots.get(0).getName());

@@ -33,7 +33,7 @@ import android.widget.Toast;
 public class LoginActivity extends Activity {
     
     private static final String TAG = "LoginActivity";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     
     //TODO drawable/main_logo.png trebuie facut 355*158
     private TextView mNewAccountTextView;

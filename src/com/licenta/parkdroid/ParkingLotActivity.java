@@ -103,29 +103,25 @@ public class ParkingLotActivity extends Activity {
         }
         
         ensureUI();
-    }
-
-    
+    }  
     
     private void ensureUI() {        
         if (DEBUG) Log.d(TAG, "ensureUI() mStateHolder.parkingLot="+mStateHolder.getParkingLot().getName());
         TextView tvParkingkLotActivityName = (TextView)findViewById(R.id.parkingkLotActivityName);
         TextView tvParkingLotActivityAddress = (TextView)findViewById(R.id.parkingLotActivityAddress);
         Button btnReserveNow = (Button)findViewById(R.id.parkingLotActivityButtonReserveNow);
+        Button btnBack = (Button) findViewById(R.id.parkingLotActivityButtonBack);
         LinearLayout progress = (LinearLayout) findViewById(R.id.parkingLotActivityDetailsProgress);
         
         TextView tvParkingLotActivitySpaces = (TextView) findViewById(R.id.parkingLotActivitySpacesValue);
         TextView tvParkingLotActivityDistance = (TextView) findViewById(R.id.parkingLotActivityDistanceValue);
         TextView tvParkingLotActivityPrice = (TextView) findViewById(R.id.parkingLotActivityPriceValue);
         
-        View viewUrl = findViewById(R.id.parkingLotActivityUrlDetails);
-        TextView tvUrlText = (TextView) findViewById(R.id.parkingLotActivityUrl);
-        ImageView ivUrlArrow = (ImageView) findViewById(R.id.parkingLotActivityUrlArrow); 
-    /*
-        TextView tvParkingLotActivitySpaces = (TextView)findViewById(R.id.parkingLotActivitySpaces);
-        TextView tvParkingLotActivityDistance = (TextView)findViewById(R.id.parkingLotActivityDistance);
-        TextView tvParkingLoatActivityPrice = (TextView)findViewById(R.id.parkingLotActivityPrice);*/
-        
+        View viewPhone = findViewById(R.id.parkingLotActivityPhoneDetails);
+        TextView tvPhoneText = (TextView) findViewById(R.id.parkingLotActivityPhone);
+        View viewOpenHours = findViewById(R.id.parkingLotActivityHourDetails);
+        TextView tvOpenHours = (TextView) findViewById(R.id.parkingLotActivityHour);
+       
         ParkingLot parkingLot = mStateHolder.getParkingLot();
         
         if (mStateHolder.getLoadType() == StateHolder.LOAD_TYPE_PARKING_LOT_FULL) {
@@ -134,17 +130,30 @@ public class ParkingLotActivity extends Activity {
             tvParkingLotActivityAddress.setText(parkingLot.getAddress());
             tvParkingLotActivitySpaces.setText(parkingLot.getEmptySpaces()+"/"+parkingLot.getTotalSpaces());
             tvParkingLotActivityDistance.setText(parkingLot.getDistance()+"m");
-            tvParkingLotActivityPrice.setText(parkingLot.getPrice()+"$/h");
+            tvParkingLotActivityPrice.setText(parkingLot.getPrice()+"$/h");            
+            btnReserveNow.setText(R.string.parking_lot_activity_reserve_now_button);
+            btnBack.setText(R.string.parking_lot_activity_button_back);
             
-            if (mStateHolder.getParkingLot().getUrl() != null) {
-                tvUrlText.setText(parkingLot.getUrl());
-                setClickHandlerUrl(viewUrl, parkingLot.getUrl());
-                viewUrl.setVisibility(View.VISIBLE);
-            } else {
-                viewUrl.setVisibility(View.GONE);
+            if (mStateHolder.getParkingLot().getPhone() != null) {
+                tvPhoneText.setText(mStateHolder.getParkingLot().getPhone());
+                viewPhone.setOnClickListener(new OnClickListener() {                    
+                    @Override
+                    public void onClick(View v) {
+                        Intent dial = new Intent();
+                        dial.setAction(Intent.ACTION_DIAL);
+                        dial.setData(Uri.parse("tel:" + mStateHolder.getParkingLot().getPhone()));
+                        startActivity(dial);
+                    }
+                });
+                viewPhone.setVisibility(View.VISIBLE);                
             }
             
-            if (mStateHolder.getParkingLot().getHasReservation()) {                
+            if (mStateHolder.getParkingLot().getOpenHours() != null) {
+                tvOpenHours.setText(mStateHolder.getParkingLot().getOpenHours());
+                viewOpenHours.setVisibility(View.VISIBLE);
+            }
+            
+            if (mStateHolder.getParkingLot().getHasReservation()) {  
                 btnReserveNow.setEnabled(false);
             }
             else {                
@@ -160,6 +169,14 @@ public class ParkingLotActivity extends Activity {
                 });
             }
         }
+        
+        btnBack.setOnClickListener(new OnClickListener() {            
+            @Override
+            public void onClick(View v) {
+                if (DEBUG) Log.d(TAG, "ensureUI() going back button pushed");
+                finish();                
+            }
+        });
         ensureUiReservationHere();
         progress.setVisibility(View.GONE);
     }
@@ -186,22 +203,6 @@ public class ParkingLotActivity extends Activity {
             rlReservationHere.setVisibility(View.GONE);
         }
     }
-    
-    /*
-     * Launches the browser and opens the parking lot url link
-     */
-    private void setClickHandlerUrl(View view, final String address) {
-        //TODO de rezolvat pentru linkuri lungi
-        view.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View arg0) {
-                Uri uriUrl = Uri.parse(address);
-                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-                startActivity(launchBrowser);                
-            }
-        });       
-    }
 
     /* (non-Javadoc)
      * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
@@ -215,6 +216,7 @@ public class ParkingLotActivity extends Activity {
             case RESULT_CODE_ACTIVITY_ADD_RESERVATION:
                 if (resultCode == Activity.RESULT_OK) {
                     if (DEBUG) Log.d(TAG, "onActivityResult() returned with reservation done succesfully");
+                    mStateHolder.setReservationHere(true);
                     Toast.makeText(ParkingLotActivity.this, "Returned from add reservation with succes", Toast.LENGTH_LONG);
                     break;
                 }                
@@ -359,8 +361,7 @@ public class ParkingLotActivity extends Activity {
                     mActivity.mStateHolder.setLoadType(StateHolder.LOAD_TYPE_PARKING_LOT_FULL);
                     mActivity.mStateHolder.setParkingLot(parkingLot);
                     mActivity.prepareResultIntent();
-                    mActivity.ensureUI();
-                    
+                    mActivity.ensureUI();                    
                 }
                 else {
                     mActivity.finish();
@@ -375,9 +376,7 @@ public class ParkingLotActivity extends Activity {
 
         public void setActivity(ParkingLotActivity activity) {
            mActivity = activity;            
-        }
-        
-        
+        }        
     }
         
     private static final class StateHolder {
@@ -387,9 +386,10 @@ public class ParkingLotActivity extends Activity {
         public static final boolean DEBUG = true;
         
         private boolean mIsRunningTaskParkingLot;
-        private ParkingLot mParkingLot;
-        private String mParkingLotId;
         private TaskParkingLot mTaskParkingLot;
+        private boolean mReservationHere;
+        private ParkingLot mParkingLot;
+        private String mParkingLotId;        
         private int mLoadType;
         
         private static final int LOAD_TYPE_PARKING_LOT_ID = 0;
@@ -430,6 +430,14 @@ public class ParkingLotActivity extends Activity {
         public int getLoadType() {
             if (DEBUG) Log.d(TAG, "getLoadType()");
             return mLoadType;
+        }
+        
+        public void setReservationHere(boolean reservation) {
+            mReservationHere = reservation;
+        }
+        
+        public boolean getReservation() {
+            return mReservationHere;
         }
         
         public void setIsRunningTaskParkingLot(boolean mIsRunningTaskParkingLot) {
