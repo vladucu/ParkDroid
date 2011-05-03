@@ -44,12 +44,12 @@
             android:textColor="#FFF"
             android:text="@string/login_get_started_more" />
         <EditText
-            android:id="@+id/phoneEditText"
+            android:id="@+id/userNameEditText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:textAppearance="@android:style/TextAppearance.Large"
-            android:hint="@string/phone_number_or_email" />
+            android:hint="@string/login_email" />
         <EditText
             android:id="@+id/passwordEditText"
             android:layout_width="fill_parent"
@@ -65,7 +65,7 @@
             android:gravity="center"
             android:enabled="false"
             android:textAppearance="@android:style/TextAppearance.Large"
-            android:text="@string/login_label" />
+            android:text="@string/login_label" /><!--
      
         <TextView
             android:id="@+id/newAccountTextView"
@@ -76,5 +76,5 @@
             android:textAppearance="@android:style/TextAppearance.Large"
             android:textColor="#FFF"
             android:text="@string/need_an_account" />
-    </LinearLayout>
+    --></LinearLayout>
 </LinearLayout>

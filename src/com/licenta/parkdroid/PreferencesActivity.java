@@ -55,7 +55,8 @@ public class PreferencesActivity extends android.preference.PreferenceActivity {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
         
-      /*  mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        /*
         Preference advancedSettingsPreference = getPreferenceScreen().findPreference(Preferences.PREFERENCE_ADVANCED_SETTINGS);
         advancedSettingsPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override

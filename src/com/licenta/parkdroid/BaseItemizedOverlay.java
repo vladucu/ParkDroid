@@ -7,6 +7,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
+import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkTypes;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -57,8 +58,8 @@ abstract class BaseItemizedOverlay<T extends ParkTypes> extends ItemizedOverlay<
         return super.onTap(index);
     }
 
-    public void addGroup(Group<T> g) {
-        if (DEBUG) Log.d(TAG, "addGroup()");
+    public void setGroup(Group<T> g) {
+        if (DEBUG) Log.d(TAG, "addGroup()");       
         group = g;
         super.populate();
     }

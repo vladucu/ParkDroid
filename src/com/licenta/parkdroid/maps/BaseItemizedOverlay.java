@@ -59,7 +59,7 @@ abstract class BaseItemizedOverlay<T extends ParkTypes> extends ItemizedOverlay<
         return super.onTap(index);
     }
 
-    public void addGroup(Group<T> g) {
+    public void setGroup(Group<T> g) {
         if (DEBUG) Log.d(TAG, "addGroup()");
         group = g;
         super.populate();

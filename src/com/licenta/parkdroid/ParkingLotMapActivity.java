@@ -73,7 +73,7 @@ public class ParkingLotMapActivity extends MapActivity {
         mOverlay = new ParkingLotItemizedOverlay(this.getResources().getDrawable(R.drawable.map_marker_blue));
         Group<ParkingLot> group = new Group<ParkingLot>();
         group.add(mStateHolder.getParkingLot());
-        mOverlay.addGroup(group);
+        mOverlay.setGroup(group);
         mMapView.getOverlays().add(mOverlay);
         if (DEBUG) Log.d(TAG, "ensureUi()=");
         updateMap();

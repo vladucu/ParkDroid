@@ -4,14 +4,18 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.google.android.maps.OverlayItem;
 import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkingLot;
 import com.licenta.park.utils.GeoUtils;
-import com.licenta.parkdroid.maps.ParkingLotItemizedOverlay;
-
+import com.licenta.parkdroid.ParkingLotItemizedOverlayIcons;
+import com.licenta.parkdroid.ParkingLotItemizedOverlayIcons.ParkingLotItemizedOverlayTapListener;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 /**
  * @author vladucu
@@ -25,8 +29,9 @@ public class MapActivity extends com.google.android.maps.MapActivity {
     private MapView mMapView;
     private MapController mMapController;
     private MyLocationOverlay mMyLocationOverlay = null;
-    private ParkingLotItemizedOverlay mOverlay = null; 
+    private ParkingLotItemizedOverlayIcons mOverlay = null; 
     
+    private String mTappedParkingLot;
     private StateHolder mStateHolder;
     
     /** Called when the activity is first created. */
@@ -45,9 +50,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         else {
             mStateHolder = new StateHolder();            
         }
-        
-        initMapView();
-        initMyLocation();
+
         ensureUi();        
     }
     
@@ -78,19 +81,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         return false;
     }
 
-    /**
-     * Initiates MapView
-     */
-    private void initMapView() {
-        if (DEBUG) Log.d(TAG, "initMapView()");
-        mMapView = (MapView) findViewById(R.id.mapView);
-        mMapController = mMapView.getController();
-        mMapView.setSatellite(true);
-        // Display zoom controls (+/-)
-        mMapView.setBuiltInZoomControls(true);
-    }
-
-    private void initMyLocation() {
+/*    private void initMyLocation() {
         if (DEBUG) Log.d(TAG, "initMyLocation()");
         mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
         mMyLocationOverlay.enableMyLocation();
@@ -106,12 +97,25 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         });
         mMapView.getOverlays().add(mMyLocationOverlay);
     }
-    
+    */
     private void ensureUi() {
         if (DEBUG) Log.d(TAG, "ensureUi()="+(Group<ParkingLot>)mStateHolder.getParkingLots());
-        mOverlay = new ParkingLotItemizedOverlay(this.getResources().getDrawable(R.drawable.map_marker_blue));        
-        mOverlay.addGroup(mStateHolder.getParkingLots());
         
+        mMapView = (MapView) findViewById(R.id.mapView);
+        // Display zoom controls (+/-)
+        mMapView.setBuiltInZoomControls(true);
+        mMapController = mMapView.getController();
+        mMapView.setSatellite(false);
+        
+        mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
+        mMapView.getOverlays().add(mMyLocationOverlay);
+              
+        mOverlay = new ParkingLotItemizedOverlayIcons(this, getResources().getDrawable(R.drawable.map_marker_blue), mParkingLotOverlayTapListener);        
+        Group<ParkingLot> g = new Group<ParkingLot>();
+        for (ParkingLot it:mStateHolder.getParkingLots()) {
+            g.add(it);
+        }
+        mOverlay.setGroup(g);
         mMapView.getOverlays().add(mOverlay);       
         if (mOverlay != null && mOverlay.size()>0) {
             reCenterMap();
@@ -123,23 +127,21 @@ public class MapActivity extends com.google.android.maps.MapActivity {
     
     private void reCenterMap() {
        if (DEBUG) Log.d(TAG, "reCenterMap()");
+    // Previously we'd try to zoom to span, but this gives us odd results a
+       // lot of times,
+       // so falling back to zoom at a fixed level.
        GeoPoint center = mMyLocationOverlay.getMyLocation();
        if (center != null) {
            mMapController.animateTo(center);
-           mMapController.zoomToSpan(mOverlay.getLatSpanE6(), mOverlay.getLonSpanE6());
-           if (DEBUG) Log.d(TAG, "reCenterMap() bestLocation zoomLevel="+mMapView.getZoomLevel());
-       }
-       else {
-           
+           mMapController.setZoom(14);
+       } else {
+           // Location overlay wasn't ready yet, try using last known
+           // geolocation from manager.
            Location bestLocation = GeoUtils.getBestLastGeolocation(this);
            if (bestLocation != null) {
-               
                mMapController.animateTo(GeoUtils.locationToGeoPoint(bestLocation));
-               mMapController.zoomToSpan(mOverlay.getLatSpanE6(), mOverlay.getLonSpanE6());
-               if (DEBUG) Log.d(TAG, "reCenterMap() bestLocation zoomLevel="+mMapView.getZoomLevel());
-           }
-           else {
-               if (DEBUG) Log.d(TAG, "reCenterMap() no myLocationOverlay");
+               mMapController.setZoom(14);
+           } else {
                // We have no location information at all, so we'll just show
                // the map at a high
                // zoom level and the user can zoom in as they wish.
@@ -151,6 +153,27 @@ public class MapActivity extends com.google.android.maps.MapActivity {
            }
        }
     }
+    
+    /**
+     * Handle taps on one of the pins.
+     */
+    private ParkingLotItemizedOverlayTapListener mParkingLotOverlayTapListener = new ParkingLotItemizedOverlayTapListener() {
+        @Override
+        public void onTap(OverlayItem itemSelected, OverlayItem itemLastSelected, ParkingLot parkingLot) {
+            Intent intent = new Intent(MapActivity.this, ParkingLotActivity.class);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.putExtra(ParkingLotActivity.INTENT_EXTRA_PARKING_LOT, parkingLot);
+            startActivity(intent);
+            /*mMapController.animateTo(GeoUtils.stringLocationToGeoPoint(parkingLot.getGeolat(), parkingLot
+                    .getGeolong()));*/
+        }
+
+        @Override
+        public void onTap(GeoPoint p, MapView mapView) {
+            
+        }
+    };
+
 
     private class StateHolder {
         

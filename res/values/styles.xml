@@ -101,4 +101,14 @@
     	<item name="android:textColor">@color/white</item>
     	<item name="android:textStyle">bold</item>
   	</style>
+  	<style name="TextViewStyleMapCalloutTitle">
+    	<item name="android:textSize">20dip</item>
+    	<item name="android:textColor">#FFF</item>
+    	<item name="android:textStyle">bold</item>
+  	</style>
+  	<style name="TextViewStyleMapCalloutMessage">
+    	<item name="android:textSize">16dip</item>
+    	<item name="android:textColor">#FFF</item>
+    	<item name="android:textStyle">bold</item>
+  	</style>
 </resources>

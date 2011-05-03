@@ -5,7 +5,6 @@ package com.licenta.parkdroid;
 
 import com.licenta.park.Park;
 import com.licenta.parkdroid.preferences.Preferences;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -38,7 +37,7 @@ public class LoginActivity extends Activity {
     
     //TODO drawable/main_logo.png trebuie facut 355*158
     private TextView mNewAccountTextView;
-    private EditText mPhoneUsernameEditText;
+    private EditText mUserNameEditText;
     private EditText mPasswordEditText;
     
     private AsyncTask<Void, Void, Boolean> mLoginTask;
@@ -90,18 +89,18 @@ public class LoginActivity extends Activity {
                 if (DEBUG) Log.d(TAG, "onClick Fa login");
             }
         });
-
+/*
         mNewAccountTextView = (TextView) findViewById(R.id.newAccountTextView);
         mNewAccountTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO implement "Need an account" link
                 //startActivity(new Intent(Intent.ACTION_VIEW, Uri
-                //        .parse(Foursquare.FOURSQUARE_MOBILE_SIGNUP)));s                
+                //        .parse(Foursquare.FOURSQUARE_MOBILE_SIGNUP)));              
             }
-        });
+        });*/
 
-        mPhoneUsernameEditText = ((EditText) findViewById(R.id.phoneEditText));
+        mUserNameEditText = ((EditText) findViewById(R.id.userNameEditText));
         mPasswordEditText = ((EditText) findViewById(R.id.passwordEditText));
 
         TextWatcher fieldValidatorTextWatcher = new TextWatcher() {
@@ -123,7 +122,7 @@ public class LoginActivity extends Activity {
                 // This can be either a phone number or username so we don't
                 // care too much about the
                 // format.
-                return !TextUtils.isEmpty(mPhoneUsernameEditText.getText());
+                return !TextUtils.isEmpty(mUserNameEditText.getText());
             }
 
             private boolean passwordEditTextFieldIsValid() {
@@ -131,7 +130,7 @@ public class LoginActivity extends Activity {
             }
         };
 
-        mPhoneUsernameEditText.addTextChangedListener(fieldValidatorTextWatcher);
+        mUserNameEditText.addTextChangedListener(fieldValidatorTextWatcher);
         mPasswordEditText.addTextChangedListener(fieldValidatorTextWatcher);        
     }    
     
@@ -157,7 +156,7 @@ public class LoginActivity extends Activity {
             ParkDroid parkDroid = (ParkDroid) getApplication();
             Park park = parkDroid.getPark();           
             try {
-                String phoneNumber = mPhoneUsernameEditText.getText().toString();
+                String phoneNumber = mUserNameEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
 
                 boolean loggedIn = Preferences.loginUser(park, phoneNumber, password,
@@ -192,9 +191,6 @@ public class LoginActivity extends Activity {
                 sendBroadcast(new Intent(ParkDroid.INTENT_ACTION_LOGGED_IN));
                 Toast.makeText(LoginActivity.this, getString(R.string.login_welcome_toast),
                         Toast.LENGTH_LONG).show();
-
-                // Launch the service to update any widgets, etc.
-                //parkDroid.requestStartService();
 
                 // Launch the main activity to let the user do anything.
                 Intent intent = new Intent(LoginActivity.this, ParkDroidActivity.class);

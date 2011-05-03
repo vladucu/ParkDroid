@@ -7,8 +7,8 @@
     <string name="preferences_search_radius_summary">Click to pop up a list to choose from</string>
     <string name="preferences_search_radius_default">500</string>
     <string name="login_get_started">Get Started</string>
-    <string name="login_get_started_more">Got a ParkDroid account? We just need your email or phone# and password</string>
-    <string name="phone_number_or_email">Phone or Email</string>
+    <string name="login_get_started_more">Don\'t have a ParkDroid account? We just need your email  and password</string>
+    <string name="login_email">Email</string>
     <string name="password">Password</string>
     <string name="login_label">Log-in</string>
     <string name="need_an_account">Need an account?</string>
