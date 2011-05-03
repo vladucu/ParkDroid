@@ -274,7 +274,7 @@ public class ParkingLotsListActivity extends LoadableListActivity {
                 mPark1.setId("123");
                 mPark1.setName("Parcarea principala");
                 mPark1.setPhone("0733683111");
-                mPark1.setAddress("Bulevardul Regina Elisabeta 23 si o iei pe acolo pe unde vezi cu ochii");
+                mPark1.setAddress("Bulevardul Regina Elisabeta 23");
                 mPark1.setCity("Bucuresti");
                 mPark1.setZip("050012");
                 mPark1.setGeolat("44.43472");

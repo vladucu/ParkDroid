@@ -1,24 +1,15 @@
-/**
- * 
- */
 package com.licenta.parkdroid;
 
-import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkingLot;
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 /**
  * @author vladucu
@@ -36,7 +27,6 @@ public class ParkingLotListAdapter extends BaseParkingLotAdapter {
     public ParkingLotListAdapter(Context context) {
         super(context);
         
-     //   this.items = items;
         mInflater = LayoutInflater.from(context);
         mHandler = new Handler();
         if (DEBUG) Log.d(TAG, "ParkingLotListAdapter()");
@@ -67,10 +57,10 @@ public class ParkingLotListAdapter extends BaseParkingLotAdapter {
             holder.icon = (ImageView) convertView.findViewById(R.id.icon);
             holder.parkingLotName = (TextView) convertView.findViewById(R.id.parkingLotName);
             holder.parkingLotLocationLine1 = (TextView) convertView.findViewById(R.id.parkingLotLocationLine1);
-            holder.parkingLotDistance = (TextView) convertView.findViewById(R.id.parkingLotDistance);
+            /*holder.parkingLotDistance = (TextView) convertView.findViewById(R.id.parkingLotDistance);
             holder.iconTrending = (ImageView) convertView.findViewById(R.id.iconTrending);
             holder.parkingLotSpaces = (TextView) convertView.findViewById(R.id.parkingLotSpaces);
-            holder.parkingPrice = (TextView) convertView.findViewById(R.id.parkingPrice);
+            holder.parkingPrice = (TextView) convertView.findViewById(R.id.parkingPrice);*/
             holder.reservationHere = (ImageView) convertView.findViewById(R.id.reservationCorner);
             convertView.setTag(holder);
         } else {
@@ -90,7 +80,7 @@ public class ParkingLotListAdapter extends BaseParkingLotAdapter {
         } else {
             holder.parkingLotLocationLine1.setText("");
         }
-                
+       /*         
         // Show parking lot distance.
         if (parkingLot.getDistance() != null) {
             holder.parkingLotDistance.setText(parkingLot.getDistance() + " meters");
@@ -99,7 +89,7 @@ public class ParkingLotListAdapter extends BaseParkingLotAdapter {
         }
         holder.iconTrending.setVisibility(View.VISIBLE);
         holder.parkingLotSpaces.setText(parkingLot.getEmptySpaces()+"/"+parkingLot.getTotalSpaces());        
-        holder.parkingPrice.setText(parkingLot.getPrice()+"/h");       
+        holder.parkingPrice.setText(parkingLot.getPrice()+"/h");       */
         
         // If we have a reservation here, show the corner folded over.
         if (parkingLot.getHasReservation()) {
@@ -111,15 +101,15 @@ public class ParkingLotListAdapter extends BaseParkingLotAdapter {
         return convertView;
     }
 
-    private static class ViewHolder {
+    private static class ViewHolder {       
         ImageView icon;
         TextView parkingLotName;
         TextView parkingLotLocationLine1;
-        //ImageView iconSpecial;
+        /*ImageView iconSpecial;
         TextView parkingLotDistance;
         ImageView iconTrending;
         TextView parkingLotSpaces;
-        TextView parkingPrice;
+        TextView parkingPrice;*/
         ImageView reservationHere;
     }
 }
