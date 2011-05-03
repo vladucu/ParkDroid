@@ -15,7 +15,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -45,6 +48,8 @@ public class ParkingLotActivity extends Activity {
     
     private static final int RESULT_CODE_ACTIVITY_ADD_RESERVATION = 1;
     private static final int RESULT_CODE_ACTIVITY_RESERVATION = 2;
+    
+    private static final int MENU_CALL = 1;
     
     private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
         @Override
@@ -255,8 +260,56 @@ public class ParkingLotActivity extends Activity {
             intent.putExtra(EXTRA_PARKKING_LOT_RETURNED, parkingLot);
         }
         setResult(Activity.RESULT_OK, intent);
-    }
+    }    
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // TODO sa vedem ce mai putem adauga aici
+        super.onCreateOptionsMenu(menu);
+        
+        menu.add(Menu.NONE, MENU_CALL, 1, R.string.parking_lot_activity_menu_call).setIcon(R.drawable.ic_menu_call);
+        
+        return true;
+    }    
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onPrepareOptionsMenu(android.view.Menu)
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean callEnabled = mStateHolder.getParkingLot() != null && !TextUtils.isEmpty(mStateHolder.getParkingLot().getPhone());
+        menu.findItem(MENU_CALL).setEnabled(callEnabled);
+        
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_CALL:
+                try {
+                    Intent dial = new Intent();
+                    dial.setAction(Intent.ACTION_DIAL);
+                    dial.setData(Uri.parse("tel:" + mStateHolder.getParkingLot().getPhone()));
+                    startActivity(dial);
+                } catch (Exception ex) {
+                    Log.e(TAG, "Error starting phone dialer intent.", ex);
+                    Toast.makeText(this, "Sorry, we couldn't find any app to place a phone call!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
     private static class TaskParkingLot extends AsyncTask<String, Void, ParkingLot> {
 
         public static final String TAG = "TaskParkingLot";

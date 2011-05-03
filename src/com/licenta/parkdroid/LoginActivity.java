@@ -4,6 +4,7 @@
 package com.licenta.parkdroid;
 
 import com.licenta.park.Park;
+import com.licenta.parkdroid.preferences.Preferences;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

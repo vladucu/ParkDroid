@@ -9,13 +9,12 @@ import com.licenta.park.types.Reservation;
 import com.licenta.parkdroid.LoadableListActivity;
 import com.licenta.parkdroid.ParkDroid;
 import com.licenta.parkdroid.ParkingLotListAdapter;
-
-import android.R;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
 /**
@@ -49,6 +50,7 @@ public class ParkingLotsListActivity extends LoadableListActivity {
     private ListView mListView;
     private LinearLayout mFooterView;
     private TextView mTextViewFooter;
+    private SearchLocationObserver mSearchLocationObserver = new SearchLocationObserver();
     private Handler mHandler;
     
     
@@ -95,17 +97,21 @@ public class ParkingLotsListActivity extends LoadableListActivity {
             mStateHolder = (StateHolder) getLastNonConfigurationInstance();
             mStateHolder.setActivity(this);
         } else {
+            if (DEBUG) Log.d(TAG, "Creating new StateHolder instance.");
             mStateHolder = new StateHolder();            
         }
         
         // Start a new search if one is not running or we have no results.
         if (mStateHolder.getIsRunningTask()) {
+            if (DEBUG) Log.d(TAG, "mIsRunning true.");
             setProgressBarIndeterminateVisibility(true);
             putResultsInAdapter(mStateHolder.getResults());
             //ensureTitle(false);
-        } else if (mStateHolder.getResults().size() == 0) {            
+        } else if (mStateHolder.getResults().size() == 0) {    
+            if (DEBUG) Log.d(TAG, "mIsRunning not running but no results.");
             startTask(0L);
         } else {
+            if (DEBUG) Log.d(TAG, "mIsRunning false.");
             onTaskComplete(mStateHolder.getResults(), mStateHolder.getReverseGeoLoc(), null);
         }
         //populateFooter(mStateHolder.getReverseGeoLoc());
@@ -125,17 +131,25 @@ public class ParkingLotsListActivity extends LoadableListActivity {
      */
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
+        
+        //((ParkDroid) getApplication()).removeLocationUpdates(mSearchLocationObserver);
+        
+        if (isFinishing()) {
+            mStateHolder.cancelAllTasks();
+        }
+        
     }
 
-    /* (non-Javadoc)
+    /* Called right before activity comes back to foreground. 
+     * Register for Location updates.
      * @see android.app.Activity#onResume()
      */
     @Override
     protected void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
+        if (DEBUG) Log.d(TAG, "onResume()");
+        //((ParkDroid) getApplication()).requestLocationUpdates(mSearchLocationObserver);
     }
 
     /* (non-Javadoc)
@@ -168,7 +182,9 @@ public class ParkingLotsListActivity extends LoadableListActivity {
     }
     
     private void startTask(long geoLocDelayTimeInMs) {
+        if (DEBUG) Log.d(TAG, "startTask");
         if (mStateHolder.getIsRunningTask() == false) {
+            if (DEBUG) Log.d(TAG, "startTask mIsRunning false");
             setProgressBarIndeterminateVisibility(true);
             if (mStateHolder.getResults().size() == 0) {
                 setLoadingView("");
@@ -194,6 +210,32 @@ public class ParkingLotsListActivity extends LoadableListActivity {
         mStateHolder.cancelAllTasks();
     }
 
+    /** If location changes, auto-start a nearby parking lots. */
+    private class SearchLocationObserver implements Observer {
+
+        private boolean mRequestedFirstSearch = false;
+
+        @Override
+        public void update(Observable observable, Object data) {
+            Location location = (Location) data;
+            // Fire a search if we haven't done so yet.
+            if (!mRequestedFirstSearch
+                    && ((BestLocationListener) observable).isAccurateEnough(location)) {
+                mRequestedFirstSearch = true;
+                if (mStateHolder.getIsRunningTask() == false) {
+                    // Since we were told by the system that location has
+                    // changed, no need to make the
+                    // task wait before grabbing the current location.
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            startTask(0L);
+                        }
+                    });
+                }
+            }
+        }
+    }
+    
     /*
      * Handles the work of finding nearby parking lots
      */
@@ -206,7 +248,7 @@ public class ParkingLotsListActivity extends LoadableListActivity {
         private long mSleepTimeInMs;
         
         public SearchTask(ParkingLotsListActivity activity, String query, long sleepTimeInMs) {
-            Log.d(TAG, "onTaskComplete()");
+            Log.d(TAG, "SearchTask()");
             // super();
             mActivity = activity;
             mQuery = query;
@@ -218,12 +260,12 @@ public class ParkingLotsListActivity extends LoadableListActivity {
          */
         @Override
         protected void onPreExecute() {
-            Log.d(TAG, "onTaskComplete()");
+            Log.d(TAG, "onPreExecute()");
         }
 
         @Override
         protected Group<ParkingLot> doInBackground(Void... params) {
-            Log.d(TAG, "onTaskComplete()");
+            Log.d(TAG, "doInBackground()");
             // TODO get last known location and get the parking lots from the server
             try {
                 Group<ParkingLot> g = new Group<ParkingLot>();
@@ -248,7 +290,6 @@ public class ParkingLotsListActivity extends LoadableListActivity {
                 reservation.setParkingLot(null);
                 reservation.setStartTime("Wed, 27 April 11 15:00:00 +0000");
                 reservation.setEndTime("Wed, 27 April 11 17:00:00 +0000");
-                mPark1.setReservation(reservation);
                 mPark2.setId("523");
                 mPark2.setName("Parcarea secundara");
                 mPark2.setPhone("0733683444");
@@ -267,11 +308,12 @@ public class ParkingLotsListActivity extends LoadableListActivity {
                 for (int index=0;index<10;index++) {
                     g.add(mPark1);g.add(mPark2); 
                 }
-                Log.d(TAG, g.get(1).getName());
+                if (DEBUG) Log.d(TAG, g.get(1).getName());
                 
                 return g;
             } catch (Exception e) {
                 // TODO Auto-generated catch block
+                if (DEBUG) Log.d(TAG, "Exception");
                 e.printStackTrace();
             }
             return null;
@@ -282,7 +324,7 @@ public class ParkingLotsListActivity extends LoadableListActivity {
          */
         @Override
         protected void onPostExecute(Group<ParkingLot> result) {
-            Log.d(TAG, "onTaskComplete()");
+            Log.d(TAG, "onPostExecute()");
             if (mActivity != null) {
                 mActivity.onTaskComplete(result, "", null);
             }

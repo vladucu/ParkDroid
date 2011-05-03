@@ -44,4 +44,11 @@
     <string name="parking_lot_activity_spaces">Free Spaces</string>
     <string name="parking_lot_activity_distance_title">Distance</string>
     <string name="parking_lot_activity_price_title">Price/h</string>
+    <string name="parking_lot_activity_phone_label">Phone: </string>
+    <string name="parking_lot_activity_menu_call">Call</string>
+    <string name="settings_user_info_label_user_id">User ID:</string>
+    <string name="settings_user_info_label_email">Email:</string>
+    <string name="preference_activity_profile_settings_dlg_title">Profile Settings</string>
+    <string name="preferences_profile_settings_label">Profile Settings</string>
+    <string name="preferences_profile_settings_summary">Information about your ParkDroid account</string>
 </resources>

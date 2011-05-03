@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	
-	 <PreferenceCategory android:title="@string/preferences_other_settings">
-    	<!--<com.licenta.ParkDroid.ClickPreference
-      		android:key="advanced_settings"
-      		android:title="@string/preferences_additional_settings"
-      		android:summary="@string/preferences_additional_settings_summary" />	
-		--><ListPreference android:key="search_radius"
-		    android:defaultValue="@string/preferences_search_radius_default"
-			android:title="@string/preferences_search_radius" 
-			android:summary="@string/preferences_search_radius_summary"
-			android:entries="@array/search_radius_options" 
-			android:entryValues="@array/search_radius_values"			
-			android:dialogTitle="@string/preferences_search_radius" 
-		/>
-		<com.licenta.parkdroid.ClickPreference
-			android:key="logout"
-			android:title="@string/preferences_logout_title"
-      		android:summary="@string/preferences_logout_summary"		
-		/> 
-	</PreferenceCategory>	
+
+  <PreferenceCategory android:title="@string/preferences_other_settings">
+     <ListPreference android:key="search_radius"
+	   android:defaultValue="@string/preferences_search_radius_default"
+	   android:title="@string/preferences_search_radius" 
+	   android:summary="@string/preferences_search_radius_summary"
+	   android:entries="@array/search_radius_options" 
+	   android:entryValues="@array/search_radius_values"			
+	   android:dialogTitle="@string/preferences_search_radius" 
+	 />
+	 
+	 <com.licenta.parkdroid.preferences.ClickPreference
+	   android:key="logout"
+	   android:title="@string/preferences_logout_title"
+       android:summary="@string/preferences_logout_summary" />
+       
+     <com.licente.parkdroid.preferences.ClickPreference
+       android:key="profile_settings"
+       android:title="@string/preferences_profile_settings_label"
+       android:summary="@string/preferences_profile_settings_summary" />
+        
+  </PreferenceCategory>	
 
 </PreferenceScreen>

@@ -291,19 +291,9 @@
             android:layout_marginRight="15dip"
             android:singleLine="true"
             android:maxLines="1"
-            android:ellipsize="marquee"
-             /><!--
-  
-          <TextView 
-            android:id="@+id/venueActivityTipsExtra"
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textAppearance="@style/TextViewStyleVenueActivityNormal"
-            android:layout_below="@id/venueActivityTipsText"
-            android:visibility="invisible" />
-    
-          --><ImageView
+            android:ellipsize="marquee" />
+          
+          <ImageView
             android:id="@+id/parkingLotActivityUrlArrow"
             android:layout_width="9dip"
             android:layout_height="13dip"
@@ -316,7 +306,48 @@
 
         </RelativeLayout>
         
+        <RelativeLayout 
+          android:id="@+id/parkingLotActivityPhoneDetails"
+          android:layout_width="fill_parent" 
+          android:layout_height="wrap_content"
+          android:padding="7dip"
+          android:visibility="gone"
+          android:focusable="true"
+          android:background="@drawable/listview_item_manual" >
         
+          <TextView
+            android:id="@+id/parkingLotActivityPhoneLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/parking_lot_activity_phone_label"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+          />
+          <TextView 
+            android:id="@+id/parkingLotActivityPhone"
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            android:text="No url."
+            android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
+            android:layout_toRightOf="@+id/parkingLotActivityPhoneLabel"
+            android:paddingLeft="5dip"
+            android:layout_marginRight="15dip"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:ellipsize="marquee" />
+          
+          <ImageView
+            android:id="@+id/parkingLotActivityUrlArrow"
+            android:layout_width="9dip"
+            android:layout_height="13dip"
+            android:src="@drawable/arrow_grey"
+            android:scaleType="fitCenter"  
+            android:layout_marginLeft="3dip"
+            android:layout_marginRight="3dip"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"  />
+
+        </RelativeLayout>
         </LinearLayout>
     </ScrollView>
     

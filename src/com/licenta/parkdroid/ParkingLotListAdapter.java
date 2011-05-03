@@ -40,8 +40,6 @@ public class ParkingLotListAdapter extends BaseParkingLotAdapter {
         mInflater = LayoutInflater.from(context);
         mHandler = new Handler();
         if (DEBUG) Log.d(TAG, "ParkingLotListAdapter()");
-    
-        this.registerDataSetObserver(mDataSetObserver);
     }
 
     /* 
@@ -124,11 +122,4 @@ public class ParkingLotListAdapter extends BaseParkingLotAdapter {
         TextView parkingPrice;
         ImageView reservationHere;
     }
-    
-    private DataSetObserver mDataSetObserver = new DataSetObserver() {
-        @Override
-        public void onChanged() {
-            notifyDataSetChanged();
-        }
-    };
 }

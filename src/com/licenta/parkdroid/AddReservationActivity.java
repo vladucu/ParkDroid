@@ -363,12 +363,12 @@ public class AddReservationActivity extends Activity {
         return null;
     }
     
-    private void onReservationComplete(ReservationResult result, Exception ex) {
+    private void onReservationComplete(Reservation result, Exception ex) {
         mStateHolder.setIsRunning(false);
         stopProgressBar();
 
         if (result != null) {
-            mStateHolder.setReservationResult(result);
+            mStateHolder.setReservation(result);
             showDialog(DIALOG_RESERVATION_RESULT);
         } else {
             Toast.makeText(this, "Reservation error", Toast.LENGTH_LONG);
@@ -377,7 +377,7 @@ public class AddReservationActivity extends Activity {
         }
     }
     
-    private static class ReservationTask extends AsyncTask<Void, Void, ReservationResult> {
+    private static class ReservationTask extends AsyncTask<Void, Void, Reservation> {
         private static final String TAG = "ReservationTask";
         private static boolean DEBUG = true;
         
@@ -406,7 +406,7 @@ public class AddReservationActivity extends Activity {
         }
 
         @Override
-        protected ReservationResult doInBackground(Void... params) {
+        protected Reservation doInBackground(Void... params) {
             if (DEBUG) Log.d( TAG, "doInBackground()");
             // TODO Auto-generated method stub
             try {
@@ -415,14 +415,14 @@ public class AddReservationActivity extends Activity {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            return new ReservationResult();
+            return new Reservation();
         }
         
         /* (non-Javadoc)
          * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
          */
         @Override
-        protected void onPostExecute(ReservationResult result) {
+        protected void onPostExecute(Reservation result) {
             if (DEBUG) Log.d( TAG, "onPostExecute()");
             if (mActivity != null) {
                 mActivity.onReservationComplete(result, null);
@@ -439,11 +439,10 @@ public class AddReservationActivity extends Activity {
         private boolean mIsRunning;
         private ReservationTask mTask;
         private Reservation mReservation;
-        private ReservationResult mReservationResult;
         
         public StateHolder() {
             if (DEBUG) Log.d( TAG, "StateHolder()");
-            mReservationResult = null;
+            mReservation = null;
             mIsRunning = false;
         }
         
@@ -479,7 +478,7 @@ public class AddReservationActivity extends Activity {
                 mTask.setActivity(activity);
             }
         }
-
+        
         public boolean getIsRunning() {
             if (DEBUG) Log.d( TAG, "getIsRunning()");
             return mIsRunning;
@@ -488,14 +487,6 @@ public class AddReservationActivity extends Activity {
         public void setIsRunning(boolean isRunning) {
             if (DEBUG) Log.d( TAG, "setIsRunning()");
             mIsRunning = isRunning;
-        }
-        
-        public ReservationResult getReservationResult() {
-            return mReservationResult;
-        }
-        
-        public void setReservationResult(ReservationResult result) {
-            mReservationResult = result;
         }
         
         public void cancelTasks() {

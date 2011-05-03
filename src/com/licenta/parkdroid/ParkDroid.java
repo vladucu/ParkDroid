@@ -4,6 +4,7 @@
 package com.licenta.parkdroid;
 
 import com.licenta.park.Park;
+import com.licenta.parkdroid.preferences.Preferences;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -18,6 +20,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.Observer;
 
 /**
  * @author vladucu
@@ -37,6 +41,7 @@ public class ParkDroid extends Application {
     
     private TaskHandler mTaskHandler;
     private HandlerThread mTaskThread;
+    private BestLocationListener mBestLocationListener;
     
     private Park mPark;
     //sa vedem daca revenim de la login sau e start de aplicatie
@@ -170,5 +175,18 @@ public class ParkDroid extends Application {
                     return;*/
             }
         }
+    }
+
+    public BestLocationListener requestLocationUpdates(Observer observer) {
+        if (DEBUG) Log.d(TAG, "requestLocationUpdates");
+        mBestLocationListener.addObserver(observer);
+        mBestLocationListener.register((LocationManager) getSystemService(Context.LOCATION_SERVICE), true);
+        return mBestLocationListener;
+        
+    }
+
+    public void removeLocationUpdates(Observer observer) {
+        mBestLocationListener.unregister((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+        
     }
 }
