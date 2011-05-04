@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -69,7 +70,7 @@ public class ParkingLotsListActivity extends LoadableListActivity {
         super.onCreate(savedInstanceState);
         if (DEBUG) Log.d(TAG, "onCreate()");
         
-        setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL);
+        setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL);        
         registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));      
         
         mHandler = new Handler();
@@ -81,12 +82,13 @@ public class ParkingLotsListActivity extends LoadableListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (DEBUG) Log.d(TAG, "onCreate()+ on item click");
                 ParkingLot parkingLot = (ParkingLot) parent.getAdapter().getItem(position);
-                Toast.makeText(ParkingLotsListActivity.this, parkingLot.getName(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(ParkingLotsListActivity.this, parkingLot.getName(), Toast.LENGTH_LONG).show();
                 startItemActivity(parkingLot);
             }
         });
 
-        
+        // We can dynamically add a footer to our loadable listview.
+        LayoutInflater inflater = LayoutInflater.from(this);
         
         // Check if we're returning from a configuration change.
         if (getLastNonConfigurationInstance() != null) {

@@ -133,6 +133,7 @@ public class ParkingLotActivity extends Activity {
             tvParkingLotActivityPrice.setText(parkingLot.getPrice()+"$/h");            
             btnReserveNow.setText(R.string.parking_lot_activity_reserve_now_button);
             btnBack.setText(R.string.parking_lot_activity_button_back);
+            setTitle(getTitle()+ " - " + mStateHolder.getParkingLot().getName());
             
             if (mStateHolder.getParkingLot().getPhone() != null) {
                 tvPhoneText.setText(mStateHolder.getParkingLot().getPhone());

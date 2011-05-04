@@ -48,12 +48,13 @@ public class ActiveReservationsAdapter extends BaseReservationsAdapter {
             // Creates a ViewHolder and store references to the children views
             // we want to bind data to.
             holder = new ViewHolder();            
-            holder.parkingLotName = (TextView) convertView.findViewById(R.id.parkingLotName);
-            holder.timeLeft = (TextView) convertView.findViewById(R.id.parkingLotLocationLine1);
-            holder.parkingLotDistance = (TextView) convertView.findViewById(R.id.parkingLotDistance);
+            holder.parkingLotName = (TextView) convertView.findViewById(R.id.activeReservationsListActivityParkingLotName);
+            holder.startingTime = (TextView) convertView.findViewById(R.id.activeReservationsListActivityStartingTime);
+            holder.endingTime = (TextView) convertView.findViewById(R.id.activeReservationsListActivityEndingTime);
+        /*    holder.parkingLotDistance = (TextView) convertView.findViewById(R.id.parkingLotDistance);
             holder.iconTrending = (ImageView) convertView.findViewById(R.id.iconTrending);
             holder.parkingLotSpaces = (TextView) convertView.findViewById(R.id.parkingLotSpaces);
-            holder.parkingPrice = (TextView) convertView.findViewById(R.id.parkingPrice);
+            holder.parkingPrice = (TextView) convertView.findViewById(R.id.parkingPrice);*/
             convertView.setTag(holder);
         } else {
             // Get the ViewHolder back to get fast access to the TextView
@@ -62,23 +63,27 @@ public class ActiveReservationsAdapter extends BaseReservationsAdapter {
         }
         
         Reservation reservation = (Reservation) getItem(position);
-        holder.parkingLotName.setText(reservation.getParkingLot().getName());
-        holder.timeLeft.setText(FormatStrings.getRelativeTimeString(reservation.getStartTime()));
-        holder.parkingLotDistance.setText(reservation.getParkingLot().getDistance() + " meters");
+        holder.parkingLotName.setText(reservation.getParkingLot().getName());        
+        holder.startingTime.setText("From: " + FormatStrings.getHourString(reservation.getStartTime()) 
+                + " " + FormatStrings.getDayString(reservation.getStartTime()) );
+        holder.endingTime.setText("Until: " + FormatStrings.getHourString(reservation.getEndTime()) 
+                + " " + FormatStrings.getDayString(reservation.getEndTime()) );
+     /*   holder.parkingLotDistance.setText(reservation.getParkingLot().getDistance() + " meters");
         holder.iconTrending.setVisibility(View.VISIBLE);
         holder.parkingLotSpaces.setText(reservation.getParkingLot().getEmptySpaces()+"/"+reservation.getParkingLot().getTotalSpaces());        
         holder.parkingPrice.setText(reservation.getParkingLot().getPrice()+"/h");
-        
+        */
         return convertView;
     }
     
     private class ViewHolder {
         TextView parkingLotName;
-        TextView timeLeft;
-        TextView parkingLotDistance;
+        TextView startingTime;
+        TextView endingTime;
+       /* TextView parkingLotDistance;
         ImageView iconTrending;
         TextView parkingLotSpaces;
-        TextView parkingPrice;
+        TextView parkingPrice;*/
     }
 
 }

@@ -185,7 +185,8 @@ public class AddReservationActivity extends Activity {
         tvParkingLotName.setText(mStateHolder.getParkingLot().getName());
         tvParkingLotLocation.setText(mStateHolder.getParkingLot().getAddress());
         tvParkingPrice.setText(mStateHolder.getParkingLot().getPrice()+"/hour");
-        
+        //set the title of the activity
+        setTitle(getTitle()+ " Reservation - " + mStateHolder.getParkingLot().getName() );
         // add a click listener to the date picker button
         mPickStartDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
