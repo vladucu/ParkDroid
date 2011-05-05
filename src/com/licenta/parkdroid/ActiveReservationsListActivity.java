@@ -147,9 +147,25 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
                 ParkingLot mPark2 = new ParkingLot();
                 mPark1.setName("Parcarea principala");
                 mPark2.setName("Parcarea secundara");
+                /*mPark1.setGeolat("44.43472");
+                mPark1.setGeolong("26.09704");
+                mPark2.setGeolat("44.43797");
+                mPark2.setGeolong("26.11576");     */
+                //37.44461, -122.13846 San Francisco - Palo Alto Library
+                mPark1.setGeolat("37.44461");
+                mPark1.setGeolong("-122.13846");
+                //37.4597, -122.1064 San Francisco - Lucy Evans Baylands Nature Interpretive Center (The City of Palo Alto)
+                mPark2.setGeolat("37.4597");
+                mPark2.setGeolong("-122.1064");
+                mPark1.setAddress("Bulevardul Regina Elisabeta 23");
+                mPark2.setAddress("Bulevardul Carol 76");
+                mPark1.setPrice("25");
+                mPark2.setPrice("125");
+                
                 Reservation r1 = new Reservation();
                 Reservation r2 = new Reservation();
                 r1.setParkingLot(mPark1);r2.setParkingLot(mPark2);
+                r1.setId("ID01234");r2.setId("ID1289");                
                 r1.setStartTime("Wed, 27 April 11 15:00:00 +0000");
                 r1.setEndTime("Wed, 27 April 11 17:00:00 +0000");
                 r2.setStartTime("Fri, 29 April 11 15:00:00 +0000");

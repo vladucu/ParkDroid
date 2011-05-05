@@ -10,7 +10,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/listview_item_manual">
+    android:background="@drawable/listview_item_manual" >
 
     <LinearLayout 
       android:id="@+id/parkingLotActivityHeaderView"
@@ -255,7 +255,7 @@
 
         </RelativeLayout>
         
-         <RelativeLayout 
+        <RelativeLayout 
           android:id="@+id/parkingLotActivityHourDetails"
           android:layout_width="fill_parent" 
           android:layout_height="wrap_content"

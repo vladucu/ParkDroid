@@ -7,9 +7,9 @@
   android:layout_height="fill_parent"
   android:background="@drawable/listview_item_manual" >
  
-  <!-- This is the top header, contains user's picture etc. -->
+  <!-- This is the top header, contains parking name, parking address,  -->
   <LinearLayout 
-    android:id="@+id/tipActivityHeaderView"
+    android:id="@+id/reservationActivityHeaderView"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content"
     android:background="@drawable/header_blue"
@@ -31,36 +31,18 @@
         android:id="@+id/reservationActivityParkingLotName" 
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextViewStyleReservationActivityTitle"
+        android:textAppearance="@style/TextViewStyleReservationActivityDetails"
         android:text="Parking Lot Name" />
     
       <TextView 
         android:id="@+id/reservationActivityParkingLotAddress"
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextViewStyleReservationActivityTitleAddress"
+        android:textAppearance="@style/TextViewStyleReservationActivityDetailsAddress"
         android:text="Parking Lot Address" />
         
     </LinearLayout>
-    
-    <LinearLayout 
-      android:layout_width="wrap_content" 
-      android:layout_height="fill_parent"
-      android:gravity="center_vertical"  
-      ><!--
-      
-      <ImageView
-        android:id="@+id/tipActivityVenueChevron"
-        android:layout_width="9dip"
-        android:layout_height="13dip"
-        android:src="@drawable/arrow_white"
-        android:scaleType="fitCenter"  
-        android:gravity="center_vertical" 
-        android:layout_marginLeft="3dip"
-        android:layout_marginRight="3dip" />
-        
-    --></LinearLayout>
-        
+            
   </LinearLayout>
   
   <LinearLayout 
@@ -70,84 +52,257 @@
     >
   </LinearLayout>
   
-  <LinearLayout 
-    android:layout_width="fill_parent" 
-    android:layout_height="0dip"
-    android:layout_weight="1"
-    android:paddingLeft="20dip"
-    android:paddingRight="20dip"
-    android:paddingTop="17dip"
-    android:orientation="vertical" 
-    >
-    
-    <!-- When supplying textAppearance, all links from linkify are invisible. -->
-    <TextView 
-      android:id="@+id/reservationActivityId"
-      android:layout_width="wrap_content" 
-      android:layout_height="wrap_content"
-      android:text="Reservation ID"  
-      android:textSize="16dip"
-      />
-      <!-- 
-      android:textAppearance="@style/TextViewStyleTipActivityBody" 
-      <style name="TextViewStyleTipActivityBody">
-        <item name="android:textSize">16dip</item>
-        <item name="android:textColor">#4c4c4c</item>
-      </style>
-      -->
-      
+  <ScrollView
+      android:layout_width="fill_parent"
+      android:layout_height="0dip"
+      android:layout_weight="1" >
+  <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+        
     <LinearLayout 
+      android:id="@+id/reservationActivityDetails"
       android:layout_width="fill_parent" 
       android:layout_height="wrap_content"
-      android:orientation="vertical" 
-      android:layout_marginTop="25dip"
-      >
+      android:visibility="visible"
+      android:orientation="horizontal"
+      android:paddingTop="5dip"
+      android:paddingBottom="6dip"
+      android:background="@drawable/listview_item_manual" 
+      android:layout_weight="1" >
+          
+	  <RelativeLayout 
+        android:id="@+id/reservationActivityPrice"
+        android:layout_width="0dip" 
+        android:layout_height="wrap_content"
+        android:layout_weight="1"            
+        android:focusable="true"
+        android:padding="3dip"
+        android:layout_marginLeft="5dip"
+        android:background="@drawable/reservation_activity_selector" >  
+         
+        <TextView 
+	      android:id="@+id/reservationActivityPriceTitle"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content"
+          android:text="@string/reservation_activity_price"
+	      android:layout_alignParentTop="true"
+	      android:layout_alignParentLeft="true"
+	      android:layout_centerHorizontal="true"
+          android:paddingLeft="2dip"
+          android:textAppearance="@style/TextViewStyleReservationActivityTitle" />
+        
+	    <TextView 
+	      android:id="@+id/reservationActivityPriceValue"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content"
+          android:text="4"
+          android:layout_centerHorizontal="true"
+          android:layout_below="@+id/reservationActivityPriceTitle"
+          android:textAppearance="@style/TextViewStyleReservationActivityValue" />
+      
+      </RelativeLayout>
+        
+      <RelativeLayout 
+        android:id="@+id/reservationActivityTime"
+        android:layout_width="0dip" 
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:focusable="true"
+        android:padding="3dip"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:background="@drawable/reservation_activity_selector" >  
+          
+        <TextView 
+	      android:id="@+id/reservationActivityTimeTitle"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content"
+          android:text="@string/reservation_activity_time_title"
+	      android:layout_alignParentTop="true"
+	      android:layout_alignParentLeft="true"
+	      android:layout_centerHorizontal="true"
+          android:paddingLeft="2dip"
+          android:textAppearance="@style/TextViewStyleReservationActivityTitle"  />
+         
+	    <TextView 
+	      android:id="@+id/reservationActivityTimeValue"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content"
+          android:text="4"
+          android:layout_centerHorizontal="true"
+          android:textAppearance="@style/TextViewStyleReservationActivityValue"
+	      android:layout_below="@+id/reservationActivityTimeTitle" />
+	        
+      </RelativeLayout>
+        
+      <RelativeLayout 
+        android:id="@+id/reservationActivityTotalPrice"
+        android:layout_width="0dip" 
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:focusable="true"
+        android:padding="3dip"
+        android:layout_marginRight="5dip"
+        android:background="@drawable/reservation_activity_selector" >  
+        
+        <TextView 
+	      android:id="@+id/reservationActivityTotalPriceTitle"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content"
+          android:text="@string/reservation_activity_total_price_title"
+	      android:layout_alignParentTop="true"
+	      android:layout_alignParentLeft="true"
+	      android:gravity="center"
+          android:paddingLeft="2dip"
+          android:textAppearance="@style/TextViewStyleReservationActivityTitle"  />
+        
+	    <TextView 
+	      android:id="@+id/reservationActivityTotalPriceValue"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content"
+          android:text="4"
+          android:layout_centerHorizontal="true"
+          android:textAppearance="@style/TextViewStyleReservationActivityValue"
+	      android:layout_below="@+id/reservationActivityTotalPriceTitle" />
+             
+      </RelativeLayout>	    
+    
+    </LinearLayout>    
+    
+    <RelativeLayout 
+      android:id="@+id/reservationActivityIdDetails"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:padding="7dip"
+      android:focusable="true"
+      android:background="@drawable/listview_item_manual" >
+      
+     
+      <TextView
+        android:id="@+id/reservationActivityReservationIdLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="150dip"
+        android:text="@string/reservation_activity_id_label"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+      
+      <TextView 
+        android:id="@+id/reservationActivityId"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/reservationActivityReservationIdLabel"
+        android:textAppearance="@style/TextViewStyleResetervationctivityBold"        
+        android:layout_marginRight="15dip" />
+
+    </RelativeLayout>
+    
+    <RelativeLayout 
+      android:id="@+id/reservationActivityStartingTimeDetails"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:padding="7dip"
+      android:focusable="true"
+      android:background="@drawable/listview_item_manual" >
+        
+      <TextView
+        android:id="@+id/reservationActivityStartingTimeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reservation_activity_starting_time_label"
+        android:minWidth="150dip"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
       
       <TextView 
         android:id="@+id/reservationActivityStartingTime"
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
-        android:text="Reservation Starting Date + Time"
+        android:textAppearance="@style/TextViewStyleResetervationctivityBold"        
+        android:layout_toRightOf="@+id/reservationActivityStartingTimeLabel"
+        android:layout_marginRight="15dip" />
+
+    </RelativeLayout>
+    
+    <RelativeLayout 
+      android:id="@+id/reservationActivityEndingTimeDetails"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:padding="7dip"
+      android:focusable="true"
+      android:background="@drawable/listview_item_manual" >
         
-        />
-        
+      <TextView
+        android:id="@+id/reservationActivityReservationEndingTimeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="150dip"        
+        android:text="@string/reservation_activity_ending_time_label"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+      
       <TextView 
         android:id="@+id/reservationActivityEndingTime"
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
-        android:text="Reservation Ending Date +Time"
+        android:textAppearance="@style/TextViewStyleResetervationctivityBold"
+        android:layout_toRightOf="@+id/reservationActivityReservationEndingTimeLabel"
+        android:layout_marginRight="15dip" />
+
+    </RelativeLayout>
+    
+    <RelativeLayout 
+      android:id="@+id/reservationActivityNavigationDetails"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:padding="7dip"
+      android:visibility="gone"
+      android:focusable="true"
+      android:background="@drawable/listview_item_manual" >
         
-        />
-      
-    </LinearLayout>
-        
+      <TextView
+        android:id="@+id/reservationActivityNavigationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reservation_activity_navigation_label"
+        android:layout_marginLeft="150dip"
+        android:textAppearance="@style/TextViewStyleResetervationctivityBold"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+              
+      <ImageView
+        android:id="@+id/reservationActivityNavigationArrow"
+        android:layout_width="9dip"
+        android:layout_height="13dip"
+        android:src="@drawable/arrow_grey"
+        android:scaleType="fitCenter"  
+        android:layout_marginLeft="3dip"
+        android:layout_marginRight="3dip"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true" />
+          
+    </RelativeLayout>
+    
   </LinearLayout>
+  
+  </ScrollView>
   
   <LinearLayout 
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content"
     android:padding="8dip"
     android:orientation="vertical"
-    android:background="@color/tip_detail_actions_background" ><!--
+    android:background="@drawable/header_blue" >
     
-    <TextView 
-      android:id="@+id/tipActivityCongrats"
-      android:layout_width="fill_parent" 
-      android:layout_height="wrap_content"
-      android:text="@string/tip_activity_btn_tip_4"
-      android:textAppearance="@style/TextViewStyleTipActivityButtons"
-      android:gravity="center_horizontal"
-      android:paddingTop="14dip"
-      android:paddingBottom="14dip"
-      />
-        
-    --><Button
+  <Button
       android:id="@+id/reservationActivityyButtonExtend"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:text="button 1"
-      android:textAppearance="@style/TextViewStyleReservationActivityButtons"
-      android:textColor="#444"
+      android:layout_marginTop="10dip"
+      style="@style/actionButton"
       /> 
       
     <Button
@@ -155,8 +310,8 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:text="button 2"
-      android:textAppearance="@style/TextViewStyleReservationActivityButtons"
-      android:textColor="#444"
+      android:layout_marginTop="10dip"
+      style="@style/actionButton"
       />
   
   </LinearLayout>

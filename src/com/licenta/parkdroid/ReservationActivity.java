@@ -3,13 +3,17 @@
  */
 package com.licenta.parkdroid;
 
+import com.google.android.maps.GeoPoint;
 import com.licenta.park.types.Reservation;
+import com.licenta.park.utils.FormatStrings;
+import com.licenta.park.utils.GeoUtils;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -83,18 +87,63 @@ public class ReservationActivity extends Activity {
         if (DEBUG) Log.d(TAG, "ensureUi()");
         TextView tvReservationActivityParkingLotName = (TextView) findViewById(R.id.reservationActivityParkingLotName);
         TextView tvReservationActivityParkingLotAddress = (TextView) findViewById(R.id.reservationActivityParkingLotAddress);
-        TextView tvReservationActivityId = (TextView) findViewById(R.id.reservationActivityId);
         TextView tvReservationActivityStartingTime = (TextView) findViewById(R.id.reservationActivityStartingTime);
         TextView tvReservationActivityEndingTime = (TextView) findViewById(R.id.reservationActivityEndingTime);
+        
+        TextView tvReservationActivityPrice = (TextView) findViewById(R.id.reservationActivityPriceValue);
+        TextView tvReservationActivityTime = (TextView) findViewById(R.id.reservationActivityTimeValue);
+        TextView tvReservationActivityCosts = (TextView) findViewById(R.id.reservationActivityTotalPriceValue);
+        
+        TextView tvResercationActivityId = (TextView) findViewById(R.id.reservationActivityId); 
+        View viewId = findViewById(R.id.reservationActivityIdDetails);
+        
+        View viewNavigation = findViewById(R.id.reservationActivityNavigationDetails);
+        
+     /*   TextView tvParkingLotActivityDistance = (TextView) findViewById(R.id.re);
+        TextView tvParkingLotActivityPrice = (TextView) findViewById(R.id.parkingLotActivityPriceValue);*/
+        
         Button btnExtend = (Button)findViewById(R.id.reservationActivityyButtonExtend);
         Button btnCancel = (Button)findViewById(R.id.reservationActivityyButtonCancel);
         
-        Reservation reservation = mStateHolder.getReservation();
+        final Reservation reservation = mStateHolder.getReservation();
         tvReservationActivityParkingLotName.setText(reservation.getParkingLot().getName());
-        tvReservationActivityParkingLotAddress.setText(reservation.getParkingLot().getName());
-        tvReservationActivityId.setText("Reservation ID: " + reservation.getId());
-        tvReservationActivityStartingTime.setText("From " + reservation.getStartTime());
-        tvReservationActivityEndingTime.setText("until " + reservation.getEndTime());
+        tvReservationActivityParkingLotAddress.setText(reservation.getParkingLot().getAddress());        
+        tvReservationActivityStartingTime.setText(FormatStrings.getHourString(reservation.getStartTime()) 
+                + ", " + FormatStrings.getDayString(reservation.getStartTime()));
+        tvReservationActivityEndingTime.setText(FormatStrings.getHourString(reservation.getEndTime()) 
+                + ", " + FormatStrings.getDayString(reservation.getEndTime()));
+        tvReservationActivityPrice.setText("$ " + reservation.getParkingLot().getPrice());
+        tvReservationActivityTime.setText("3h");
+        tvReservationActivityCosts.setText("9");
+        
+        tvResercationActivityId.setText(reservation.getId());
+        viewId.setVisibility(View.VISIBLE);
+        
+        /* 
+         * We could put a link to get navigation to the parking lot,
+         * but the Navigation App is still beta, not official and works only i US
+         */
+        viewNavigation.setVisibility(View.GONE);        
+        viewNavigation.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                //starting navigation intent
+                if (DEBUG) Log.d(TAG, "Starting navigation LAT=" + reservation.getParkingLot().getGeolat()
+                        + "LONG=" + reservation.getParkingLot().getGeolong());
+                Uri navigationUri = Uri.parse("google.navigation:ll=" + reservation.getParkingLot().getGeolat() + "," +
+                        reservation.getParkingLot().getGeolat());                        
+                Intent intent = new Intent(Intent.ACTION_VIEW, navigationUri);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                
+             /*   Intent intent = new Intent(android.content.Intent.ACTION_VIEW, 
+                        Uri.parse("http://maps.google.com/maps?saddr="+reservation.getParkingLot().getGeolat()+"&daddr="+reservation.getParkingLot().getGeolong()));
+                        startActivity(intent);
+                */
+            }
+        });
+        
         btnExtend.setEnabled(true);
         btnExtend.setText(R.string.reservation_activity_extend_button);
         btnExtend.setOnClickListener(new OnClickListener() {
@@ -121,6 +170,11 @@ public class ReservationActivity extends Activity {
         });        
     }    
     
+    private int ValueOf(String price) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
     /* (non-Javadoc)
      * @see android.app.Activity#onDestroy()
      */

@@ -7,7 +7,6 @@ import com.licenta.park.types.ParkingLot;
 import com.licenta.park.types.Reservation;
 import com.licenta.park.types.ReservationResult;
 import com.licenta.park.utils.FormatStrings;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
