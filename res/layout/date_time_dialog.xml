@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout 
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/dateTimeDialog" 
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content" >
+  
+  <com.licenta.parkdroid.widgets.DateTimePicker
+    android:id="@+id/dateTimePicker" 
+    android:layout_width="fill_parent"
+	android:layout_height="wrap_content" />
+  
+  <LinearLayout android:id="@+id/controlButtons"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+	android:layout_below="@+id/dateTimePicker"
+	android:padding="5dip">
+		
+    <Button 
+      android:id="@+id/setDateTime" 
+      android:layout_width="0dip"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+	  android:text="@android:string/ok" />
+		
+    <Button 
+      android:id="@+id/resetDateTime" 
+      android:layout_width="0dip"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+	  android:text="Reset" />
+		
+    <Button 
+      android:id="@+id/cancelDialog" 
+      android:layout_width="0dip"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+	  android:text="@android:string/cancel" />
+    
+  </LinearLayout>
+  
+</RelativeLayout>

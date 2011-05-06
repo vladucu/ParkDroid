@@ -102,8 +102,8 @@ public class ReservationActivity extends Activity {
      /*   TextView tvParkingLotActivityDistance = (TextView) findViewById(R.id.re);
         TextView tvParkingLotActivityPrice = (TextView) findViewById(R.id.parkingLotActivityPriceValue);*/
         
-        Button btnExtend = (Button)findViewById(R.id.reservationActivityyButtonExtend);
-        Button btnCancel = (Button)findViewById(R.id.reservationActivityyButtonCancel);
+        Button btnExtend = (Button)findViewById(R.id.reservationActivityButtonExtend);
+        Button btnCancel = (Button)findViewById(R.id.reservationActivityButtonCancel);
         
         final Reservation reservation = mStateHolder.getReservation();
         tvReservationActivityParkingLotName.setText(reservation.getParkingLot().getName());

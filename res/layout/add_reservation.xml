@@ -1,137 +1,398 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+
+<LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent" android:layout_height="match_parent">
-    <LinearLayout 
-      android:id="@+id/linearLayout1" 
-      android:layout_width="fill_parent" 
-      android:layout_height="fill_parent"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="@drawable/listview_item_manual" >
+ 
+  <!-- This is the top header, contains parking name, parking address,  -->
+  <LinearLayout 
+    android:id="@+id/addReservationActivityHeaderView"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+    android:background="@drawable/header_blue"
+    android:paddingLeft="5dip" 
+    android:paddingRight="5dip" 
+    android:paddingTop="10dip" 
+    android:paddingBottom="10dip" 
+    android:orientation="horizontal"
+    >
+    
+    <LinearLayout
       android:orientation="vertical"
-      android:paddingTop="10dip" >
+      android:layout_width="0dip"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:paddingLeft="8dip" >
+       
+      <TextView 
+        android:id="@+id/addReservationActivityParkingLotName" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextViewStyleAddReservationActivityDetails"
+        android:text="Parking Lot Name" />
+    
+      <TextView 
+        android:id="@+id/addReservationActivityParkingLotAddress"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextViewStyleAddReservationActivityDetailsAddress"
+        android:text="Parking Lot Address" />
+        
+    </LinearLayout>
+            
+  </LinearLayout>
+  
+  <LinearLayout 
+    android:layout_width="fill_parent" 
+    android:layout_height="8dip"
+    android:background="@color/color_bright_green"
+    >
+  </LinearLayout>
+  
+  <ScrollView
+      android:layout_width="fill_parent"
+      android:layout_height="0dip"
+      android:layout_weight="1" >
       
-      <TextView 
-        android:id="@+id/parkingLotNameLabel"
+    <LinearLayout
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical" >
+          
+      <LinearLayout 
+        android:id="@+id/addReservationActivityDetails"
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content"
-        style="@style/listSeparatorTextViewStyle"
-       	android:text="@string/parking_lot_name_label" 
-      />
-      <TextView 
-        android:id="@+id/parkingLotName"
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dip"
-        android:layout_marginRight="5dip"
-        android:layout_marginTop="5dip"
-        android:layout_marginBottom="5dip"
-      />
-      <TextView 
-        android:id="@+id/parkingLotLocationLabel"
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"
-        style="@style/listSeparatorTextViewStyle"
-        android:text="@string/parking_lot_location_label" 
-      />
-      <TextView 
-        android:id="@+id/parkingLotLocation"
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content" 
-        android:layout_marginLeft="5dip"       
-        android:layout_marginRight="5dip"
-        android:layout_marginTop="5dip"
-        android:layout_marginBottom="5dip"
-      />
-      <TextView 
-        android:id="@+id/parkingPriceLabel"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        style="@style/listSeparatorTextViewStyle"
-        android:text="@string/add_reservation_parking_price_label"
-      />
-      <TextView 
-        android:id="@+id/parkingPrice"
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content" 
-        android:gravity="center"
-        android:layout_marginLeft="5dip"       
-        android:layout_marginRight="5dip"
-        android:layout_marginTop="5dip"
-        android:layout_marginBottom="5dip"
-      />
-      <TextView 
-        android:id="@+id/addReservationActivityStartingFromLabel"
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"          
-        style="@style/listSeparatorTextViewStyle"
-        android:text="@string/add_reservation_starting_from_label" 
-      />       
-      <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-        <Button 
-    	  android:id="@+id/pickStartDate"
-          android:layout_width="0dip"
+        android:visibility="visible"
+        android:orientation="horizontal"
+        android:paddingTop="20dip"
+        android:paddingBottom="20dip"
+        android:background="@drawable/listview_item_manual" 
+        android:layout_weight="1" >
+            
+  	  <RelativeLayout 
+          android:id="@+id/addReservationActivityPrice"
+          android:layout_width="0dip" 
           android:layout_height="wrap_content"
-          android:layout_weight="0.5"             
-          android:layout_marginLeft="5dip"       
-          android:layout_marginRight="5dip"
-          android:layout_marginTop="5dip"
-          android:layout_marginBottom="5dip"
-        />
-        <Button 
-          android:id="@+id/pickStartTime"
-          android:layout_width="0dip"
+          android:layout_weight="1"            
+          android:focusable="true"
+          android:padding="3dip"
+          android:layout_marginLeft="5dip"
+          android:background="@drawable/add_reservation_activity_selector" >  
+           
+          <TextView 
+  	        android:id="@+id/addReservationActivityPriceTitle"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="@string/add_reservation_activity_price_title"
+  	        android:layout_alignParentTop="true"
+  	        android:layout_alignParentLeft="true"
+  	        android:layout_centerHorizontal="true"
+            android:paddingLeft="2dip"
+            android:textAppearance="@style/TextViewStyleReservationActivityTitle" />
+          
+  	      <TextView 
+  	        android:id="@+id/addReservationActivityPriceValue"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/addReservationActivityPriceTitle"
+            android:textAppearance="@style/TextViewStyleReservationActivityValue" />
+        
+        </RelativeLayout>
+          
+        <RelativeLayout 
+          android:id="@+id/addReservationActivityTime"
+          android:layout_width="0dip" 
           android:layout_height="wrap_content"
-          android:layout_weight="0.5"      
-          android:layout_marginLeft="5dip"       
+          android:layout_weight="1"
+          android:focusable="true"
+          android:padding="3dip"
+          android:layout_marginLeft="5dip"
           android:layout_marginRight="5dip"
-          android:layout_marginTop="5dip"
-          android:layout_marginBottom="5dip"
-        />
+          android:background="@drawable/add_reservation_activity_selector" >  
+            
+          <TextView 
+  	        android:id="@+id/addReservationActivityTimeTitle"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="@string/add_reservation_activity_time_title"
+  	        android:layout_alignParentTop="true"
+  	        android:layout_alignParentLeft="true"
+  	        android:layout_centerHorizontal="true"
+            android:paddingLeft="2dip"
+            android:textAppearance="@style/TextViewStyleReservationActivityTitle"  />
+           
+  	      <TextView 
+  	        android:id="@+id/addReservationActivityTimeValue"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextViewStyleReservationActivityValue"
+  	        android:layout_below="@+id/addReservationActivityTimeTitle" />
+  	        
+        </RelativeLayout>
+          
+        <RelativeLayout 
+          android:id="@+id/addReservationActivityTotalPrice"
+          android:layout_width="0dip" 
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:focusable="true"
+          android:padding="3dip"
+          android:layout_marginRight="5dip"
+          android:background="@drawable/add_reservation_activity_selector" >  
+          
+          <TextView 
+  	        android:id="@+id/addReservationActivityTotalPriceTitle"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="@string/add_reservation_activity_total_price_title"
+  	        android:layout_alignParentTop="true"
+  	        android:layout_alignParentLeft="true"
+  	        android:gravity="center"
+            android:paddingLeft="2dip"
+            android:textAppearance="@style/TextViewStyleReservationActivityTitle"  />
+          
+  	      <TextView 
+  	        android:id="@+id/addReservationActivityTotalPriceValue"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextViewStyleReservationActivityValue"
+  	        android:layout_below="@+id/addReservationActivityTotalPriceTitle" />
+               
+        </RelativeLayout>	    
+      
       </LinearLayout>
-      <TextView 
-        android:id="@+id/addReservationActivityUntilLabel"
+      
+      <RelativeLayout 
+        android:id="@+id/addReservationActivityStartingTimeDetails"
         android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"        
-        style="@style/listSeparatorTextViewStyle"
-        android:text="@string/add_reservation_until_label"           
-      />   
-      <LinearLayout
-        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" > 
-        <Button 
-     	  android:id="@+id/pickEndDate"
-          android:layout_width="0dip"
-          android:layout_height="wrap_content" 
-          android:layout_weight="0.5"  
-          android:layout_marginLeft="5dip"       
-          android:layout_marginRight="5dip"
-          android:layout_marginTop="5dip"
-          android:layout_marginBottom="5dip"
-        />      
-        <Button 
-    	  android:id="@+id/pickEndTime"
-          android:layout_width="0dip"
-          android:layout_height="wrap_content"     
-		  android:layout_weight="0.5"    
-          android:layout_marginLeft="5dip"       
-          android:layout_marginRight="5dip"
-          android:layout_marginTop="5dip"
-          android:layout_marginBottom="5dip"
-        />
-      </LinearLayout>
-      <Button
-        android:id="@+id/addReservationActivityButtonReserveNow"
-        android:layout_width="fill_parent"
+        android:padding="7dip"
+        android:focusable="true"
+        android:background="@drawable/listview_item_manual" >
+          
+        <TextView
+          android:id="@+id/addReservationActivityStartingTimeLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/add_reservation_activity_starting_time_label"
+          android:minWidth="110dip"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentTop="true" />
+        
+        <TextView 
+          android:id="@+id/addReservationActivityStartingTime"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content"
+          android:textAppearance="@style/TextViewStyleResetervationctivityBold"
+          android:layout_toRightOf="@+id/addReservationActivityStartingTimeLabel"
+          android:layout_marginRight="15dip" />
+                  
+        <ImageView
+          android:id="@+id/reservationActivityNavigationArrow"
+          android:layout_width="9dip"
+          android:layout_height="13dip"
+          android:src="@drawable/arrow_grey"
+          android:scaleType="fitCenter"  
+          android:layout_marginLeft="3dip"
+          android:layout_marginRight="3dip"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true" />
+            
+      </RelativeLayout>
+      
+    
+    <RelativeLayout 
+      android:id="@+id/addReservationActivityEndingTimeDetails"
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:padding="7dip"
+      android:focusable="true"
+      android:background="@drawable/listview_item_manual" >
+        
+      <TextView
+        android:id="@+id/addReservationActivityEndingTimeLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dip"       
-        android:layout_marginRight="5dip"
-        android:layout_marginTop="10dip"
-        android:layout_marginBottom="15dip"
-        android:text="@string/add_reservation_reserve_now"
-      />
-	 
-    </LinearLayout>  
-</ScrollView>
+        android:text="@string/add_reservation_activity_ending_time_label"
+        android:minWidth="110dip"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+              
+      <TextView 
+        android:id="@+id/addReservationActivityEndingTime"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextViewStyleResetervationctivityBold"
+        android:layout_toRightOf="@+id/addReservationActivityEndingTimeLabel"
+        android:layout_marginRight="15dip" />
+          
+      <ImageView
+        android:id="@+id/addReservationActivityEndingArrow"
+        android:layout_width="9dip"
+        android:layout_height="13dip"
+        android:src="@drawable/arrow_grey"
+        android:scaleType="fitCenter"  
+        android:layout_marginLeft="3dip"
+        android:layout_marginRight="3dip"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true" />
+          
+    </RelativeLayout>
+      <!--    
+      
+      <RelativeLayout 
+        android:id="@+id/reservationActivityIdDetails"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:padding="7dip"
+        android:focusable="true"
+        android:background="@drawable/listview_item_manual" >
+        
+       
+        <TextView
+          android:id="@+id/reservationActivityReservationIdLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:minWidth="150dip"
+          android:text="@string/reservation_activity_id_label"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentTop="true" />
+        
+        <TextView 
+          android:id="@+id/reservationActivityId"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content"
+          android:layout_toRightOf="@+id/reservationActivityReservationIdLabel"
+          android:textAppearance="@style/TextViewStyleResetervationctivityBold"        
+          android:layout_marginRight="15dip" />
+  
+      </RelativeLayout>
+      
+      <RelativeLayout 
+        android:id="@+id/reservationActivityStartingTimeDetails"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:padding="7dip"
+        android:focusable="true"
+        android:background="@drawable/listview_item_manual" >
+          
+        <TextView
+          android:id="@+id/reservationActivityStartingTimeLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/reservation_activity_starting_time_label"
+          android:minWidth="150dip"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentTop="true" />
+        
+        <TextView 
+          android:id="@+id/reservationActivityStartingTime"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content"
+          android:textAppearance="@style/TextViewStyleResetervationctivityBold"        
+          android:layout_toRightOf="@+id/reservationActivityStartingTimeLabel"
+          android:layout_marginRight="15dip" />
+  
+      </RelativeLayout>
+      
+      <RelativeLayout 
+        android:id="@+id/reservationActivityEndingTimeDetails"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:padding="7dip"
+        android:focusable="true"
+        android:background="@drawable/listview_item_manual" >
+          
+        <TextView
+          android:id="@+id/reservationActivityReservationEndingTimeLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:minWidth="150dip"        
+          android:text="@string/reservation_activity_ending_time_label"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentTop="true" />
+        
+        <TextView 
+          android:id="@+id/reservationActivityEndingTime"
+          android:layout_width="wrap_content" 
+          android:layout_height="wrap_content"
+          android:textAppearance="@style/TextViewStyleResetervationctivityBold"
+          android:layout_toRightOf="@+id/reservationActivityReservationEndingTimeLabel"
+          android:layout_marginRight="15dip" />
+  
+      </RelativeLayout>
+      
+      <RelativeLayout 
+        android:id="@+id/reservationActivityNavigationDetails"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:padding="7dip"
+        android:visibility="gone"
+        android:focusable="true"
+        android:background="@drawable/listview_item_manual" >
+          
+        <TextView
+          android:id="@+id/reservationActivityNavigationLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/reservation_activity_navigation_label"
+          android:layout_marginLeft="150dip"
+          android:textAppearance="@style/TextViewStyleResetervationctivityBold"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentTop="true" />
+                
+        <ImageView
+          android:id="@+id/reservationActivityNavigationArrow"
+          android:layout_width="9dip"
+          android:layout_height="13dip"
+          android:src="@drawable/arrow_grey"
+          android:scaleType="fitCenter"  
+          android:layout_marginLeft="3dip"
+          android:layout_marginRight="3dip"
+          android:layout_centerVertical="true"
+          android:layout_alignParentRight="true" />
+            
+      </RelativeLayout>
+      
+    --></LinearLayout>
+  
+  </ScrollView>
+  
+  <LinearLayout 
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+    android:padding="8dip"
+    android:orientation="vertical"
+    android:background="@drawable/header_blue" >
+    
+    <Button
+      android:id="@+id/addReservationActivityButtonReserveNow"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/add_reservation__activity_reserve_now"
+      android:layout_marginTop="10dip"
+      style="@style/actionButton"
+    /><!-- 
+      
+    <Button
+      android:id="@+id/addReservationActivityyButtonBack"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="button 2"
+      android:layout_marginTop="10dip"
+      style="@style/actionButton"
+    />
+  
+  --></LinearLayout>
+  
+</LinearLayout>

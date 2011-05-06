@@ -297,7 +297,7 @@
     android:background="@drawable/header_blue" >
     
   <Button
-      android:id="@+id/reservationActivityyButtonExtend"
+      android:id="@+id/reservationActivityButtonExtend"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:text="button 1"
@@ -306,7 +306,7 @@
       /> 
       
     <Button
-      android:id="@+id/reservationActivityyButtonCancel"
+      android:id="@+id/reservationActivityButtonCancel"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:text="button 2"

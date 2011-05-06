@@ -5,8 +5,7 @@ package com.licenta.parkdroid;
 
 import com.licenta.park.types.ParkingLot;
 import com.licenta.park.types.Reservation;
-import com.licenta.park.types.ReservationResult;
-import com.licenta.park.utils.FormatStrings;
+import com.licenta.parkdroid.widgets.DateTimePicker;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -19,27 +18,23 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
  * @author vladucu
  *
  */
-public class AddReservationActivity extends Activity {
+public class AddReservationActivity extends Activity implements OnClickListener {
 
     private static final String TAG = "AddReservationActivity";
     private static boolean DEBUG = true;
@@ -62,7 +57,9 @@ public class AddReservationActivity extends Activity {
     private int mStartHour, mStartMinute;
     private int mEndYear, mEndMonth, mEndDay;
     private int mEndHour, mEndMinute;
-    Button mPickStartDate, mPickStartTime, mPickEndDate, mPickEndTime;
+    // Check is system is set to use 24h time (this doesn't seem to work as expected though)
+    final String timeS = android.provider.Settings.System.getString(getContentResolver(), android.provider.Settings.System.TIME_12_24);
+    private final boolean is24h = !(timeS == null || timeS.equals("12"));
        
     private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
         @Override
@@ -173,47 +170,29 @@ public class AddReservationActivity extends Activity {
     
     private void ensureUi() {
         if (DEBUG) Log.d( TAG, "ensureUi()");
-        TextView tvParkingLotName = (TextView)findViewById(R.id.parkingLotName);
-        TextView tvParkingLotLocation = (TextView)findViewById(R.id.parkingLotLocation);
-        TextView tvParkingPrice = (TextView)findViewById(R.id.parkingPrice);
-        mPickStartDate = (Button)findViewById(R.id.pickStartDate);
-        mPickStartTime = (Button)findViewById(R.id.pickStartTime);
-        mPickEndDate = (Button)findViewById(R.id.pickEndDate);
-        mPickEndTime = (Button)findViewById(R.id.pickEndTime);
+        TextView tvParkingLotName = (TextView)findViewById(R.id.addReservationActivityParkingLotName);
+        TextView tvParkingLotLocation = (TextView)findViewById(R.id.addReservationActivityParkingLotAddress);
+        TextView tvParkingHourPrice = (TextView)findViewById(R.id.addReservationActivityPriceValue);
+        TextView tvParkingSelectedTime = (TextView) findViewById(R.id.addReservationActivityTimeValue);
+        TextView tvParkingTotalPrice = (TextView) findViewById(R.id.addReservationActivityTotalPriceValue);
+        
+        TextView tvStartTime = (TextView) findViewById(R.id.addReservationActivityStartingTime);
+        View viewStartTime = findViewById(R.id.addReservationActivityStartingTimeDetails);        
+        TextView tvEndTime = (TextView) findViewById(R.id.addReservationActivityEndingTime);
+        View viewEndTime = findViewById(R.id.addReservationActivityEndingTimeDetails);
         
         tvParkingLotName.setText(mStateHolder.getParkingLot().getName());
         tvParkingLotLocation.setText(mStateHolder.getParkingLot().getAddress());
-        tvParkingPrice.setText(mStateHolder.getParkingLot().getPrice()+"/hour");
+        tvParkingHourPrice.setText(mStateHolder.getParkingLot().getPrice()+"/hour");
+        tvParkingSelectedTime.setText("3:35");
+        tvParkingTotalPrice.setText("250");
+        
+        viewStartTime.setOnClickListener(this);
+        viewEndTime.setOnClickListener(this);
+        
         //set the title of the activity
         setTitle(getTitle()+ " Reservation - " + mStateHolder.getParkingLot().getName() );
-        // add a click listener to the date picker button
-        mPickStartDate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(DIALOG_SELECT_START_DATE);
-            }
-        });
-        
-        // add a click listener to the time picker button
-        mPickStartTime.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(DIALOG_SELECT_START_TIME);
-            }
-        });
-        
-     // add a click listener to the date picker button
-        mPickEndDate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(DIALOG_SELECT_END_DATE);
-            }
-        });
-        
-        // add a click listener to the time picker button
-        mPickEndTime.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(DIALOG_SELECT_END_TIME);
-            }
-        });
-
+       
         if (mStateHolder.getReservation() == null) {
             //Get the current date
             final Calendar c =  Calendar.getInstance();
@@ -223,19 +202,81 @@ public class AddReservationActivity extends Activity {
             // get the current time        
             mStartHour = mEndHour = c.get(Calendar.HOUR_OF_DAY);
             mStartMinute = mEndMinute = c.get(Calendar.MINUTE);
-            updateDateDisplay(mPickStartDate, mStartDay, mStartMonth, mStartYear);
-            updateDateDisplay(mPickEndDate, mEndDay, mEndMonth, mEndYear);       
-            updateTimeDisplay(mPickStartTime, mStartHour, mStartMinute);
-            updateTimeDisplay(mPickEndTime, mEndHour, mEndMinute);  
+
+            updateDisplay(tvStartTime, mStartDay, mStartMonth, mStartYear, mStartHour, mStartMinute, is24h);
+            updateDisplay(tvEndTime, mEndDay, mEndMonth, mEndYear, mEndHour, mEndMinute, is24h);
+
         }
         else {
-           /* mPickStartDate.setText(new String.)
+            // TODO set reservation time values in mStateHolder
+            /*mPickStartDate.setText(new String.)
             final Calendar c = (Calendar) mStateHolder.getReservation().getStartTime();
             mPickStartDate.setText(mStateHolder.getReservation().getStartTime());
             //TODO aici atentie
 */        }
         
         ensureUiReserveNowButton();
+    
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.addReservationActivityStartingTimeDetails) {
+            if (DEBUG) Log.d( TAG, "onClick() + Time");
+            showDateTimeDialog(R.id.addReservationActivityStartingTime);
+        } else if (view.getId() == R.id.addReservationActivityEndingTimeDetails) {
+            if (DEBUG) Log.d( TAG, "onClick() + Date");
+            showDateTimeDialog(R.id.addReservationActivityEndingTime);
+        }        
+    }
+    
+    private void showDateTimeDialog(final int textViewId) {
+     // Create the dialog
+        final Dialog mDateTimeDialog = new Dialog(this);
+        // Inflate the root layout
+        final RelativeLayout mDateTimeDialogView = (RelativeLayout) getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+        // Grab widget instance
+        final DateTimePicker mDateTimePicker = (DateTimePicker) mDateTimeDialogView.findViewById(R.id.dateTimePicker);        
+        
+        // Update demo TextViews when the "OK" button is clicked 
+        ((Button) mDateTimeDialogView.findViewById(R.id.setDateTime)).setOnClickListener(new OnClickListener() {
+
+            public void onClick(View v) {
+                // TODO save reservation time values in mStateHolder
+                updateDisplay((TextView)findViewById(textViewId), mDateTimePicker.get(Calendar.DAY_OF_MONTH), mDateTimePicker.get(Calendar.MONTH), 
+                        mDateTimePicker.get(Calendar.YEAR), mDateTimePicker.get(Calendar.HOUR),  mDateTimePicker.get(Calendar.MINUTE), 
+                        mDateTimePicker.is24HourView());   
+                
+                mDateTimeDialog.dismiss();
+            }
+        });
+
+        // Cancel the dialog when the "Cancel" button is clicked
+        ((Button) mDateTimeDialogView.findViewById(R.id.cancelDialog)).setOnClickListener(new OnClickListener() {
+
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                mDateTimeDialog.cancel();
+            }
+        });
+
+        // Reset Date and Time pickers when the "Reset" button is clicked
+        ((Button) mDateTimeDialogView.findViewById(R.id.resetDateTime)).setOnClickListener(new OnClickListener() {
+
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                mDateTimePicker.reset();
+            }
+        });
+        
+        // Setup TimePicker
+        mDateTimePicker.setIs24HourView(is24h);
+        // No title on the dialog window
+        mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // Set the dialog content view
+        mDateTimeDialog.setContentView(mDateTimeDialogView);
+        // Display the dialog
+        mDateTimeDialog.show();
     }
     
     private void ensureUiReserveNowButton() {
@@ -244,123 +285,43 @@ public class AddReservationActivity extends Activity {
         btnReserveNow.setEnabled(true);
         if (mStateHolder.getReservation() != null) {
             btnReserveNow.setText(R.string.reservation_activity_extend_button);
-            btnReserveNow.setOnClickListener(new OnClickListener() {
-                
+            btnReserveNow.setOnClickListener(new OnClickListener() {                
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(AddReservationActivity.this, "Extending reservation", Toast.LENGTH_LONG);
-                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());
-                    
+                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());                    
                 }
             });
         }
         else {
-            btnReserveNow.setOnClickListener(new OnClickListener() {
-                
+            btnReserveNow.setOnClickListener(new OnClickListener() {                
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(AddReservationActivity.this, "Starting reservation", Toast.LENGTH_LONG);
-                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());
-                    
+                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());                    
                 }
             });
-        }
-        
+        }        
     }
 
     // updates the date in the TextView
-    private void updateDateDisplay(Button date, int day, int month, int year) {
-        if (DEBUG) Log.d( TAG, "updateDateDisplay()");
-        if (DEBUG) Log.d( TAG, "updateUi()");
-        date.setText(
-                new StringBuilder()
-                        // Month is 0 based so add 1
+    private void updateDisplay(TextView view, int day, int month, int year, int hour, int minute, boolean is24h) {
+        if (DEBUG) Log.d( TAG, "updateDisplay()");
+        view.setText(
+                new StringBuilder()                        
+                        .append(pad(hour)).append(":")
+                        .append(pad(minute)).append(", ")
                         .append(day).append("-")
+                        // Month is 0 based so add 1
                         .append(month + 1).append("-")                        
                         .append(year).append(" "));
     }   
-    
-    // updates the time we display in the View
-    private void updateTimeDisplay(Button time, int hour, int minute) {
-        if (DEBUG) Log.d( TAG, "updateTimeDisplay()");
-        time.setText(
-            new StringBuilder()
-                    .append(pad(hour)).append(":")
-                    .append(pad(minute)));
-    }
     
     private static String pad(int c) {
         if (c >= 10)
             return String.valueOf(c);
         else
             return "0" + String.valueOf(c);
-    }
-    
-    // the callback received when the user "sets" the date in the dialog
-    private DatePickerDialog.OnDateSetListener mStartDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-
-                public void onDateSet(DatePicker view, int year, 
-                                      int monthOfYear, int dayOfMonth) {
-                    mStartYear = year;
-                    mStartMonth = monthOfYear;
-                    mStartDay = dayOfMonth;
-                    updateDateDisplay(mPickStartDate, mStartYear, mStartMonth, mStartDay);
-                }
-            };
-           
-    // the callback received when the user "sets" the time in the dialog
-    private TimePickerDialog.OnTimeSetListener mStartTimeSetListener =
-        new TimePickerDialog.OnTimeSetListener() {
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                mStartHour = hourOfDay;
-                mStartMinute = minute;
-                updateTimeDisplay(mPickStartTime, mStartHour, mStartMinute);
-            }
-        };
-        
-    // the callback received when the user "sets" the date in the dialog
-    private DatePickerDialog.OnDateSetListener mEndDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-
-                public void onDateSet(DatePicker view, int year, 
-                                      int monthOfYear, int dayOfMonth) {
-                    mEndYear = year;
-                    mEndMonth = monthOfYear;
-                    mEndDay = dayOfMonth;
-                    updateDateDisplay(mPickEndDate, mEndYear, mEndMonth, mEndDay);
-                }
-            };
-           
-    // the callback received when the user "sets" the time in the dialog
-    private TimePickerDialog.OnTimeSetListener mEndTimeSetListener =
-        new TimePickerDialog.OnTimeSetListener() {
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                mEndHour = hourOfDay;
-                mEndMinute = minute;
-                updateTimeDisplay(mPickEndTime, mEndHour, mEndMinute);
-            }
-        };
-    
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreateDialog(int)
-     */
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        if (DEBUG) Log.d( TAG, "onCreateDialog()");
-        switch (id) {
-            case DIALOG_SELECT_START_DATE:
-                return new DatePickerDialog(this, mStartDateSetListener, mStartYear, mStartMonth, mStartDay); 
-            case DIALOG_SELECT_START_TIME:
-                return new TimePickerDialog(this, mStartTimeSetListener, mStartHour, mStartMinute, true);
-            case DIALOG_SELECT_END_DATE:
-                return new DatePickerDialog(this, mEndDateSetListener, mEndYear, mEndMonth, mEndDay); 
-            case DIALOG_SELECT_END_TIME:
-                return new TimePickerDialog(this, mEndTimeSetListener, mEndHour, mEndMinute, true);
-            case DIALOG_RESERVATION_RESULT:
-                //TODO add reservationResult intent 
-        }
-        return null;
     }
     
     private void onReservationComplete(Reservation result, Exception ex) {
@@ -439,6 +400,8 @@ public class AddReservationActivity extends Activity {
         private boolean mIsRunning;
         private ReservationTask mTask;
         private Reservation mReservation;
+        private String mStartingTime;
+        private String mEndingTime;
         
         public StateHolder() {
             if (DEBUG) Log.d( TAG, "StateHolder()");
@@ -464,7 +427,7 @@ public class AddReservationActivity extends Activity {
         
         public void setParkingLot(ParkingLot parkignLot) {
             if (DEBUG) Log.d( TAG, "setParkingLot()");
-            mParkingLot = parkignLot;            
+            mParkingLot = parkignLot;       
         }
         
         public ParkingLot getParkingLot() {
@@ -477,6 +440,10 @@ public class AddReservationActivity extends Activity {
             if (mTask != null) {
                 mTask.setActivity(activity);
             }
+        }
+        
+        public void setStartingTime(String time) {
+            mStartingTime = time;
         }
         
         public boolean getIsRunning() {
