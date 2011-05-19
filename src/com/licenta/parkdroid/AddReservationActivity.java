@@ -57,9 +57,8 @@ public class AddReservationActivity extends Activity implements OnClickListener 
     private int mStartHour, mStartMinute;
     private int mEndYear, mEndMonth, mEndDay;
     private int mEndHour, mEndMinute;
-    // Check is system is set to use 24h time (this doesn't seem to work as expected though)
-    final String timeS = android.provider.Settings.System.getString(getContentResolver(), android.provider.Settings.System.TIME_12_24);
-    private final boolean is24h = !(timeS == null || timeS.equals("12"));
+    
+    boolean is24h;
        
     private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
         @Override
@@ -82,6 +81,11 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         
         setContentView(R.layout.add_reservation);
         registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));
+        
+        
+        // Check is system is set to use 24h time (this doesn't seem to work as expected though)
+        final String timeS = android.provider.Settings.System.getString(getContentResolver(), android.provider.Settings.System.TIME_12_24);
+        is24h = !(timeS == null || timeS.equals("12"));
         
         mHandler = new Handler();        
         Object retained = getLastNonConfigurationInstance();
@@ -170,6 +174,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
     
     private void ensureUi() {
         if (DEBUG) Log.d( TAG, "ensureUi()");
+        
         TextView tvParkingLotName = (TextView)findViewById(R.id.addReservationActivityParkingLotName);
         TextView tvParkingLotLocation = (TextView)findViewById(R.id.addReservationActivityParkingLotAddress);
         TextView tvParkingHourPrice = (TextView)findViewById(R.id.addReservationActivityPriceValue);

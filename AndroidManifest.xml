@@ -50,17 +50,17 @@
         
         <activity android:name=".ParkingLotMapActivity"></activity>
         
-        <activity android:name="LoginActivity"
+        <activity android:name=".LoginActivity"
         		  android:launchMode="singleInstance">
         </activity>
         
-        <activity android:name="AddReservationActivity">
+        <activity android:name=".AddReservationActivity">
         </activity>
         
-        <activity android:name="ActiveReservationsListActivity">
+        <activity android:name=".ActiveReservationsListActivity">
         </activity>
         
-        <activity android:name="ReservationActivity">
+        <activity android:name=".ReservationActivity">
         </activity>
         		  
     </application>
