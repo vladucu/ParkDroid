@@ -37,7 +37,7 @@ public class ParkingLotActivity extends Activity {
     
     public static final String TAG = "ParkingLotActivity";
     //debug mode
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     
     private Handler mHandler;
     private StateHolder mStateHolder;

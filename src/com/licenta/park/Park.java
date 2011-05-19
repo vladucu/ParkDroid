@@ -20,7 +20,7 @@ public class Park {
     
     public static final String TAG = "Park";
     //debug mode
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     
     private String mPhone;
     private String mPassword;

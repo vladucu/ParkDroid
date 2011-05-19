@@ -21,7 +21,7 @@ public class BestLocationListener extends Observable implements LocationListener
 
     private static final String TAG = "BestLocationListener";
     //debug mode
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     
     private Location mLastLocation;
     

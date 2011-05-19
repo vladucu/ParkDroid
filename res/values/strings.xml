@@ -58,4 +58,7 @@
 	<string name="reservation_activity_navigation_label">Get directions</string>	
     <string name="reservation_activity_cancel_button">Cancel reservation</string>
     <string name="reservation_activity_extend_button">Extend reservation</string>
+    <string name="add_reservation_execute_activity_action_label">Add reservation!</string>
+    <string name="add_reservation_execute_activity_progress_bar_message">Making Reservation...</string>
+    <string name="add_reservation_title_result">Reservation confirmed!</string>
 </resources>

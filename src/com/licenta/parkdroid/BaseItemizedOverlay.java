@@ -19,7 +19,7 @@ import android.util.Log;
 abstract class BaseItemizedOverlay<T extends ParkTypes> extends ItemizedOverlay<OverlayItem> {
     
     private static final String TAG = "BaseItemizedOverlay";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
 
     Group<T> group = null;
     

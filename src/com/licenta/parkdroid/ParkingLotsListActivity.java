@@ -240,7 +240,7 @@ public class ParkingLotsListActivity extends LoadableListActivity {
      */
     private static class SearchTask extends AsyncTask<Void, Void, Group<ParkingLot>> {
         private static final String TAG = "SearchTask";
-        private static boolean DEBUG = true;
+        private static boolean DEBUG = false;
         
         private ParkingLotsListActivity mActivity;
         private String mQuery;

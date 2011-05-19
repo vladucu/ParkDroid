@@ -18,7 +18,7 @@ import android.widget.TextView;
 public class ParkingLotListAdapter extends BaseParkingLotAdapter {
     
     private static final String TAG = "ParkingLotListAdapter";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     
    // private Group<ParkingLot> items;
     private LayoutInflater mInflater;

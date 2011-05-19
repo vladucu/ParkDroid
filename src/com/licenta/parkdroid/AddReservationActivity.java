@@ -7,10 +7,8 @@ import com.licenta.park.types.ParkingLot;
 import com.licenta.park.types.Reservation;
 import com.licenta.parkdroid.widgets.DateTimePicker;
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,10 +21,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 import java.util.Calendar;
 
@@ -42,12 +38,8 @@ public class AddReservationActivity extends Activity implements OnClickListener 
     public static final String INTENT_EXTRA_PARKING_LOT = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_PARKING_LOT";
     public static final String INTENT_EXTRA_RESERVATION = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_RESERVATION";
     public static final String INTENT_EXTRA_RETURNED_RESERVATION = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_RETURNED_RESERVATION";
-    
-    private static final int DIALOG_SELECT_START_DATE = 0;
-    private static final int DIALOG_SELECT_START_TIME = 1;
-    private static final int DIALOG_SELECT_END_DATE = 2;
-    private static final int DIALOG_SELECT_END_TIME = 3;
-    private static final int DIALOG_RESERVATION_RESULT = 4;
+
+    private static final int DIALOG_RESERVATION_RESULT = 1;
     
     private StateHolder mStateHolder;
     private Handler mHandler;
@@ -91,7 +83,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         Object retained = getLastNonConfigurationInstance();
         if (retained != null && retained instanceof StateHolder) {
             mStateHolder = (StateHolder) retained;
-            mStateHolder.setActivity(this);
+            //mStateHolder.setActivity(this);
         } else {
             mStateHolder = new StateHolder();
             if (getIntent().hasExtra(INTENT_EXTRA_PARKING_LOT)) {
@@ -119,21 +111,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         unregisterReceiver(mLoggedOutReceiver);
     }
 
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onPause()
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        
-        stopProgressBar();
-
-        if (isFinishing()) {
-            mStateHolder.cancelTasks();
-        }
-    }
-
     /* (non-Javadoc)
      * @see android.app.Activity#onResume()
      */
@@ -152,7 +129,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
      */
     @Override
     public Object onRetainNonConfigurationInstance() {
-        mStateHolder.setActivity(null);
+        //mStateHolder.setActivity(null);
         return mStateHolder;
     }
 
@@ -293,8 +270,8 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             btnReserveNow.setOnClickListener(new OnClickListener() {                
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(AddReservationActivity.this, "Extending reservation", Toast.LENGTH_LONG);
-                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());                    
+               /*     Toast.makeText(AddReservationActivity.this, "Extending reservation", Toast.LENGTH_LONG);
+                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());                    */
                 }
             });
         }
@@ -302,8 +279,9 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             btnReserveNow.setOnClickListener(new OnClickListener() {                
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(AddReservationActivity.this, "Starting reservation", Toast.LENGTH_LONG);
-                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());                    
+                    /*Toast.makeText(AddReservationActivity.this, "Starting reservation", Toast.LENGTH_LONG);
+                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());*/
+                	makeReservation();
                 }
             });
         }        
@@ -329,6 +307,12 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             return "0" + String.valueOf(c);
     }
     
+    private void makeReservation() {
+    	Intent intent = new Intent(AddReservationActivity.this, AddReservationExecuteActivity.class);
+    	intent.putExtra(AddReservationExecuteActivity.INTENT_EXTRA_PARKING_LOT_ID, mStateHolder.getParkingLot().getId());
+    	startActivityForResult(intent, DIALOG_RESERVATION_RESULT);
+    }
+    
     private void onReservationComplete(Reservation result, Exception ex) {
         mStateHolder.setIsRunning(false);
         stopProgressBar();
@@ -343,7 +327,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         }
     }
     
-    private static class ReservationTask extends AsyncTask<Void, Void, Reservation> {
+  /*  private static class ReservationTask extends AsyncTask<Void, Void, Reservation> {
         private static final String TAG = "ReservationTask";
         private static boolean DEBUG = true;
         
@@ -361,9 +345,9 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             mParkingLotId = parkingLotId;
         }        
         
-        /* (non-Javadoc)
+         (non-Javadoc)
          * @see android.os.AsyncTask#onPreExecute()
-         */
+         
         @Override
         protected void onPreExecute() {
             if (DEBUG) Log.d( TAG, "onPreExecute()");
@@ -384,9 +368,9 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             return new Reservation();
         }
         
-        /* (non-Javadoc)
+         (non-Javadoc)
          * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
-         */
+         
         @Override
         protected void onPostExecute(Reservation result) {
             if (DEBUG) Log.d( TAG, "onPostExecute()");
@@ -396,14 +380,14 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         }
         
     }
-
+*/
     private class StateHolder {
-        private static final String TAG = "ReservationTask";
+        private static final String TAG = "AddReservationTask";
         private boolean DEBUG = true;
         
         private ParkingLot mParkingLot;
         private boolean mIsRunning;
-        private ReservationTask mTask;
+        //private ReservationTask mTask;
         private Reservation mReservation;
         private String mStartingTime;
         private String mEndingTime;
@@ -422,13 +406,13 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             return mReservation;
         }
 
-        public void startTask(AddReservationActivity activity, String parkingLotId) {
+      /*  public void startTask(AddReservationActivity activity, String parkingLotId) {
             if (DEBUG) Log.d( TAG, "startTask()");
             mIsRunning = true;
             mTask = new ReservationTask(activity, parkingLotId);
             mTask.execute();
             
-        }
+        }*/
         
         public void setParkingLot(ParkingLot parkignLot) {
             if (DEBUG) Log.d( TAG, "setParkingLot()");
@@ -440,12 +424,12 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             return mParkingLot;
         }
         
-        public void setActivity(AddReservationActivity activity) {
+      /*  public void setActivity(AddReservationActivity activity) {
             if (DEBUG) Log.d( TAG, "setActivity()");
             if (mTask != null) {
                 mTask.setActivity(activity);
             }
-        }
+        }*/
         
         public void setStartingTime(String time) {
             mStartingTime = time;
@@ -461,12 +445,12 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             mIsRunning = isRunning;
         }
         
-        public void cancelTasks() {
+     /*   public void cancelTasks() {
             if (DEBUG) Log.d( TAG, "cancelTasks()");
             if (mTask !=null && mIsRunning) {
                 mTask.setActivity(null);
                 mTask.cancel(true);
             }            
-        }
+        }*/
     }
 }
