@@ -3,5 +3,10 @@
 	<classpathentry excluding="com/licenta/parkdroid/TabsUtil4.java|com/licenta/parkdroid/TabsUtil3.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="/home/vladucu/local/restlet-android-2.1m4/lib/org.restlet.ext.jackson.jar"/>
+	<classpathentry kind="lib" path="/home/vladucu/local/restlet-android-2.1m4/lib/org.restlet.ext.httpclient.jar"/>
+	<classpathentry kind="lib" path="/home/vladucu/local/restlet-android-2.1m4/lib/org.restlet.jar"/>
+	<classpathentry kind="lib" path="/home/vladucu/local/restlet-android-2.1m4/lib/org.restlet.ext.ssl.jar"/>
+	<classpathentry kind="lib" path="/home/vladucu/Downloads/jackson-all-1.7.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
