@@ -184,7 +184,7 @@
         android:id="@+id/reservationActivityReservationIdLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="150dip"
+        android:minWidth="120dip"
         android:text="@string/reservation_activity_id_label"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
@@ -212,7 +212,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/reservation_activity_starting_time_label"
-        android:minWidth="150dip"
+        android:minWidth="120dip"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
       
@@ -238,7 +238,7 @@
         android:id="@+id/reservationActivityReservationEndingTimeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="150dip"        
+        android:minWidth="120dip"        
         android:text="@string/reservation_activity_ending_time_label"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />

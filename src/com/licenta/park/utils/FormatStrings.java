@@ -23,6 +23,7 @@ public class FormatStrings {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
             "HH:mm, EEE, dd MMM yy");
     
+    //public static final DateFormat dataformat =  DateFormat.getDateInstance(DateFormat.LONG);
     public static final SimpleDateFormat DATE_FORMAT2 = new SimpleDateFormat(
     		"HH:mm, dd-MM-yyyy");
     
@@ -86,7 +87,13 @@ public class FormatStrings {
     }
     
     public static Date stringDateToUnits(String time) {
-    
+    	try {
+			return DATE_FORMAT.parse(time);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     	CharSequence time2 = StringToDate(time);
     	String day = getHourString(time);
     	int i = 0;

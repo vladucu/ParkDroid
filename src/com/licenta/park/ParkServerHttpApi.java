@@ -4,6 +4,8 @@
 package com.licenta.park;
 
 import java.io.IOException;
+import java.util.Date;
+
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Form;
@@ -18,6 +20,7 @@ import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkingSpace;
 import com.licenta.park.types.ParkingSpaces;
 import com.licenta.park.types.ParkingSpacesResource;
+import com.licenta.park.types.ReservationResource;
 import com.licenta.park.types.Reservations;
 import com.licenta.park.types.Reservation;
 import com.licenta.park.types.ReservationsResource;
@@ -40,6 +43,7 @@ class ParkServerHttpApi {
 	private ParkingSpacesResource parkingSpacesResource;
 	private UserResource userResource;
 	private ReservationsResource reservationsResource;
+	private ReservationResource reservationResource;
 	
 	public ParkServerHttpApi(String domain) {
 		if (DEBUG) Log.d(TAG, "ParkServerHttpApi() domain="+domain);
@@ -145,7 +149,7 @@ class ParkServerHttpApi {
 	}
 
 	public Reservations reservations() throws IOException {
-		Group<ParkingSpace> result = new Group<ParkingSpace>();
+		
 		clientResource = new ClientResource("http://89.37.147.104:8080/users/1/reservations");
 		clientResource.setChallengeResponse(authentication);
 		reservationsResource = clientResource.wrap(ReservationsResource.class);
@@ -174,26 +178,56 @@ class ParkServerHttpApi {
 		return reservations;
 	}
 
-	public Reservation createReservation(int userId, ParkingSpace mParkingSpace, String startTime, String endTime) throws IOException {
+	public Reservation createReservation(int userId, ParkingSpace mParkingSpace, String mStartTime, String mEndTime) throws IOException {
 		
 		Reservation reservation = new Reservation();
 		reservation.setParkingSpace(mParkingSpace);
 		reservation.setUser(null);
-		reservation.setStartTime(startTime);
-		reservation.setEndTime(endTime);
+		reservation.setStartTime(mStartTime);
+		reservation.setEndTime(mEndTime);
 		
 		clientResource = new ClientResource("http://89.37.147.104:8080/users/"+userId+"/reservations");
 		clientResource.setChallengeResponse(authentication);
 		reservationsResource = clientResource.wrap(ReservationsResource.class);
-		Form form = new Form();
+		/*Form form = new Form();
 		form.add("startTime", startTime);
 		form.add("endTime", endTime);
-		form.add("parkingSpaceId", Integer.toString(mParkingSpace.getId()));
+		form.add("parkingSpaceId", Integer.toString(mParkingSpace.getId()));*/
 		//reservationsResource.createReservation(form);
 		
 		
 		try {
 			reservation = reservationsResource.createReservation(reservation);
+			//clientResource.post(form.getWebRepresentation());
+			//Representation rep = clientResource.post(form.getWebRepresentation());
+			
+		} catch (Exception e) {}
+		if (clientResource.getStatus() == Status.SUCCESS_OK) {
+			//reservation = (Reservation) clientResource.getResponseEntity(entity);
+			//reservation = clientResource.getResponseEntity(); 
+			//return null;
+		}
+		else {
+			clientResource.getResponseEntity().exhaust();
+		}
+		clientResource.release();
+		return reservation;
+	}
+
+	public Reservation updateReservation(Reservation reservation) throws IOException {
+		
+		clientResource = new ClientResource("http://89.37.147.104:8080/users/"+reservation.getUser().getId()+"/reservations/"+reservation.getId());
+		clientResource.setChallengeResponse(authentication);
+		reservationResource = clientResource.wrap(ReservationResource.class);
+		/*Form form = new Form();
+		form.add("startTime", startTime);
+		form.add("endTime", endTime);
+		form.add("parkingSpaceId", Integer.toString(mParkingSpace.getId()));*/
+		//reservationsResource.createReservation(form);
+		
+		
+		try {
+			reservation = reservationResource.updateReservation(reservation);
 			//clientResource.post(form.getWebRepresentation());
 			//Representation rep = clientResource.post(form.getWebRepresentation());
 			

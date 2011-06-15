@@ -3,14 +3,13 @@
  */
 package com.licenta.parkdroid;
 
+import java.util.Iterator;
 import java.util.List;
-
 import com.licenta.park.Park;
 import com.licenta.park.types.Group;
-import com.licenta.park.types.ParkingSpace;
 import com.licenta.park.types.Reservation;
 import com.licenta.park.types.Reservations;
-import com.licenta.park.utils.FormatStrings;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +34,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
     
     private StateHolder mStateHolder;
     private ActiveReservationsAdapter mListAdapter;
+    private static final int RESULT_CODE_ACTIVITY_RESERVATION = 1;
 
     private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
         @Override
@@ -62,7 +62,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
             mStateHolder.setActivity(this);
         } else {            
             ParkDroid parkDroid = (ParkDroid) getApplication();
-            mStateHolder = new StateHolder(parkDroid.getUserEmail());
+            mStateHolder = new StateHolder();
             mStateHolder.startActiveReservationsTask(this);
         }
         
@@ -96,10 +96,27 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         if (DEBUG) Log.d(TAG, "startItemActivity()");
         Intent intent = new Intent(ActiveReservationsListActivity.this, ReservationActivity.class);
         intent.putExtra(ReservationActivity.INTENT_EXTRA_RESERVATION, reservation);
-        startActivity(intent);        
+        startActivityForResult(intent, RESULT_CODE_ACTIVITY_RESERVATION);        
     }
         
-    public void onActiveReservationsTaskComplete(Reservations reservations) {
+    /* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case RESULT_CODE_ACTIVITY_RESERVATION:
+				if (resultCode == Activity.RESULT_OK && data.hasExtra(ReservationActivity.INTENT_EXTRA_RESERVATION)) {
+					Reservation reservation = data.getParcelableExtra(ReservationActivity.INTENT_EXTRA_RESERVATION);
+					mStateHolder.updateReservation(reservation);
+					//mListAdapter.notifyDataSetChanged();
+					ensureUi();
+				}
+				break;
+		}
+	}
+
+	public void onActiveReservationsTaskComplete(Reservations reservations) {
         if (DEBUG) Log.d(TAG, "onActiveReservationsTaskComplete()");
         
         mListAdapter = new ActiveReservationsAdapter(this);
@@ -208,15 +225,13 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         private static boolean DEBUG = true;
         
         private List<Reservation> mReservations;
-        private ActiveReservationsTask mTask;
-        private String mUserEmail;
+        private ActiveReservationsTask mTask;        
         private boolean mIsRunning;
         
-        public StateHolder(String userEmail) {
-            if (DEBUG) Log.d(TAG, "StateHolder()");
-            mUserEmail = userEmail;
+        public StateHolder() {
+            if (DEBUG) Log.d(TAG, "StateHolder()");            
             mIsRunning = false;
-            mReservations = new Group<Reservation>();
+            mReservations = null;
         }
         
         public void startActiveReservationsTask(ActiveReservationsListActivity activity) {
@@ -251,6 +266,23 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
             if (mTask != null) {
                 mTask.setActivity(activity);
             }
+        }
+        
+        public void updateReservation(Reservation reservation) {
+        	Iterator<Reservation> it = mReservations.iterator();
+        	Reservation res;
+        	int i=0;
+        	while (it.hasNext()) {
+        		res = it.next();        		
+        		if (res.getId() == reservation.getId()) {
+        			//TODO should we calculate the distance here?
+        			it.remove();        		
+        			mReservations.add(reservation);
+        			return;
+        		}
+        		
+        		i++;
+        	}            
         }
     }    
 }

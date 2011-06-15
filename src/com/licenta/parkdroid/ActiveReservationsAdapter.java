@@ -4,6 +4,7 @@ import com.licenta.park.types.Reservation;
 import com.licenta.park.utils.FormatStrings;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +17,7 @@ import android.widget.TextView;
  * @author vladucu
  *
  */
-public class ActiveReservationsAdapter extends BaseReservationsAdapter {
+public class ActiveReservationsAdapter extends BaseReservationsAdapter implements ObservableAdapter {
     private static final String TAG = "ActiveReservationsAdapter";
     private static boolean DEBUG = true;
     
@@ -64,10 +65,10 @@ public class ActiveReservationsAdapter extends BaseReservationsAdapter {
         
         Reservation reservation = (Reservation) getItem(position);
         holder.parkingLotName.setText(reservation.getParkingSpace().getName());        
-        holder.startingTime.setText("From: " + FormatStrings.getHourString(reservation.getStartTime()) 
+       /* holder.startingTime.setText("From: " + FormatStrings.getHourString(reservation.getStartTime()) 
                 + " " + FormatStrings.getDayString(reservation.getStartTime()) );
         holder.endingTime.setText("Until: " + FormatStrings.getHourString(reservation.getEndTime()) 
-                + " " + FormatStrings.getDayString(reservation.getEndTime()) );
+                + " " + FormatStrings.getDayString(reservation.getEndTime()) );*/
      /*   holder.parkingLotDistance.setText(reservation.getParkingLot().getDistance() + " meters");
         holder.iconTrending.setVisibility(View.VISIBLE);
         holder.parkingLotSpaces.setText(reservation.getParkingLot().getEmptySpaces()+"/"+reservation.getParkingLot().getTotalSpaces());        
@@ -85,5 +86,18 @@ public class ActiveReservationsAdapter extends BaseReservationsAdapter {
         TextView parkingLotSpaces;
         TextView parkingPrice;*/
     }
+
+	@Override
+	public void removeObserver() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+    private DataSetObserver mDataSetObserver = new DataSetObserver() {
+        @Override
+        public void onChanged() {
+            notifyDataSetChanged();
+        }
+    };
 
 }

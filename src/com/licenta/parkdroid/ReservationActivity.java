@@ -3,11 +3,13 @@
  */
 package com.licenta.parkdroid;
 
+import java.util.Date;
+
 import com.google.android.maps.GeoPoint;
+import com.licenta.park.types.AddReservationResult;
 import com.licenta.park.types.Reservation;
 import com.licenta.park.utils.FormatStrings;
 import com.licenta.park.utils.GeoUtils;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -77,7 +79,7 @@ public class ReservationActivity extends Activity {
         else {
             if (DEBUG) Log.d(TAG, "onCreate4()");
             mStateHolder = holder;
-         //   mStateHolder.setActivity(this);
+            //mStateHolder.setActivity(this);
         }
         
         ensureUi();
@@ -87,13 +89,7 @@ public class ReservationActivity extends Activity {
         if (DEBUG) Log.d(TAG, "ensureUi()");
         TextView tvReservationActivityParkingLotName = (TextView) findViewById(R.id.reservationActivityParkingLotName);
         TextView tvReservationActivityParkingLotAddress = (TextView) findViewById(R.id.reservationActivityParkingLotAddress);
-        TextView tvReservationActivityStartingTime = (TextView) findViewById(R.id.reservationActivityStartingTime);
-        TextView tvReservationActivityEndingTime = (TextView) findViewById(R.id.reservationActivityEndingTime);
-        
-        TextView tvReservationActivityPrice = (TextView) findViewById(R.id.reservationActivityPriceValue);
-        TextView tvReservationActivityTime = (TextView) findViewById(R.id.reservationActivityTimeValue);
-        TextView tvReservationActivityCosts = (TextView) findViewById(R.id.reservationActivityTotalPriceValue);
-        
+   
         TextView tvResercationActivityId = (TextView) findViewById(R.id.reservationActivityId); 
         View viewId = findViewById(R.id.reservationActivityIdDetails);
         
@@ -108,17 +104,12 @@ public class ReservationActivity extends Activity {
         final Reservation reservation = mStateHolder.getReservation();
         tvReservationActivityParkingLotName.setText(reservation.getParkingSpace().getName());
         tvReservationActivityParkingLotAddress.setText(reservation.getParkingSpace().getAddress());        
-        tvReservationActivityStartingTime.setText(FormatStrings.getHourString(reservation.getStartTime()) 
-                + ", " + FormatStrings.getDayString(reservation.getStartTime()));
-        tvReservationActivityEndingTime.setText(FormatStrings.getHourString(reservation.getEndTime()) 
-                + ", " + FormatStrings.getDayString(reservation.getEndTime()));
-        //tvReservationActivityPrice.setText("$ " + reservation.getParkingLot().getPrice());
-        tvReservationActivityTime.setText("3h");
-        tvReservationActivityCosts.setText("9");
+   
         
         tvResercationActivityId.setText(Integer.toString(reservation.getId()));
         viewId.setVisibility(View.VISIBLE);
         
+        updateView();
         /* 
          * We could put a link to get navigation to the parking lot,
          * but the Navigation App is still beta, not official and works only i US
@@ -169,13 +160,51 @@ public class ReservationActivity extends Activity {
             }
         });        
     }    
-    
-    private int ValueOf(String price) {
-        // TODO Auto-generated method stub
-        return 0;
+   
+    public void updateView() {
+    	TextView tvReservationActivityStartingTime = (TextView) findViewById(R.id.reservationActivityStartingTime);
+        TextView tvReservationActivityEndingTime = (TextView) findViewById(R.id.reservationActivityEndingTime);
+        
+        TextView tvReservationActivityPrice = (TextView) findViewById(R.id.reservationActivityPriceValue);
+        TextView tvReservationActivityTime = (TextView) findViewById(R.id.reservationActivityTimeValue);
+        TextView tvReservationActivityCosts = (TextView) findViewById(R.id.reservationActivityTotalPriceValue);
+        
+        tvReservationActivityStartingTime.setText(mStateHolder.getReservation().getStartTime());
+        tvReservationActivityEndingTime.setText(mStateHolder.getReservation().getEndTime());
+        //tvReservationActivityPrice.setText("$ " + reservation.getParkingLot().getPrice());
+        tvReservationActivityTime.setText("3h");
+        tvReservationActivityCosts.setText("9");
     }
+    
+    private void prepareResultIntent() {
+        Reservation reservation = mStateHolder.getReservation();
 
+        Intent intent = new Intent();
+        if (reservation != null) {
+            intent.putExtra(INTENT_EXTRA_RESERVATION, reservation);
+        }
+        setResult(Activity.RESULT_OK, intent);
+    }
+    
     /* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case RESULT_CODE_ACTIVITY_EXTEND_RESERVATION:
+				if (resultCode == Activity.RESULT_OK) {
+					Reservation reservation = data.getParcelableExtra(AddReservationActivity.INTENT_EXTRA_RETURNED_RESERVATION);
+					mStateHolder.setReservation(reservation);		
+					updateView();
+					prepareResultIntent();
+				}
+				break;
+				
+		}
+	}
+
+	/* (non-Javadoc)
      * @see android.app.Activity#onDestroy()
      */
     @Override

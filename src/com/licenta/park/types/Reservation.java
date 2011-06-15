@@ -1,8 +1,13 @@
 package com.licenta.park.types;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.util.Date;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.licenta.park.utils.FormatStrings;
 import com.licenta.park.utils.ParcelUtils;
 
 
@@ -28,9 +33,9 @@ public class Reservation implements ParkTypes, Parcelable {
     }
 
     public Reservation(Parcel in) {
-        reservationId = in.readInt();       
-        startTime = ParcelUtils.readStringFromParcel(in);
-        endTime = ParcelUtils.readStringFromParcel(in);
+        reservationId = in.readInt();
+        startTime = in.readString();
+        endTime = in.readString();
         cost = in.readInt();
         if (in.readInt() == 1) {
         	parkingSpace = in.readParcelable(ParkingSpace.class.getClassLoader());
@@ -63,14 +68,11 @@ public class Reservation implements ParkTypes, Parcelable {
 		return 0;
 	}
 
-	  /* (non-Javadoc)
-     * @see android.os.Parcelable#writeToParcel(android.os.Parcel, int)
-     */
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(reservationId);
-        ParcelUtils.writeStringToParcel(out, startTime);
-        ParcelUtils.writeStringToParcel(out, endTime);
+        out.writeString(startTime);
+        out.writeString(endTime);
         out.writeInt(cost);        
         if (parkingSpace != null) {
             out.writeInt(1);

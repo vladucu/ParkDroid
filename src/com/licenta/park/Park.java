@@ -10,6 +10,7 @@ import com.licenta.park.types.Reservation;
 import com.licenta.park.types.User;
 import android.util.Log;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * @author vladucu
@@ -83,9 +84,14 @@ public class Park {
 		return mParkDroidApi.reservations();				
 	}
 
-	public  Reservation createReservation(int mUserId, ParkingSpace mParkingSpace, String startTime, String endTime) throws IOException {
+	public  Reservation createReservation(int mUserId, ParkingSpace mParkingSpace, String mStartTime, String mEndTime) throws IOException {
 		if (DEBUG) Log.d(TAG, "createReservation()");
-		return mParkDroidApi.createReservation(mUserId, mParkingSpace, startTime, endTime);
+		return mParkDroidApi.createReservation(mUserId, mParkingSpace, mStartTime, mEndTime);
 		
+	}
+
+	public Reservation updateReservation(Reservation reservation) throws IOException {
+		if (DEBUG) Log.d(TAG, "updateReservation()");
+		return mParkDroidApi.updateReservation(reservation);
 	}
 }

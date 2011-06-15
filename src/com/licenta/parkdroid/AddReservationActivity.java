@@ -28,6 +28,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -40,7 +42,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
     private static final String TAG = "AddReservationActivity";
     private static boolean DEBUG = true;
     
-    public static final String INTENT_EXTRA_PARKING_SPACE = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_PARKING_LOT";
+    public static final String INTENT_EXTRA_PARKING_SPACE = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_PARKING_SPACE";
     public static final String INTENT_EXTRA_RESERVATION = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_RESERVATION";
     public static final String INTENT_EXTRA_RETURNED_RESERVATION = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_RETURNED_RESERVATION";
     public static final String INTENT_EXTRA_START_TIME = ParkDroid.PACKAGE_NAME + ".AddReservationExecuteActivity.INTENT_EXTRA_START_TIME";
@@ -48,7 +50,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
 
     private static final int DIALOG_RESERVATION_RESULT = 1;
     
-    private StateHolder mStateHolder;
+    private static StateHolder mStateHolder;
     private Handler mHandler;
     private ProgressDialog mDlgProgress;
     
@@ -95,10 +97,10 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             mStateHolder = new StateHolder();
             if (getIntent().hasExtra(INTENT_EXTRA_PARKING_SPACE)) {
                 mStateHolder.setParkingSpace((ParkingSpace) getIntent().getParcelableExtra(INTENT_EXTRA_PARKING_SPACE));
-                if (getIntent().getExtras().containsKey(INTENT_EXTRA_START_TIME) && getIntent().getExtras().containsKey(INTENT_EXTRA_END_TIME)) {
-					mStateHolder.setStartingTime((String) getIntent().getStringExtra(INTENT_EXTRA_START_TIME));
-					mStateHolder.setEndingTime((String) getIntent().getStringExtra(INTENT_EXTRA_END_TIME));		
-                }
+                /*if (getIntent().getExtras().containsKey(INTENT_EXTRA_START_TIME) && getIntent().getExtras().containsKey(INTENT_EXTRA_END_TIME)) {
+					mStateHolder.setStartingTime(getIntent().get(INTENT_EXTRA_START_TIME, 0L));
+					mStateHolder.setEndingTime((long) getIntent().getLongExtra(INTENT_EXTRA_END_TIME, 0L));		
+                }*/
             } else {
                 Log.e(TAG, "AddReservationActivity must be given a parking lot parcel as intent extras.");
                 finish();
@@ -187,9 +189,10 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         //set the title of the activity
         setTitle(getTitle()+ " Reservation - " + mStateHolder.getParkingSpace().getName() );
        
+        final Calendar c =  Calendar.getInstance();
         if (mStateHolder.getReservation() == null) {
             //Get the current date
-            final Calendar c =  Calendar.getInstance();
+            
             mStartYear = mEndYear = c.get(Calendar.YEAR);
             mStartMonth = mEndMonth = c.get(Calendar.MONTH);
             mStartDay = mEndDay = c.get(Calendar.DAY_OF_MONTH);
@@ -201,13 +204,30 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             updateDisplay(tvEndTime, mEndDay, mEndMonth, mEndYear, mEndHour, mEndMinute, is24h);
 
         }
-        else {
-            // TODO set reservation time values in mStateHolder
-        	//String[] startTime = FormatStrings.stringDateToUnits(mStateHolder.getReservation().getStartTime());
-        	//updateDisplay(tvStartTime, day, month, year, hour, minute, is24h)
-            //mPickStartDate.setText(new String);
-            
-            
+        else {        	
+        	String date = mStateHolder.getReservation().getStartTime();
+        	Date date2 = null;
+    		try {
+				date2 = FormatStrings.DATE_FORMAT.parse(date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    
+        	c.setTime((Date) date2);
+        	
+        	updateDisplay(tvStartTime, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH), c.get(Calendar.YEAR), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), is24h);
+        	date = mStateHolder.getReservation().getEndTime();
+        	date2 = null;
+    		try {
+				date2 = FormatStrings.DATE_FORMAT.parse(date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    
+        	c.setTime((Date) date2);
+        	updateDisplay(tvEndTime, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH), c.get(Calendar.YEAR), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), is24h);           
             //TODO aici atentie
         }
         
@@ -234,13 +254,35 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         // Grab widget instance
         final DateTimePicker mDateTimePicker = (DateTimePicker) mDateTimeDialogView.findViewById(R.id.dateTimePicker);        
         
+        //initialize dialog date & time values to the existing reservation or to something in the near future
+        final Calendar calendar = Calendar.getInstance();
+        if (mStateHolder.getReservation() != null) {
+        	Date date = null;
+        	String strDate;
+        	if (textViewId == R.id.addReservationActivityStartingTime) {
+        		strDate = mStateHolder.getReservation().getStartTime();
+        	} else {
+        		strDate = mStateHolder.getReservation().getEndTime();
+        	}
+	        
+	        try {
+				date = FormatStrings.DATE_FORMAT.parse(strDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	        
+			calendar.setTime(date);
+	        mDateTimePicker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+	        mDateTimePicker.updateTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        }
+        
         // Update demo TextViews when the "OK" button is clicked 
         ((Button) mDateTimeDialogView.findViewById(R.id.setDateTime)).setOnClickListener(new OnClickListener() {
 
             public void onClick(View v) {
                 // TODO save reservation time values in mStateHolder
                 updateDisplay((TextView)findViewById(textViewId), mDateTimePicker.get(Calendar.DAY_OF_MONTH), mDateTimePicker.get(Calendar.MONTH), 
-                        mDateTimePicker.get(Calendar.YEAR), mDateTimePicker.get(Calendar.HOUR),  mDateTimePicker.get(Calendar.MINUTE), 
+                        mDateTimePicker.get(Calendar.YEAR), mDateTimePicker.get(Calendar.HOUR_OF_DAY),  mDateTimePicker.get(Calendar.MINUTE), 
                         mDateTimePicker.is24HourView());   
                 
                 mDateTimeDialog.dismiss();
@@ -284,7 +326,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             btnReserveNow.setOnClickListener(new OnClickListener() {                
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(AddReservationActivity.tihis, "Extending reservation", Toast.LENGTH_LONG);
                     mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingSpace(), 
                     		mStateHolder.getStartingTime(), mStateHolder.getEndingTime());                    
                 }
@@ -294,10 +335,8 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             btnReserveNow.setOnClickListener(new OnClickListener() {                
                 @Override
                 public void onClick(View v) {
-                    /*Toast.makeText(AddReservationActivity.this, "Starting reservation", Toast.LENGTH_LONG);
-                    mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingLot().getId());*/
-                	 
-                	//makeReservation();
+                	mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingSpace(), 
+                    		mStateHolder.getStartingTime(), mStateHolder.getEndingTime()); 
                 }
             });
         }        
@@ -310,15 +349,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         result.set(year, month, day, hourOfDay, minute);
         String date = FormatStrings.DATE_FORMAT.format(result.getTime());
         
-/*        StringBuilder text = new StringBuilder()                        
-        	.append(pad(hourOfDay)).append(":")
-        	.append(pad(minute)).append(", ")
-        	.append(pad(day)).append("-")
-        	// Month is 0 based so add 1
-        	.append(pad(month + 1)).append("-")                        
-        	.append(year).append(" ");*/
-
-        //boolean x = FormatStrings.checkValidDates(text.toString(), text.toString());
         view.setText(FormatStrings.DATE_FORMAT.format(result.getTime()));
         if (view.getId() == R.id.addReservationActivityStartingTime) {
             if (DEBUG) Log.d( TAG, "update stateholder time");
@@ -337,15 +367,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             return "0" + String.valueOf(c);
     }
     
-    private void makeReservation() {
-    	/*Intent intent = new Intent(AddReservationActivity.this, AddReservationExecuteActivity.class);
-    	intent.putExtra(AddReservationExecuteActivity.INTENT_EXTRA_PARKING_SPACE, mStateHolder.getParkingSpace());
-    	intent.putExtra(AddReservationExecuteActivity.INTENT_EXTRA_START_TIME, mStateHolder.getStartingTime());
-    	intent.putExtra(AddReservationExecuteActivity.INTENT_EXTRA_END_TIME, mStateHolder.getEndingTime());
-    	
-    	startActivityForResult(intent, DIALOG_RESERVATION_RESULT);*/
-    }
-    
     @Override
     protected Dialog onCreateDialog(int id) {
     	if (DEBUG) Log.d(TAG, "onCreateDialog()");
@@ -362,13 +383,24 @@ public class AddReservationActivity extends Activity implements OnClickListener 
                     @Override
                     public void onCancel(DialogInterface dialog) {
                         removeDialog(DIALOG_RESERVATION_RESULT);
-                        setResult(Activity.RESULT_OK);
-                        finish();
+                        prepareResultIntent();                        
                     }
                 });
                 return dlg;
         }
         return null;
+    }
+    
+    private void prepareResultIntent() {
+    	if (DEBUG) Log.d(TAG, "prepareResultIntent()");
+        Reservation reservation = mStateHolder.getReservation();
+
+        Intent intent = new Intent();
+        if (reservation != null) {
+            intent.putExtra(INTENT_EXTRA_RETURNED_RESERVATION, reservation);
+        }
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
     
     public void onAddReservationComplete(Reservation result) {		
@@ -387,7 +419,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
 		
 	}    
     
-    private static class ReservationTask extends AsyncTask<Void, Void, Reservation> {
+    public static class ReservationTask extends AsyncTask<Void, Void, Reservation> {
         private static final String TAG = "ReservationTask";
         private static boolean DEBUG = true;
         
@@ -410,26 +442,29 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         }        
         
         @Override
-        protected void onPreExecute() {
+        public void onPreExecute() {
             if (DEBUG) Log.d( TAG, "onPreExecute()");
             mActivity.startProgressBar(mActivity.getResources().getString(R.string.add_reservation_action_label), 
                     mActivity.getResources().getString(R.string.add_reservation_activity_progress_bar_message));
         }
 
         @Override
-        protected Reservation doInBackground(Void... params) {
-            if (DEBUG) Log.d( TAG, "doInBackground()");            
-            
-            Reservation result = null;
+        public Reservation doInBackground(Void... params) {
+            if (DEBUG) Log.d( TAG, "doInBackground()");                        
+            Reservation result = (Reservation) mStateHolder.getReservation();
 			try {
-				result = mParkDroid.getPark().createReservation(mUserId, mParkingSpace, mStartTime, mEndTime);	
+				if (result == null) {
+					result = mParkDroid.getPark().createReservation(mUserId, mParkingSpace, mStartTime, mEndTime);
+				} else {
+					result = mParkDroid.getPark().updateReservation(result);
+				}
 			} catch (Exception e) {	}
 			
 			return result;			
         }        
          
         @Override
-        protected void onPostExecute(Reservation result) {
+        public void onPostExecute(Reservation result) {
             if (DEBUG) Log.d( TAG, "onPostExecute()");
             if (mActivity != null) {
                 mActivity.onAddReservationComplete(result);
@@ -452,8 +487,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         private Reservation mReservation;
         private String mStartingTime;
         private String mEndingTime;
-        private String mStartTime;
-        private String mEndTime;
         
         public StateHolder() {
             if (DEBUG) Log.d( TAG, "StateHolder()");
@@ -484,7 +517,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         }
         
         public ParkingSpace getParkingSpace() {
-            if (DEBUG) Log.d( TAG, "getParkingLot()");
+            if (DEBUG) Log.d( TAG, "getParkingSpace()");
             return mParkingSpace;
         }
         
@@ -496,7 +529,10 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         }
         
         public void setStartingTime(String time) {
-            mStartingTime = time;
+            if (mReservation == null) {
+            	mReservation = new Reservation();            
+            }
+        	mReservation.setStartTime(time);
         }
         
         public String getStartingTime() {
@@ -504,7 +540,10 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         }
         
         public void setEndingTime(String time) {
-        	mEndingTime = time;
+        	if (mReservation == null) {
+            	mReservation = new Reservation();            
+            }
+        	mReservation.setEndTime(time);
         }
         
         public String getEndingTime() {
