@@ -3,6 +3,8 @@
  */
 package com.licenta.parkdroid;
 
+import java.util.List;
+
 import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkTypes;
 
@@ -17,7 +19,7 @@ import android.widget.BaseAdapter;
  */
 abstract class BaseGroupAdapter<T extends ParkTypes> extends BaseAdapter {
     
-    Group<T> group = null;
+	List<T> group = null;
     
     public BaseGroupAdapter(Context context) {        
     }
@@ -51,7 +53,7 @@ abstract class BaseGroupAdapter<T extends ParkTypes> extends BaseAdapter {
         return (group == null) ? true : group.isEmpty();
     }
 
-    public void setGroup(Group<T> g) {
+    public void setGroup(List<T> g) {
         group = g;
         notifyDataSetInvalidated();
     }

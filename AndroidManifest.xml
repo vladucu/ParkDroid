@@ -4,7 +4,7 @@
       android:versionCode="1"
       android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="8" />
+    <uses-sdk android:minSdkVersion="10" />
               
     <application android:name="ParkDroid" 
     			 android:icon="@drawable/icon" 
@@ -33,13 +33,13 @@
         		  </intent-filter>
         </activity>
 
-		<activity android:name=".ParkingLotsListActivity">
+		<activity android:name=".ParkingSpacesListActivity">
 			<intent-filter>
         		<action android:name="com.licenta.parkdroid.intent.action.LOGGED_OUT" />
         	</intent-filter>        		  
         </activity>
         
-        <activity android:name=".ParkingLotActivity">
+        <activity android:name=".ParkingSpaceActivity">
         	<intent-filter>
         		<action android:name="android.intent.action.main" />
         	</intent-filter>
@@ -48,7 +48,7 @@
         	</intent-filter>
         </activity>
         
-        <activity android:name=".ParkingLotMapActivity"></activity>
+        <activity android:name=".ParkingSpaceMapActivity"></activity>
         
         <activity android:name=".LoginActivity"
         		  android:launchMode="singleInstance">

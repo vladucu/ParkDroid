@@ -3,7 +3,7 @@
  */
 package com.licenta.parkdroid;
 
-import com.licenta.park.types.ReservationResult;
+import com.licenta.park.types.Reservation;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -22,17 +22,16 @@ public class AddReservationResultDialog extends Dialog {
     
     private Handler mHandler;
     private ParkDroid mApplication;
-    private ReservationResult mReservationResult;
+    private Reservation mReservationResult;
     
     //TODO use this class to show a confirmation dialog with reservation results (ID + others)
-    public AddReservationResultDialog(Context context, ReservationResult result, ParkDroid app) {
+    public AddReservationResultDialog(Context context, Reservation result, ParkDroid app) {
     	super(context);
     	mReservationResult = result;
     	mApplication = app;
     	mHandler = new Handler();
     	
     	if (DEBUG) Log.d(TAG, "AddReservationResultDialog");
-    	mReservationResult = result;
     }
 
 	/* (non-Javadoc)
@@ -48,7 +47,9 @@ public class AddReservationResultDialog extends Dialog {
 		setTitle(getContext().getResources().getString(R.string.add_reservation_title_result));
 		
 		TextView tvMessage = (TextView) findViewById(R.id.textViewAddReservationMessage);
+		TextView tvReservationId = (TextView) findViewById(R.id.textViewReservationId);
 		tvMessage.setText("Reservation succesfully created");
+		tvReservationId.setText(Integer.toString(mReservationResult.getId()));
 	}
 
 	/* (non-Javadoc)

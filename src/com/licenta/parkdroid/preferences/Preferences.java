@@ -4,6 +4,8 @@
 package com.licenta.parkdroid.preferences;
 
 import com.licenta.park.Park;
+import com.licenta.park.types.User;
+
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
@@ -24,14 +26,14 @@ public class Preferences {
     public static final String PREFERENCE_PROFILE_SETTINGS = "profile_settings";
     
     // Credentials related preferences
-    public static final String PREFERENCE_LOGIN = "phone";
+    public static final String PREFERENCE_LOGIN = "email";
     public static final String PREFERENCE_PASSWORD = "password";
     
     // Extra info for getUserId
     private static final String PREFERENCE_ID = "id";
 
-    // Extra for storing user's supplied email address.
-    private static final String PREFERENCE_USER_EMAIL = "user_email";
+    // Extra for storing user's supplied name.
+    private static final String PREFERENCE_USER_NAME = "user_name";
     
     public static boolean loginUser(Park park, String login, String password, Editor editor) {
         if (DEBUG) Log.d(Preferences.TAG, "Trying to log in.");
@@ -43,13 +45,14 @@ public class Preferences {
             return false;
         }
 
-        Park.User user = park.user(login, password);
+        User user = park.user(login, password);
         storeUser(editor, user);
         if (!editor.commit()) {
             if (DEBUG) Log.d(TAG, "storeUser commit failed");
             return false;
             		
         }
+
         return true;
     }
 
@@ -73,7 +76,7 @@ public class Preferences {
      * @return user_email
      */
     public static String getUserEmail(SharedPreferences prefs) {
-        return prefs.getString(PREFERENCE_USER_EMAIL, null);
+        return prefs.getString(PREFERENCE_USER_NAME, null);
     }
     
     public static void storeLoginAndPassword(final Editor editor, String login, String password) {
@@ -82,11 +85,11 @@ public class Preferences {
         editor.putString(PREFERENCE_PASSWORD, password);
     }
     
-    public static void storeUser(final Editor editor, Park.User user) {
+    public static void storeUser(final Editor editor, User user) {
         if (DEBUG) Log.d(TAG, "storeUser");
-        if (user != null && user.getId() != null) {
-            editor.putString(PREFERENCE_ID, user.getId());
-            editor.putString(PREFERENCE_USER_EMAIL, user.getEmail());           
+        if (user != null && Integer.valueOf(user.getId()) != null) {
+            editor.putString(PREFERENCE_ID, Integer.toString(user.getId()));
+            editor.putString(PREFERENCE_USER_NAME, user.getEmail());           
             if (DEBUG) Log.d(TAG, "Setting user info");
         } else {
             if (DEBUG) Log.d(TAG, "Unable to lookup user.");

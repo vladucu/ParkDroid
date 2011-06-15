@@ -3,14 +3,13 @@
  */
 package com.licenta.park;
 
-import com.licenta.park.types.ParkingLot;
-
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.impl.client.DefaultHttpClient;
+import com.licenta.park.types.ParkingSpace;
+import com.licenta.park.types.ParkingSpaces;
+import com.licenta.park.types.Reservations;
+import com.licenta.park.types.Reservation;
+import com.licenta.park.types.User;
 import android.util.Log;
-
-import java.util.logging.Level;
+import java.io.IOException;
 
 /**
  * @author vladucu
@@ -20,80 +19,73 @@ public class Park {
     
     public static final String TAG = "Park";
     //debug mode
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     
-    private String mPhone;
+    private String mLogin;
     private String mPassword;
-    private static boolean gotToken = false;
     
-    private final AuthScope mAuthScope = new AuthScope("idew.wdca.ca", 79);
-    private final DefaultHttpClient mHttpClient = new DefaultHttpClient();
+    private ParkServerHttpApi mParkDroidApi;
     
-    public void Park() {
-        
+    public Park(ParkServerHttpApi parkDroidApi) {
+    	if (DEBUG) Log.d(TAG, "Park ");
+        mParkDroidApi = parkDroidApi;
     }
     
-    public void setCredentials(String phone, String password) {        
-        if (phone == null || phone.length() == 0 || password == null || password.length() == 0) {
-            if (DEBUG) Log.d(TAG, "Clearing Credentials");
-            mHttpClient.getCredentialsProvider().clear();
-            gotToken = false;
-        } else {
-            if (DEBUG) Log.d(TAG, "setCredentials phone="+phone);
-            mPhone = phone;
-            mPassword = password;
-            gotToken = true;
-            mHttpClient.getCredentialsProvider().setCredentials(mAuthScope,
-                    new UsernamePasswordCredentials(phone, password));
-        }
+    public void setCredentials(String email, String password) {        
+   
+        if (DEBUG) Log.d(TAG, "setCredentials email="+email);
+        mLogin = email;
+        mPassword = password;
+        mParkDroidApi.setCredentials(email, password);
+    
     }
     
-    public boolean hasCredentials() {
-        if (DEBUG) Log.d(TAG, "hasCredentials");
-        return mHttpClient.getCredentialsProvider().getCredentials(mAuthScope) != null;
-    }
-    
-    public boolean hasOAuthTokenWithSecret() {
-        if (DEBUG) Log.d(TAG, "hasOAuthTokenWithSecret");
-        if (gotToken) return true;
-        else return false;        
-    }
 
     public boolean hasLoginAndPassword() {
-        if (DEBUG) Log.d(TAG, "hasLoginAndPassword");
-        return hasCredentials() && hasOAuthTokenWithSecret();
+        if (DEBUG) Log.d(TAG, "hasLoginAndPassword()");
+        return mParkDroidApi.hasCredentials();
     }
 
     public User user(String login, String password) {
-        User user = new User();
-        user.mId = "1";
+        /*User user = new User();        
         user.mEmail = "x";
         user.mPassword = "x";
-        /*if (user.mEmail == login && user.mPassword == password) return user;
-        else return new User();*/
-        return user;
+        if (user.mEmail == login && user.mPassword == password) return user;
+        else return new User();
+        return user;*/
+    	return mParkDroidApi.user(login, password);
     }
     
-    public class User {
-                
-        private String mId;
-        private String mEmail;
-        private String mPassword;
-        private String mPhone;
-        
-        public String getId() {
-            return mId;
-        }
-        
-        public String getEmail() {
-            return mEmail;
-        }
-        
-    }
+    
 
-    public ParkingLot parkingLot(String string) {
+    public ParkingSpace parkingLot(String string) {
         // TODO Auto-generated method stub
         return null;
     }
 
+	public static final ParkServerHttpApi createHttpApi(String domain) {
+		if (DEBUG) Log.d(TAG, "createHttpApi("+domain+")");
+		return new ParkServerHttpApi(domain);
+	}
+
+	public ParkingSpaces parkingSpaces(int userId) throws IOException {
+		if (DEBUG) Log.d(TAG, "parkingSpaces()");
+		return mParkDroidApi.parkingspaces(userId);
+	}
+
+	public ParkingSpace parkingSpace(int userId, int parkingSpaceId) throws IOException {
+		//if (DEBUG) Log.d(TAG, "parkingSpace("+id+")");
+		return mParkDroidApi.parkingSpace(userId, parkingSpaceId);
+	}
+
+	public Reservations reservations() throws IOException {
+		if (DEBUG) Log.d(TAG, "reservations()");
+		return mParkDroidApi.reservations();				
+	}
+
+	public  Reservation createReservation(int mUserId, ParkingSpace mParkingSpace, String startTime, String endTime) throws IOException {
+		if (DEBUG) Log.d(TAG, "createReservation()");
+		return mParkDroidApi.createReservation(mUserId, mParkingSpace, startTime, endTime);
+		
+	}
 }

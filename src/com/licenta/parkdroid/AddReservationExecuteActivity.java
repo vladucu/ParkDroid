@@ -3,7 +3,8 @@
  */
 package com.licenta.parkdroid;
 
-import com.licenta.park.types.ReservationResult;
+import com.licenta.park.types.ParkingSpace;
+import com.licenta.park.types.Reservation;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -27,8 +28,15 @@ public class AddReservationExecuteActivity extends Activity {
 	private static final String TAG = "AddReservationExecuteActivity";
     private static final boolean DEBUG = true;
     
-    public static final String INTENT_EXTRA_PARKING_LOT_ID = ParkDroid.PACKAGE_NAME
-    + ".AddReservationExecuteActivity.INTENT_EXTRA_PARKING_LOT_ID";
+    public static final String INTENT_EXTRA_PARKING_SPACE_ID = ParkDroid.PACKAGE_NAME
+    + ".AddReservationExecuteActivity.INTENT_EXTRA_PARKING_SPACE_ID";
+    public static final String INTENT_EXTRA_START_TIME = ParkDroid.PACKAGE_NAME
+    + ".AddReservationExecuteActivity.INTENT_EXTRA_START_TIME";
+    public static final String INTENT_EXTRA_END_TIME = ParkDroid.PACKAGE_NAME
+    + ".AddReservationExecuteActivity.INTENT_EXTRA_END_TIME";
+    public static final String INTENT_EXTRA_PARKING_SPACE = ParkDroid.PACKAGE_NAME + 
+    ".AddReservationExecuteActivity.INTENT_EXTRA_PARKING_SPACE";
+
 
     private static final int DIALOG_ADD_RESERVATION_RESULT = 1;
 
@@ -66,9 +74,18 @@ public class AddReservationExecuteActivity extends Activity {
 		else {
 			mStateHolder = new StateHolder();
 			
-			String parkingLotId = null;
-			if (getIntent().getExtras().containsKey(INTENT_EXTRA_PARKING_LOT_ID)) {
-				parkingLotId = (String) getIntent().getStringExtra(INTENT_EXTRA_PARKING_LOT_ID);
+			ParkingSpace parkingSpace;
+			String startTime = null;
+			String endTime = null;
+			if (getIntent().getExtras().containsKey(INTENT_EXTRA_PARKING_SPACE)) {
+				parkingSpace = getIntent().getParcelableExtra(INTENT_EXTRA_PARKING_SPACE);
+				if (getIntent().getExtras().containsKey(INTENT_EXTRA_START_TIME) && getIntent().getExtras().containsKey(INTENT_EXTRA_END_TIME)) {
+					startTime = (String) getIntent().getStringExtra(INTENT_EXTRA_START_TIME);
+					endTime = (String) getIntent().getStringExtra(INTENT_EXTRA_END_TIME);					
+				} else {
+					Log.e(TAG, "AddReservationExecuteActivity needs to know the timeframe for reservation !");
+					finish();
+				}
 			}
 			else {
 				Log.e(TAG, "AddReservationExecuteActivity needs an 'INTENT_EXTRA_PARKING_LOT_ID' extra !");
@@ -76,7 +93,7 @@ public class AddReservationExecuteActivity extends Activity {
 				return;
 			}
 			
-			mStateHolder.startTask(AddReservationExecuteActivity.this, parkingLotId);
+			mStateHolder.startTask(AddReservationExecuteActivity.this, parkingSpace, startTime, endTime);
 		}		
 	}
 	
@@ -163,7 +180,7 @@ public class AddReservationExecuteActivity extends Activity {
         return null;
     }
 
-	public void onAddReservationComplete(ReservationResult result) {		
+	public void onAddReservationComplete(Reservation result) {		
 		if (DEBUG) Log.d(TAG, "onAddReservationComplete()");
 		mStateHolder.setIsRunning(false);
 		stopProgressBar();
@@ -179,18 +196,26 @@ public class AddReservationExecuteActivity extends Activity {
 		
 	}    
 	
-	private static class AddReservationTask extends AsyncTask<Void, Void, ReservationResult> {
+	private static class AddReservationTask extends AsyncTask<Void, Void, Reservation> {
 
 		private static final String TAG = "AddReservationTask";
 	    private static final boolean DEBUG = true;
 
 		private AddReservationExecuteActivity mActivity;
-		private String mParkingLotId;
+		private ParkDroid mParkDroid;
+		private ParkingSpace mParkingSpace;
+		private String mStartTime;
+		private String mEndTime;
+		private int mUserId;
 		
-		public AddReservationTask(AddReservationExecuteActivity activity, String parkingLotId) {
+		public AddReservationTask(AddReservationExecuteActivity activity, ParkingSpace parkingSpace, String startTime, String endTime) {
 			if (DEBUG) Log.d(TAG, "AddReservationTask()");
 			mActivity = activity;
-			mParkingLotId = parkingLotId;			
+			mParkingSpace = parkingSpace;
+			mStartTime = startTime;
+			mEndTime = endTime;
+			mParkDroid = (ParkDroid) mActivity.getApplication();
+			mUserId = Integer.parseInt(mParkDroid.getUserId());
 		}
 
 		/* (non-Javadoc)
@@ -208,20 +233,20 @@ public class AddReservationExecuteActivity extends Activity {
 		 * @see android.os.AsyncTask#doInBackground(Params[])
 		 */
 		@Override
-		protected ReservationResult doInBackground(Void... params) {
+		protected Reservation doInBackground(Void... params) {
 			if (DEBUG) Log.d(TAG, "doInBackground()");
 			
-			// TODO Auto-generated method stub
+		
 			// TODO we could add exception handling and put this into try/catch block
 			// TODO implement the method to call the rest web service
 			
-			ReservationResult result = new ReservationResult();
+			Reservation result = null;
 			try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+				result = mParkDroid.getPark().createReservation(mUserId, mParkingSpace, mStartTime, mEndTime);	
+			} catch (Exception e) {
+				
+			}
+			
 			return result;			
 		}
 
@@ -230,7 +255,7 @@ public class AddReservationExecuteActivity extends Activity {
 		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 		 */
 		@Override
-		protected void onPostExecute(ReservationResult result) {
+		protected void onPostExecute(Reservation result) {
 			if (DEBUG) Log.d(TAG, "onPostExecute()");
 			if (mActivity != null) {
 				mActivity.onAddReservationComplete(result);
@@ -249,7 +274,7 @@ public class AddReservationExecuteActivity extends Activity {
 	    private static final boolean DEBUG = true;
 
 		private AddReservationTask mTask;
-		private ReservationResult mResult;
+		private Reservation mResult;
 		private boolean mIsRunning;
 		
 		public StateHolder() {
@@ -259,10 +284,10 @@ public class AddReservationExecuteActivity extends Activity {
 		}
 		
 		//TODO to see what the parameters will be exactly
-		public void startTask(AddReservationExecuteActivity activity, String parkingLotId) {
+		public void startTask(AddReservationExecuteActivity activity, ParkingSpace parkingSpace, String startTime, String endTime) {
 			if (DEBUG) Log.d(TAG, "startTask()");
 			mIsRunning = true;
-			mTask = new AddReservationTask(activity, parkingLotId);
+			mTask = new AddReservationTask(activity, parkingSpace, startTime, endTime);
 			mTask.execute();
 		}
 		
@@ -283,12 +308,12 @@ public class AddReservationExecuteActivity extends Activity {
             mIsRunning = isRunning;
         }
         
-		public ReservationResult getReservationResult() {
+		public Reservation getReservationResult() {
 			if (DEBUG) Log.d(TAG, "getReservationResult()");
             return mResult;
         }
 
-        public void setReservationResult(ReservationResult result) {
+        public void setReservationResult(Reservation result) {
         	if (DEBUG) Log.d(TAG, "setReservationResult()");
             mResult = result;
         }        

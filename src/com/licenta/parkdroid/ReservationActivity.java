@@ -106,17 +106,17 @@ public class ReservationActivity extends Activity {
         Button btnCancel = (Button)findViewById(R.id.reservationActivityButtonCancel);
         
         final Reservation reservation = mStateHolder.getReservation();
-        tvReservationActivityParkingLotName.setText(reservation.getParkingLot().getName());
-        tvReservationActivityParkingLotAddress.setText(reservation.getParkingLot().getAddress());        
+        tvReservationActivityParkingLotName.setText(reservation.getParkingSpace().getName());
+        tvReservationActivityParkingLotAddress.setText(reservation.getParkingSpace().getAddress());        
         tvReservationActivityStartingTime.setText(FormatStrings.getHourString(reservation.getStartTime()) 
                 + ", " + FormatStrings.getDayString(reservation.getStartTime()));
         tvReservationActivityEndingTime.setText(FormatStrings.getHourString(reservation.getEndTime()) 
                 + ", " + FormatStrings.getDayString(reservation.getEndTime()));
-        tvReservationActivityPrice.setText("$ " + reservation.getParkingLot().getPrice());
+        //tvReservationActivityPrice.setText("$ " + reservation.getParkingLot().getPrice());
         tvReservationActivityTime.setText("3h");
         tvReservationActivityCosts.setText("9");
         
-        tvResercationActivityId.setText(reservation.getId());
+        tvResercationActivityId.setText(Integer.toString(reservation.getId()));
         viewId.setVisibility(View.VISIBLE);
         
         /* 
@@ -129,10 +129,10 @@ public class ReservationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //starting navigation intent
-                if (DEBUG) Log.d(TAG, "Starting navigation LAT=" + reservation.getParkingLot().getGeolat()
-                        + "LONG=" + reservation.getParkingLot().getGeolong());
-                Uri navigationUri = Uri.parse("google.navigation:ll=" + reservation.getParkingLot().getGeolat() + "," +
-                        reservation.getParkingLot().getGeolat());                        
+                if (DEBUG) Log.d(TAG, "Starting navigation LAT=" + reservation.getParkingSpace().getGeoLat()
+                        + "LONG=" + reservation.getParkingSpace().getGeoLong());
+                Uri navigationUri = Uri.parse("google.navigation:ll=" + reservation.getParkingSpace().getGeoLat() + "," +
+                        reservation.getParkingSpace().getGeoLat());                        
                 Intent intent = new Intent(Intent.ACTION_VIEW, navigationUri);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -153,7 +153,7 @@ public class ReservationActivity extends Activity {
                 // TODO Auto-generated method stub
                 if (DEBUG) Log.d(TAG, "ensureUI() button extend clicked");
                 Intent intent = new Intent(ReservationActivity.this, AddReservationActivity.class);
-                intent.putExtra(AddReservationActivity.INTENT_EXTRA_PARKING_LOT, mStateHolder.getReservation().getParkingLot());
+                intent.putExtra(AddReservationActivity.INTENT_EXTRA_PARKING_SPACE, mStateHolder.getReservation().getParkingSpace());
                 intent.putExtra(AddReservationActivity.INTENT_EXTRA_RESERVATION, mStateHolder.getReservation());
                 startActivityForResult(intent, RESULT_CODE_ACTIVITY_EXTEND_RESERVATION);       
             }

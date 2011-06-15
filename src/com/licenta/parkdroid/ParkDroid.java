@@ -4,6 +4,7 @@
 package com.licenta.parkdroid;
 
 import com.licenta.park.Park;
+import com.licenta.park.types.User;
 import com.licenta.parkdroid.preferences.Preferences;
 import android.app.Application;
 import android.content.BroadcastReceiver;
@@ -36,6 +37,7 @@ public class ParkDroid extends Application {
     public static final String INTENT_ACTION_LOGGED_OUT = "com.licenta.parkdroid.intent.action.LOGGED_OUT";
     public static final String INTENT_ACTION_LOGGED_IN = "com.licenta.parkdroid.intent.action.LOGGED_IN";
     public static final String PACKAGE_NAME = "com.licenta.parkdroid";;
+    public static final String DOMAIN = "89.37.147.104:8080";
     
     private SharedPreferences mPrefs;
     
@@ -53,7 +55,7 @@ public class ParkDroid extends Application {
     @Override
     public void onCreate() {
         // TODO finish ParkDroid
-        
+    	if (DEBUG) Log.d(TAG, "onCreate()");
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         
         // Sometimes we want the application to do some work on behalf of the
@@ -66,7 +68,7 @@ public class ParkDroid extends Application {
         // Catch logins or logouts.
         new LoggedInOutBroadcastReceiver().register();
         
-        // Log into Foursquare, if we can.
+        // Log into ParkDroid, if we can.
         loadPark();
 
     }
@@ -79,6 +81,7 @@ public class ParkDroid extends Application {
     }
 
     public Park getPark() {
+    	if (DEBUG) Log.d(TAG, "getPark()");
         return mPark;
     }
     
@@ -102,12 +105,15 @@ public class ParkDroid extends Application {
             mFoursquare = new Foursquare(Foursquare.createHttpApi(mVersion, false));
         }
 */
-        mPark = new Park();
-        String phoneNumber = mPrefs.getString(Preferences.PREFERENCE_LOGIN, null);
+    	if (DEBUG) Log.d(TAG, "loadPark()");
+        mPark = new Park(Park.createHttpApi(DOMAIN));
+        
+        String email = mPrefs.getString(Preferences.PREFERENCE_LOGIN, null);
         String password = mPrefs.getString(Preferences.PREFERENCE_PASSWORD, null);        
-        mPark.setCredentials(phoneNumber, password);
+        mPark.setCredentials(email, password);
+        if (DEBUG) Log.d(TAG, "loadPark() hasloginandpassword="+mPark.hasLoginAndPassword());
         if (mPark.hasLoginAndPassword()) {
-            if (DEBUG) Log.d(TAG, "loadCredentials() phoneNumber="+phoneNumber);
+            if (DEBUG) Log.d(TAG, "loadCredentials() phoneNumber="+email);
             sendBroadcast(new Intent(INTENT_ACTION_LOGGED_IN));
         } else {
             sendBroadcast(new Intent(INTENT_ACTION_LOGGED_OUT));
@@ -155,12 +161,12 @@ public class ParkDroid extends Application {
                         // Update user info
                         Log.d(TAG, "Updating user.");
 
-                       
-                        Park.User user = getPark().user(null, null);
+             
+                        /*User user = getPark().createUser(login, password);
 
                         Editor editor = mPrefs.edit();
                         Preferences.storeUser(editor, user);
-                        editor.commit();
+                        editor.commit();*/
                     } catch (Error e) {
                         if (DEBUG) Log.d(TAG, "FoursquareError", e);
                     } catch (Exception e) {

@@ -3,11 +3,14 @@
  */
 package com.licenta.parkdroid;
 
-import com.licenta.park.types.Group;
-import com.licenta.park.types.ParkingLot;
-import com.licenta.park.types.Reservation;
-import com.licenta.park.utils.FormatStrings;
+import java.util.List;
 
+import com.licenta.park.Park;
+import com.licenta.park.types.Group;
+import com.licenta.park.types.ParkingSpace;
+import com.licenta.park.types.Reservation;
+import com.licenta.park.types.Reservations;
+import com.licenta.park.utils.FormatStrings;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -81,8 +84,8 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
                 
                 Reservation reservation = (Reservation) parent.getAdapter().getItem(position);
-                if (DEBUG) Log.d(TAG, "ensureUi() =" + reservation.getParkingLot().getName());
-                Toast.makeText(ActiveReservationsListActivity.this, reservation.getParkingLot().getName(), Toast.LENGTH_LONG);
+                if (DEBUG) Log.d(TAG, "ensureUi() =" + reservation.getParkingSpace().getName());
+                Toast.makeText(ActiveReservationsListActivity.this, reservation.getParkingSpace().getName(), Toast.LENGTH_LONG);
                 startItemActivity(reservation);
             }            
         });
@@ -96,13 +99,13 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         startActivity(intent);        
     }
         
-    public void onActiveReservationsTaskComplete(Group<Reservation> reservations) {
+    public void onActiveReservationsTaskComplete(Reservations reservations) {
         if (DEBUG) Log.d(TAG, "onActiveReservationsTaskComplete()");
         
         mListAdapter = new ActiveReservationsAdapter(this);
         
         if (reservations != null) {
-            mStateHolder.setReservations(reservations);
+            mStateHolder.setReservations(reservations.getReservations());
             mListAdapter.setGroup(mStateHolder.getReservations());
             getListView().setAdapter(mListAdapter);
         }
@@ -114,16 +117,21 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         
     }
     
-    private static class ActiveReservationsTask extends AsyncTask<Void, Void, Group<Reservation>> {
+    private static class ActiveReservationsTask extends AsyncTask<Void, Void, Reservations> {
 
         private static final String TAG = "ActiveReservationsTask";
         private static boolean DEBUG = true;
         
         private ActiveReservationsListActivity mActivity;
+        private Reservations reservations;
+        private Park mPark;
+        private ParkDroid mParkDroid;
         
         public ActiveReservationsTask(ActiveReservationsListActivity activity) {
             if (DEBUG) Log.d(TAG, "ActiveReservationsTask()");
             mActivity = activity;
+            mParkDroid = (ParkDroid) mActivity.getApplication();
+            mPark = mParkDroid.getPark();
         }
         
         @Override
@@ -133,7 +141,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         }
         
         @Override
-        protected Group<Reservation> doInBackground(Void... params) {
+        protected Reservations doInBackground(Void... params) {
             if (DEBUG) Log.d(TAG, "doInBackground()");
             // TODO Auto-generated method stub
             /*try {
@@ -143,45 +151,46 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
                 e.printStackTrace();
             }*/
             try {
-                ParkingLot mPark1 = new ParkingLot();
-                ParkingLot mPark2 = new ParkingLot();
+            	reservations = mPark.reservations();
+            	/*ParkingSpace mPark1 = new ParkingSpace();
+            	ParkingSpace mPark2 = new ParkingSpace();
                 mPark1.setName("Parcarea principala");
                 mPark2.setName("Parcarea secundara");
-                /*mPark1.setGeolat("44.43472");
+                mPark1.setGeolat("44.43472");
                 mPark1.setGeolong("26.09704");
                 mPark2.setGeolat("44.43797");
-                mPark2.setGeolong("26.11576");     */
+                mPark2.setGeolong("26.11576");     
                 //37.44461, -122.13846 San Francisco - Palo Alto Library
-                mPark1.setGeolat("37.44461");
-                mPark1.setGeolong("-122.13846");
+                mPark1.setGeoLat("37.44461");
+                mPark1.setGeoLong("-122.13846");
                 //37.4597, -122.1064 San Francisco - Lucy Evans Baylands Nature Interpretive Center (The City of Palo Alto)
-                mPark2.setGeolat("37.4597");
-                mPark2.setGeolong("-122.1064");
+                mPark2.setGeoLat("37.4597");
+                mPark2.setGeoLong("-122.1064");
                 mPark1.setAddress("Bulevardul Regina Elisabeta 23");
                 mPark2.setAddress("Bulevardul Carol 76");
-                mPark1.setPrice("25");
-                mPark2.setPrice("125");
+                //mPark1.setPrice("25");
+                //mPark2.setPrice("125");
                 
                 Reservation r1 = new Reservation();
                 Reservation r2 = new Reservation();
-                r1.setParkingLot(mPark1);r2.setParkingLot(mPark2);
-                r1.setId("ID01234");r2.setId("ID1289");                
+                r1.setParkingSpace(mPark1);r2.setParkingSpace(mPark2);
+                r1.setId(123);r2.setId(234);                
                 r1.setStartTime("Wed, 27 April 11 15:00:00 +0000");
                 r1.setEndTime("Wed, 27 April 11 17:00:00 +0000");
                 r2.setStartTime("Fri, 29 April 11 15:00:00 +0000");
                 r2.setEndTime("Fri, 29 April 11 17:35:00 +0000");
                 Group<Reservation> g = new Group<Reservation>();
                 g.add(r1);g.add(r2);
-                return g;
+                return g;*/
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            return null;
+            return reservations;
         }
         
         @Override
-        protected void onPostExecute(Group<Reservation> reservations) {
+        protected void onPostExecute(Reservations reservations) {
             if (DEBUG) Log.d(TAG, "onPostExecute()");
             if (mActivity != null) {
                 mActivity.onActiveReservationsTaskComplete(reservations);
@@ -198,7 +207,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         private static final String TAG = "StateHolder";
         private static boolean DEBUG = true;
         
-        private Group<Reservation> mReservations;
+        private List<Reservation> mReservations;
         private ActiveReservationsTask mTask;
         private String mUserEmail;
         private boolean mIsRunning;
@@ -227,12 +236,12 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
             return mIsRunning;
         }
         
-        public void setReservations(Group<Reservation> reservations) {
+        public void setReservations(List<Reservation> reservations) {
             if (DEBUG) Log.d(TAG, "setReservations()");
             mReservations = reservations;
         }
         
-        public Group<Reservation> getReservations() {
+        public List<Reservation> getReservations() {
             if (DEBUG) Log.d(TAG, "getReservations()");
             return mReservations;
         }
