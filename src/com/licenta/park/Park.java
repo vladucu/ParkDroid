@@ -84,9 +84,9 @@ public class Park {
 		return mParkDroidApi.reservations();				
 	}
 
-	public  Reservation createReservation(int mUserId, ParkingSpace mParkingSpace, String mStartTime, String mEndTime) throws IOException {
+	public  Reservation createReservation(int mUserId, ParkingSpace mParkingSpace, String mStartTime, String mEndTime, String mTotalTime, int mCost) throws IOException {
 		if (DEBUG) Log.d(TAG, "createReservation()");
-		return mParkDroidApi.createReservation(mUserId, mParkingSpace, mStartTime, mEndTime);
+		return mParkDroidApi.createReservation(mUserId, mParkingSpace, mStartTime, mEndTime, mTotalTime, mCost);
 		
 	}
 

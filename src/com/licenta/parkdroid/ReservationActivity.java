@@ -162,6 +162,7 @@ public class ReservationActivity extends Activity {
     }    
    
     public void updateView() {
+    	if (DEBUG) Log.d(TAG, "updateView()");
     	TextView tvReservationActivityStartingTime = (TextView) findViewById(R.id.reservationActivityStartingTime);
         TextView tvReservationActivityEndingTime = (TextView) findViewById(R.id.reservationActivityEndingTime);
         
@@ -169,11 +170,13 @@ public class ReservationActivity extends Activity {
         TextView tvReservationActivityTime = (TextView) findViewById(R.id.reservationActivityTimeValue);
         TextView tvReservationActivityCosts = (TextView) findViewById(R.id.reservationActivityTotalPriceValue);
         
-        tvReservationActivityStartingTime.setText(mStateHolder.getReservation().getStartTime());
-        tvReservationActivityEndingTime.setText(mStateHolder.getReservation().getEndTime());
+        final Reservation reservation = mStateHolder.getReservation();
+        tvReservationActivityPrice.setText(Integer.toString(reservation.getParkingSpace().getPrice()));
+        tvReservationActivityStartingTime.setText(reservation.getStartTime());
+        tvReservationActivityEndingTime.setText(reservation.getEndTime());
         //tvReservationActivityPrice.setText("$ " + reservation.getParkingLot().getPrice());
-        tvReservationActivityTime.setText("3h");
-        tvReservationActivityCosts.setText("9");
+        tvReservationActivityTime.setText(reservation.getTotalTime());
+        tvReservationActivityCosts.setText(Integer.toString(reservation.getCost()));
     }
     
     private void prepareResultIntent() {

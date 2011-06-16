@@ -44,7 +44,7 @@ public class ParcelUtils {
         if (flag == 1) {
         	String x = in.readString();
         	System.out.println();
-            return FormatStrings.stringDateToUnits(x);
+            return null;//FormatStrings.stringDateToUnits(x);
         } else {
             return null;
         }

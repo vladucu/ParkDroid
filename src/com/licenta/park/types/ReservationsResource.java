@@ -3,7 +3,6 @@
  */
 package com.licenta.park.types;
 import org.restlet.ext.jackson.JacksonRepresentation;
-import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
@@ -11,7 +10,7 @@ import org.restlet.resource.Post;
  * @author vladucu
  *
  */
-public interface ReservationsResource {
+public interface ReservationsResource extends Resources {
 	/*
 	@Post("json")
     public Reservation createReservation(Reservation res);*/

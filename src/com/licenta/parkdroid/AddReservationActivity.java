@@ -97,10 +97,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             mStateHolder = new StateHolder();
             if (getIntent().hasExtra(INTENT_EXTRA_PARKING_SPACE)) {
                 mStateHolder.setParkingSpace((ParkingSpace) getIntent().getParcelableExtra(INTENT_EXTRA_PARKING_SPACE));
-                /*if (getIntent().getExtras().containsKey(INTENT_EXTRA_START_TIME) && getIntent().getExtras().containsKey(INTENT_EXTRA_END_TIME)) {
-					mStateHolder.setStartingTime(getIntent().get(INTENT_EXTRA_START_TIME, 0L));
-					mStateHolder.setEndingTime((long) getIntent().getLongExtra(INTENT_EXTRA_END_TIME, 0L));		
-                }*/
             } else {
                 Log.e(TAG, "AddReservationActivity must be given a parking lot parcel as intent extras.");
                 finish();
@@ -170,7 +166,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         TextView tvParkingLotLocation = (TextView)findViewById(R.id.addReservationActivityParkingLotAddress);
         TextView tvParkingHourPrice = (TextView)findViewById(R.id.addReservationActivityPriceValue);
         TextView tvParkingSelectedTime = (TextView) findViewById(R.id.addReservationActivityTimeValue);
-        TextView tvParkingTotalPrice = (TextView) findViewById(R.id.addReservationActivityTotalPriceValue);
+        TextView tvParkingTotalCost = (TextView) findViewById(R.id.addReservationActivityTotalPriceValue);
         
         TextView tvStartTime = (TextView) findViewById(R.id.addReservationActivityStartingTime);
         View viewStartTime = findViewById(R.id.addReservationActivityStartingTimeDetails);        
@@ -179,9 +175,9 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         
         tvParkingLotName.setText(mStateHolder.getParkingSpace().getName());
         tvParkingLotLocation.setText(mStateHolder.getParkingSpace().getAddress());
-       // tvParkingHourPrice.setText(mStateHolder.getParkingSpace().getPrice()+"/hour");
-        tvParkingSelectedTime.setText("3:35");
-        tvParkingTotalPrice.setText("250");
+        tvParkingHourPrice.setText(Integer.toString(mStateHolder.getParkingSpace().getPrice()));
+        //tvParkingSelectedTime.setText(mStateHolder.getReservation().getTotalTime());
+        //tvParkingTotalCost.setText(Integer.toString(mStateHolder.getReservation().getCost()));
         
         viewStartTime.setOnClickListener(this);
         viewEndTime.setOnClickListener(this);
@@ -192,20 +188,21 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         final Calendar c =  Calendar.getInstance();
         if (mStateHolder.getReservation() == null) {
             //Get the current date
-            
+            //default the start time to next hour and end time startTime+1hour
             mStartYear = mEndYear = c.get(Calendar.YEAR);
             mStartMonth = mEndMonth = c.get(Calendar.MONTH);
             mStartDay = mEndDay = c.get(Calendar.DAY_OF_MONTH);
             // get the current time        
-            mStartHour = mEndHour = c.get(Calendar.HOUR_OF_DAY);
-            mStartMinute = mEndMinute = c.get(Calendar.MINUTE);
+            mStartHour = c.get(Calendar.HOUR_OF_DAY) + 1;
+            mEndHour = mStartHour + 1;
+            mStartMinute = mEndMinute = 0;
 
             updateDisplay(tvStartTime, mStartDay, mStartMonth, mStartYear, mStartHour, mStartMinute, is24h);
             updateDisplay(tvEndTime, mEndDay, mEndMonth, mEndYear, mEndHour, mEndMinute, is24h);
 
         }
         else {        	
-        	String date = mStateHolder.getReservation().getStartTime();
+        	String date = mStateHolder.getStartingTime();
         	Date date2 = null;
     		try {
 				date2 = FormatStrings.DATE_FORMAT.parse(date);
@@ -217,7 +214,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         	c.setTime((Date) date2);
         	
         	updateDisplay(tvStartTime, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH), c.get(Calendar.YEAR), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), is24h);
-        	date = mStateHolder.getReservation().getEndTime();
+        	date = mStateHolder.getEndingTime();
         	date2 = null;
     		try {
 				date2 = FormatStrings.DATE_FORMAT.parse(date);
@@ -256,13 +253,12 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         
         //initialize dialog date & time values to the existing reservation or to something in the near future
         final Calendar calendar = Calendar.getInstance();
-        if (mStateHolder.getReservation() != null) {
         	Date date = null;
         	String strDate;
         	if (textViewId == R.id.addReservationActivityStartingTime) {
-        		strDate = mStateHolder.getReservation().getStartTime();
+        		strDate = mStateHolder.getStartingTime();
         	} else {
-        		strDate = mStateHolder.getReservation().getEndTime();
+        		strDate = mStateHolder.getEndingTime();
         	}
 	        
 	        try {
@@ -274,7 +270,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
 			calendar.setTime(date);
 	        mDateTimePicker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 	        mDateTimePicker.updateTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
-        }
+        
         
         // Update demo TextViews when the "OK" button is clicked 
         ((Button) mDateTimeDialogView.findViewById(R.id.setDateTime)).setOnClickListener(new OnClickListener() {
@@ -308,7 +304,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         });
         
         // Setup TimePicker
-        mDateTimePicker.setIs24HourView(is24h);
+        mDateTimePicker.setIs24HourView(true);
         // No title on the dialog window
         mDateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         // Set the dialog content view
@@ -327,7 +323,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
                 @Override
                 public void onClick(View v) {
                     mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingSpace(), 
-                    		mStateHolder.getStartingTime(), mStateHolder.getEndingTime());                    
+                    		mStateHolder.getStartingTime(), mStateHolder.getEndingTime(), mStateHolder.getTotalTime(), mStateHolder.getCost());                    
                 }
             });
         }
@@ -336,7 +332,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
                 @Override
                 public void onClick(View v) {
                 	mStateHolder.startTask(AddReservationActivity.this, mStateHolder.getParkingSpace(), 
-                    		mStateHolder.getStartingTime(), mStateHolder.getEndingTime()); 
+                    		mStateHolder.getStartingTime(), mStateHolder.getEndingTime(), mStateHolder.getTotalTime(), mStateHolder.getCost()); 
                 }
             });
         }        
@@ -348,19 +344,52 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         Calendar result = Calendar.getInstance();
         result.set(year, month, day, hourOfDay, minute);
         String date = FormatStrings.DATE_FORMAT.format(result.getTime());
-        
+        String temp;
         view.setText(FormatStrings.DATE_FORMAT.format(result.getTime()));
         if (view.getId() == R.id.addReservationActivityStartingTime) {
-            if (DEBUG) Log.d( TAG, "update stateholder time");
-            mStateHolder.setStartingTime(date);
+        	temp = mStateHolder.getStartingTime();
+        	mStateHolder.setStartingTime(date);        	
         } else if (view.getId() == R.id.addReservationActivityEndingTime) {
-            if (DEBUG) Log.d( TAG, "update stateholder time");
-            mStateHolder.setEndingTime(date);
+        	temp = mStateHolder.getEndingTime();
+        	mStateHolder.setEndingTime(date);        	
         }        
+        if (mStateHolder.getStartingTime() != null && mStateHolder.getEndingTime() != null) {
+        	calculateCostAndTime();
+        }
         return result;
     }   
     
-    private static String pad(int c) {
+    private void calculateCostAndTime() {
+    	if (DEBUG) Log.d( TAG, "calculateCostAndTime()");
+    	String s = mStateHolder.getStartingTime();
+    	Date date1 = (Date) FormatStrings.StringToDate(mStateHolder.getStartingTime());
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(date1);
+		date1 = (Date) FormatStrings.StringToDate(mStateHolder.getEndingTime());
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(date1);
+		long mil1 = cal1.getTimeInMillis();
+		long mil2 = cal2.getTimeInMillis();
+		long diff = mil2-mil1;
+		long hours = diff/(3600000);
+		diff = diff - (hours*3600000);
+		long minutes = diff/60000;
+		TextView tvParkingSelectedTime = (TextView) findViewById(R.id.addReservationActivityTimeValue);
+        TextView tvParkingTotalCost = (TextView) findViewById(R.id.addReservationActivityTotalPriceValue);
+        String hour_pad = pad((int) hours);
+        String minutes_pad = pad((int) minutes);
+        String selectedTime = (String)hour_pad+":"+minutes_pad;
+        mStateHolder.setTotalTime(selectedTime);
+        
+        tvParkingSelectedTime.setText(selectedTime);
+        int price = mStateHolder.getParkingSpace().getPrice();
+        int totalCost = (int) ((int) (hours*price) + ((minutes*price)/60));
+        mStateHolder.setCost(totalCost);
+        tvParkingTotalCost.setText(Integer.toString(totalCost));
+		
+	}
+
+	private static String pad(int c) {
         if (c >= 10)
             return String.valueOf(c);
         else
@@ -392,7 +421,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
     }
     
     private void prepareResultIntent() {
-    	if (DEBUG) Log.d(TAG, "prepareResultIntent()");
+    	if (DEBUG) Log.d(TAG, "onCreateDialog()");
         Reservation reservation = mStateHolder.getReservation();
 
         Intent intent = new Intent();
@@ -429,9 +458,12 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         private ParkingSpace mParkingSpace;
 		private String mStartTime;
 		private String mEndTime;
+		private String mTotalTime;
+		private int mCost;
 		private int mUserId;
         
-        public ReservationTask(AddReservationActivity activity, ParkingSpace parkingSpace, String startTime, String endTime) {
+        public ReservationTask(AddReservationActivity activity, ParkingSpace parkingSpace, String startTime, String endTime,
+        		String totalTime, int cost) {
             if (DEBUG) Log.d( TAG, "ReservationTask()");
             mActivity = activity;
 			mParkingSpace = parkingSpace;
@@ -439,6 +471,9 @@ public class AddReservationActivity extends Activity implements OnClickListener 
 			mEndTime = endTime;
 			mParkDroid = (ParkDroid) mActivity.getApplication();
 			mUserId = Integer.parseInt(mParkDroid.getUserId());
+			mTotalTime = totalTime;
+			mCost = cost;
+			
         }        
         
         @Override
@@ -451,12 +486,14 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         @Override
         public Reservation doInBackground(Void... params) {
             if (DEBUG) Log.d( TAG, "doInBackground()");                        
-            Reservation result = (Reservation) mStateHolder.getReservation();
+            Reservation result = (Reservation) mStateHolder.getReservation();         
 			try {
 				if (result == null) {
-					result = mParkDroid.getPark().createReservation(mUserId, mParkingSpace, mStartTime, mEndTime);
+					result = mParkDroid.getPark().createReservation(mUserId, mParkingSpace, mStartTime, mEndTime, mTotalTime, mCost);
 				} else {
-					result = mParkDroid.getPark().updateReservation(result);
+					result.setStartTime(mStartTime);result.setEndTime(mEndTime);
+		            result.setTotalTime(mTotalTime);result.setCost(mCost);
+		            result = mParkDroid.getPark().updateReservation(result);
 				}
 			} catch (Exception e) {	}
 			
@@ -487,6 +524,8 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         private Reservation mReservation;
         private String mStartingTime;
         private String mEndingTime;
+        private String mTotalTime;
+        private int mCost;
         
         public StateHolder() {
             if (DEBUG) Log.d( TAG, "StateHolder()");
@@ -494,20 +533,27 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             mIsRunning = false;
             mStartingTime = null;
             mEndingTime = null;
+            mTotalTime = null;
+            mCost = 0;
         }
         
-        public void setReservation(Reservation reservation) {
-            mReservation = reservation;            
+		public void setReservation(Reservation reservation) {
+            mReservation = reservation;           
+            mStartingTime = mReservation.getStartTime();
+            mEndingTime = mReservation.getEndTime();
+            mTotalTime = mReservation.getTotalTime();
+            mCost = mReservation.getCost();            
         }
         
         public Reservation getReservation() {
             return mReservation;
         }
 
-        public void startTask(AddReservationActivity activity, ParkingSpace parkingSpace, String startTime, String endTime) {
+        public void startTask(AddReservationActivity activity, ParkingSpace parkingSpace, String startTime, String endTime,
+        		String totalTime, int cost) {
             if (DEBUG) Log.d( TAG, "startTask()");
             mIsRunning = true;
-            mTask = new ReservationTask(activity, parkingSpace, startTime, endTime);
+            mTask = new ReservationTask(activity, parkingSpace, startTime, endTime, totalTime, cost);
             mTask.execute();            
         }
         
@@ -529,10 +575,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         }
         
         public void setStartingTime(String time) {
-            if (mReservation == null) {
-            	mReservation = new Reservation();            
-            }
-        	mReservation.setStartTime(time);
+        	mStartingTime = time;
         }
         
         public String getStartingTime() {
@@ -540,16 +583,29 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         }
         
         public void setEndingTime(String time) {
-        	if (mReservation == null) {
-            	mReservation = new Reservation();            
-            }
-        	mReservation.setEndTime(time);
+        	mEndingTime = time;
         }
         
         public String getEndingTime() {
         	return mEndingTime;
         }
+
+        public String getTotalTime() {
+			return mTotalTime;
+		}
+
+        public void setTotalTime(String totalTime) {
+        	mTotalTime = totalTime;
+        }
         
+		public int getCost() {
+			return mCost;
+		}
+		
+		public void setCost(int cost) {
+			mCost = cost;
+		}
+		
         public boolean getIsRunning() {
             if (DEBUG) Log.d( TAG, "getIsRunning()");
             return mIsRunning;

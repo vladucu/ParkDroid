@@ -11,7 +11,7 @@ import org.restlet.resource.Put;
  * @author vladucu
  *
  */
-public interface ReservationResource {
+public interface ReservationResource extends Resources {
 	
 	@Get("json")
 	public Reservation getReservation();

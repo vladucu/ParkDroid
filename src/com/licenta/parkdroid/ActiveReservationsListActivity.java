@@ -85,7 +85,6 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
                 
                 Reservation reservation = (Reservation) parent.getAdapter().getItem(position);
                 if (DEBUG) Log.d(TAG, "ensureUi() =" + reservation.getParkingSpace().getName());
-                Toast.makeText(ActiveReservationsListActivity.this, reservation.getParkingSpace().getName(), Toast.LENGTH_LONG);
                 startItemActivity(reservation);
             }            
         });
@@ -109,7 +108,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
 				if (resultCode == Activity.RESULT_OK && data.hasExtra(ReservationActivity.INTENT_EXTRA_RESERVATION)) {
 					Reservation reservation = data.getParcelableExtra(ReservationActivity.INTENT_EXTRA_RESERVATION);
 					mStateHolder.updateReservation(reservation);
-					//mListAdapter.notifyDataSetChanged();
+					mListAdapter.notifyDataSetChanged();
 					ensureUi();
 				}
 				break;
@@ -168,37 +167,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
                 e.printStackTrace();
             }*/
             try {
-            	reservations = mPark.reservations();
-            	/*ParkingSpace mPark1 = new ParkingSpace();
-            	ParkingSpace mPark2 = new ParkingSpace();
-                mPark1.setName("Parcarea principala");
-                mPark2.setName("Parcarea secundara");
-                mPark1.setGeolat("44.43472");
-                mPark1.setGeolong("26.09704");
-                mPark2.setGeolat("44.43797");
-                mPark2.setGeolong("26.11576");     
-                //37.44461, -122.13846 San Francisco - Palo Alto Library
-                mPark1.setGeoLat("37.44461");
-                mPark1.setGeoLong("-122.13846");
-                //37.4597, -122.1064 San Francisco - Lucy Evans Baylands Nature Interpretive Center (The City of Palo Alto)
-                mPark2.setGeoLat("37.4597");
-                mPark2.setGeoLong("-122.1064");
-                mPark1.setAddress("Bulevardul Regina Elisabeta 23");
-                mPark2.setAddress("Bulevardul Carol 76");
-                //mPark1.setPrice("25");
-                //mPark2.setPrice("125");
-                
-                Reservation r1 = new Reservation();
-                Reservation r2 = new Reservation();
-                r1.setParkingSpace(mPark1);r2.setParkingSpace(mPark2);
-                r1.setId(123);r2.setId(234);                
-                r1.setStartTime("Wed, 27 April 11 15:00:00 +0000");
-                r1.setEndTime("Wed, 27 April 11 17:00:00 +0000");
-                r2.setStartTime("Fri, 29 April 11 15:00:00 +0000");
-                r2.setEndTime("Fri, 29 April 11 17:35:00 +0000");
-                Group<Reservation> g = new Group<Reservation>();
-                g.add(r1);g.add(r2);
-                return g;*/
+            	reservations = mPark.reservations();            
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -268,6 +237,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
             }
         }
         
+        //add the modified reservation to the list of reservations
         public void updateReservation(Reservation reservation) {
         	Iterator<Reservation> it = mReservations.iterator();
         	Reservation res;

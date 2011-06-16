@@ -15,12 +15,12 @@ public class ParkingSpace implements ParkTypes, Parcelable {
 	private String geolat;
 	private String geolong;
 	private int spaces;  
-	//private User user;
+	private int price;
 
     public ParkingSpace() {
     }
 
-    public ParkingSpace(int id, String name, String address, String geolat, String geolong, int spaces/*, User user*/) {
+    public ParkingSpace(int id, String name, String address, String geolat, String geolong, int spaces, int price) {
     	super();
     	this.id = id;
     	this.name = name;
@@ -28,7 +28,7 @@ public class ParkingSpace implements ParkTypes, Parcelable {
         this.geolat = geolat;
         this.geolong = geolong;
         this.spaces = spaces;
-        //this.user = user;
+        this.price = price;        
     }
     
     private ParkingSpace(Parcel in) {
@@ -42,6 +42,7 @@ public class ParkingSpace implements ParkTypes, Parcelable {
         geolong = ParcelUtils.readStringFromParcel(in);
         //mDistance = ParcelUtils.readStringFromParcel(in);
         spaces = in.readInt();
+        price = in.readInt();
        /* if (in.readInt() == 1) {
         	user = new User();
         	user = in.readParcelable(User.class.getClassLoader());
@@ -120,14 +121,14 @@ public class ParkingSpace implements ParkTypes, Parcelable {
         this.spaces = spaces;
     }
     
-   /* public User getUser() {
-    	return user;
+    public int getPrice() {
+        return price;
     }
-    
-    public void setUser(User user) {
-    	this.user = user;
+
+    public void setPrice(int price) {
+        this.price = price;
     }
-*/
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -146,6 +147,7 @@ public class ParkingSpace implements ParkTypes, Parcelable {
         ParcelUtils.writeStringToParcel(out, geolong);
         //ParcelUtils.writeStringToParcel(out, mDistance);
         out.writeInt(spaces);
+        out.writeInt(price);
        /* if (user != null) {
         	out.writeInt(1);
         	out.writeParcelable(user, flags);        	
@@ -167,4 +169,5 @@ public class ParkingSpace implements ParkTypes, Parcelable {
         }*/
 		
 	}
+
 }

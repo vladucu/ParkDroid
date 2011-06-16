@@ -129,7 +129,7 @@ public class ParkingSpaceActivity extends Activity {
             tvParkingSpaceActivityAddress.setText(parkingSpace.getAddress());
             tvParkingSpaceActivitySpaces.setText(Integer.toString(parkingSpace.getSpaces()));
             //tvParkingSpaceActivityDistance.setText(parkingSpace.getDistance()+"m");
-            //tvParkingSpaceActivityPrice.setText(parkingSpace.getPrice()+"$/h");            
+            tvParkingSpaceActivityPrice.setText(Integer.toString(parkingSpace.getPrice()));            
             btnReserveNow.setText(R.string.parking_lot_activity_reserve_now_button);
             btnBack.setText(R.string.parking_lot_activity_button_back);
             setTitle(getTitle()+ " - " + mStateHolder.getParkingSpace().getName());
@@ -217,7 +217,6 @@ public class ParkingSpaceActivity extends Activity {
                 if (resultCode == Activity.RESULT_OK) {
                     if (DEBUG) Log.d(TAG, "onActivityResult() returned with reservation done succesfully");
                     mStateHolder.setReservationHere(true);
-                    Toast.makeText(ParkingSpaceActivity.this, "Returned from add reservation with succes", Toast.LENGTH_LONG);
                     break;
                 }                
         }

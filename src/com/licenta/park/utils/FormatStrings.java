@@ -46,11 +46,11 @@ public class FormatStrings {
         }
     }
     
-    public  static CharSequence StringToDate(String time) {
+    public  static Date StringToDate(String time) {
         try {
-            return (CharSequence) DATE_FORMAT.parse(time);
+            return (Date) DATE_FORMAT.parse(time);
         } catch (ParseException e) {
-            return time;
+            return null;
         }
     }
     
@@ -86,22 +86,5 @@ public class FormatStrings {
 		return true;
     }
     
-    public static Date stringDateToUnits(String time) {
-    	try {
-			return DATE_FORMAT.parse(time);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    	CharSequence time2 = StringToDate(time);
-    	String day = getHourString(time);
-    	int i = 0;
-    	while (i<6) {
-    		i = time2.toString().indexOf(" ");
-    		day = time2.toString().substring(i+1, i+3);	
-    	}
-    	
-    	return null;
-    }
+    
 }

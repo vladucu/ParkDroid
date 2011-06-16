@@ -4,19 +4,14 @@
 package com.licenta.park;
 
 import java.io.IOException;
-import java.util.Date;
-
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
-import org.restlet.data.Form;
 import org.restlet.data.Status;
 import org.restlet.engine.Engine;
 import org.restlet.ext.httpclient.HttpClientHelper;
 import org.restlet.ext.jackson.JacksonConverter;
-import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import android.util.Log;
-import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkingSpace;
 import com.licenta.park.types.ParkingSpaces;
 import com.licenta.park.types.ParkingSpacesResource;
@@ -25,8 +20,8 @@ import com.licenta.park.types.Reservations;
 import com.licenta.park.types.Reservation;
 import com.licenta.park.types.ReservationsResource;
 import com.licenta.park.types.User;
+import com.licenta.park.types.UserResource;
 import com.licenta.parkdroid.ParkingSpaceResource;
-import com.licenta.parkdroid.UserResource;
 
 /**
  * @author vladucu
@@ -35,8 +30,7 @@ import com.licenta.parkdroid.UserResource;
 class ParkServerHttpApi {
 	
 	private static final String TAG = "ParkServerHttpApi";
-	private static final boolean DEBUG = true;
-	
+	private static final boolean DEBUG = true;	
 	private ClientResource clientResource;
 	private ChallengeResponse authentication;
 	private ChallengeScheme scheme = ChallengeScheme.HTTP_BASIC;
@@ -52,10 +46,7 @@ class ParkServerHttpApi {
 		Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
 		Engine.getInstance().getRegisteredConverters().clear();
 		Engine.getInstance().getRegisteredConverters().add(new JacksonConverter());
-		clientResource = new ClientResource(domain);
-		ParkingSpacesResource parkingSpacesResource = clientResource.wrap(ParkingSpacesResource.class);
-		ParkingSpaceResource parkingSpaceResource = clientResource.wrap(ParkingSpaceResource.class);
-		
+		clientResource = new ClientResource(domain);		
 	}
 
 	public User user(String login, String password) {
@@ -64,7 +55,6 @@ class ParkServerHttpApi {
 		
 		//Prepare the request
     	clientResource = new ClientResource("http://89.37.147.104:8080/users/1");
-    	//ClientResource clientResource = new ClientResource("https://89.37.147.104:8443/users/1/reservations");
     	
     	clientResource.setChallengeResponse(authentication);
     	
@@ -89,8 +79,6 @@ class ParkServerHttpApi {
 	}
 
 	public boolean hasCredentials() {
-		//if (DEBUG) Log.d(TAG, "hasCredentials() "+resource.getChallengeResponse().getRawValue());
-		
 		return (authentication != null);
 	}
 
@@ -108,17 +96,8 @@ class ParkServerHttpApi {
 			clientResource.getResponseEntity().exhaust();
 		}
 		
-		/*Iterator<ParkingSpace> it = parkingSpaces.iterator();
-		
-		while (it.hasNext()) {
-			//ParkingSpace x = (ParkingSpace) it.next();
-			result.add((ParkingSpace) it.next());
-		}*/
-		//Status x = clientResource.getStatus();
 		clientResource.release();
 		
-		//Group<ParkingSpace> result = new Group<ParkingSpace>();
-		//result.addAll(parkingSpaces);
 		return parkingSpaces;
 	}
 	
@@ -128,23 +107,12 @@ class ParkServerHttpApi {
 		clientResource.setChallengeResponse(authentication);
 		ParkingSpaceResource parkingSpaceResource = clientResource.wrap(ParkingSpaceResource.class);
 		
-		ParkingSpace parkingSpace = parkingSpaceResource.retrieve();
-		
+		ParkingSpace parkingSpace = parkingSpaceResource.retrieve();		
 	
-			clientResource.getResponseEntity().exhaust();
+		clientResource.getResponseEntity().exhaust();
 	
-		
-		/*Iterator<ParkingSpace> it = parkingSpaces.iterator();
-		
-		while (it.hasNext()) {
-			//ParkingSpace x = (ParkingSpace) it.next();
-			result.add((ParkingSpace) it.next());
-		}*/
-		//Status x = clientResource.getStatus();
 		clientResource.release();
 		
-		//Group<ParkingSpace> result = new Group<ParkingSpace>();
-		//result.addAll(parkingSpaces);
 		return parkingSpace;
 	}
 
@@ -163,49 +131,30 @@ class ParkServerHttpApi {
 		else {
 			clientResource.getResponseEntity().exhaust();
 		}
-		
-		/*Iterator<ParkingSpace> it = parkingSpaces.iterator();
-		
-		while (it.hasNext()) {
-			//ParkingSpace x = (ParkingSpace) it.next();
-			result.add((ParkingSpace) it.next());
-		}*/
-		//Status x = clientResource.getStatus();
+	
 		clientResource.release();
-		
-		//Group<ParkingSpace> result = new Group<ParkingSpace>();
-		//result.addAll(parkingSpaces);
+	
 		return reservations;
 	}
 
-	public Reservation createReservation(int userId, ParkingSpace mParkingSpace, String mStartTime, String mEndTime) throws IOException {
+	public Reservation createReservation(int userId, ParkingSpace mParkingSpace, String mStartTime, String mEndTime, String mTotalTime, int mCost) throws IOException {
 		
 		Reservation reservation = new Reservation();
 		reservation.setParkingSpace(mParkingSpace);
 		reservation.setUser(null);
 		reservation.setStartTime(mStartTime);
 		reservation.setEndTime(mEndTime);
+		reservation.setTotalTime(mTotalTime);
+		reservation.setCost(mCost);
 		
 		clientResource = new ClientResource("http://89.37.147.104:8080/users/"+userId+"/reservations");
 		clientResource.setChallengeResponse(authentication);
 		reservationsResource = clientResource.wrap(ReservationsResource.class);
-		/*Form form = new Form();
-		form.add("startTime", startTime);
-		form.add("endTime", endTime);
-		form.add("parkingSpaceId", Integer.toString(mParkingSpace.getId()));*/
-		//reservationsResource.createReservation(form);
-		
 		
 		try {
-			reservation = reservationsResource.createReservation(reservation);
-			//clientResource.post(form.getWebRepresentation());
-			//Representation rep = clientResource.post(form.getWebRepresentation());
-			
+			reservation = reservationsResource.createReservation(reservation);			
 		} catch (Exception e) {}
 		if (clientResource.getStatus() == Status.SUCCESS_OK) {
-			//reservation = (Reservation) clientResource.getResponseEntity(entity);
-			//reservation = clientResource.getResponseEntity(); 
-			//return null;
 		}
 		else {
 			clientResource.getResponseEntity().exhaust();
@@ -219,23 +168,11 @@ class ParkServerHttpApi {
 		clientResource = new ClientResource("http://89.37.147.104:8080/users/"+reservation.getUser().getId()+"/reservations/"+reservation.getId());
 		clientResource.setChallengeResponse(authentication);
 		reservationResource = clientResource.wrap(ReservationResource.class);
-		/*Form form = new Form();
-		form.add("startTime", startTime);
-		form.add("endTime", endTime);
-		form.add("parkingSpaceId", Integer.toString(mParkingSpace.getId()));*/
-		//reservationsResource.createReservation(form);
-		
 		
 		try {
-			reservation = reservationResource.updateReservation(reservation);
-			//clientResource.post(form.getWebRepresentation());
-			//Representation rep = clientResource.post(form.getWebRepresentation());
-			
+			reservation = reservationResource.updateReservation(reservation);			
 		} catch (Exception e) {}
 		if (clientResource.getStatus() == Status.SUCCESS_OK) {
-			//reservation = (Reservation) clientResource.getResponseEntity(entity);
-			//reservation = clientResource.getResponseEntity(); 
-			//return null;
 		}
 		else {
 			clientResource.getResponseEntity().exhaust();

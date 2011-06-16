@@ -56,9 +56,10 @@
 	<string name="reservation_activity_starting_time_label">Starting time</string>	
 	<string name="reservation_activity_ending_time_label">Ending time</string>
 	<string name="reservation_activity_navigation_label">Get directions</string>	
-    <string name="reservation_activity_cancel_button">Cancel reservation</string>
+    <string name="reservation_activity_cancel_button">Delete reservation</string>
     <string name="reservation_activity_extend_button">Extend reservation</string>
-    <string name="add_reservation_execute_activity_action_label">Add reservation!</string>
+    <string name="add_reservation_execute_activity_action_label">Please wait!</string>
     <string name="add_reservation_execute_activity_progress_bar_message">Making Reservation...</string>
     <string name="add_reservation_title_result">Reservation confirmed!</string>
+    <string name="add_reservation_activity_reservation_label">Unique ID</string>
 </resources>

@@ -14,7 +14,7 @@ import org.restlet.resource.Get;
  * @author vladucu
  *
  */
-public interface ParkingSpacesResource {
+public interface ParkingSpacesResource extends Resources {
 
 	@Get("json") 
 	public ParkingSpaces retrieve();

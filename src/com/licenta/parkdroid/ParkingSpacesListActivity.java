@@ -242,7 +242,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
     }
     
     /*
-     * Handles the work of finding nearby parking lots
+     * Handles the work of finding nearby parking spaces
      */
     private static class SearchTask extends AsyncTask<Void, Void, ParkingSpaces> {
         private static final String TAG = "SearchTask";
@@ -267,9 +267,6 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
             mPark = mParkDroid.getPark();
         }
         
-        /* (non-Javadoc)
-         * @see android.os.AsyncTask#onPreExecute()
-         */
         @Override
         public void onPreExecute() {
             Log.d(TAG, "onPreExecute()");
@@ -283,59 +280,12 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
             try {
             	
             	results = mPark.parkingSpaces(Integer.parseInt(mParkDroid.getUserId()));
-            	/*
-                Group<ParkingSpace> g = new Group<ParkingSpace>();
-                ParkingSpace mPark1 = new ParkingSpace();
-                ParkingSpace mPark2 = new ParkingSpace();
-                mPark1.setId(123);
-                mPark1.setName("Parcarea principala");
-                //mPark1.setPhone("0733683111");
-                mPark1.setAddress("Bulevardul Regina Elisabeta 23");
-                //mPark1.setCity("Bucuresti");
-                //mPark1.setZip("050012");
-                mPark1.setGeoLat("44.43472");
-                mPark1.setGeoLat("26.09704");
-                //mPark1.setDistance("100");
-                mPark1.setSpaces(150);
-                //mPark1.setTotalSpaces("500");
-                //mPark1.setPrice("25");
-                //mPark1.setOpenHours("09-20");
-                //mPark1.setHasReservation(true);
-                Reservation reservation = new Reservation();
-                reservation.setId("323213");
-                reservation.setParkingLot(null);
-                reservation.setStartTime("Wed, 27 April 11 15:00:00 +0000");
-                reservation.setEndTime("Wed, 27 April 11 17:00:00 +0000");
-                mPark2.setId(5);
-                mPark2.setName("Parcarea secundara");
-                //mPark2.setPhone("0733683444");
-                mPark2.setAddress("Bulevardul Carol 76");
-                //mPark2.setCity("Bucuresti");
-                //mPark2.setZip("020926");
-                mPark2.setGeoLat("44.43797");
-                mPark2.setGeoLat("26.11576");
-                //mPark2.setDistance("500");
-                mPark2.setSpaces(550);
-                //mPark2.setTotalSpaces("1500");
-                //mPark2.setPrice("125");
-                //mPark2.setOpenHours("09-20");
-                //mPark2.setHasReservation(false);
-                //mPark2.setReservation(null);
-                for (int index=0;index<10;index++) {
-                    g.add(mPark1);g.add(mPark2); 
-                }
-                if (DEBUG) Log.d(TAG, g.get(1).getName());
-                
-                return g;*/
             } catch (Exception e) {
                
             }
             return results;
         }
-                
-        /* (non-Javadoc)
-         * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
-         */
+    
         @Override
         public void onPostExecute(ParkingSpaces results) {
             Log.d(TAG, "onPostExecute()");

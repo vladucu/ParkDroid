@@ -17,17 +17,19 @@ public class Reservation implements ParkTypes, Parcelable {
 	private String startTime;
 	private String endTime;
 	private int cost;	
+	private String totalTime;
 	private ParkingSpace parkingSpace;
 	private User user;
 
     public Reservation() {
     }
 
-    public Reservation(int id, String start_time, String end_time, int cost, ParkingSpace parkingSpace, User user) {
+    public Reservation(int id, String start_time, String end_time, int cost, String totalTime, ParkingSpace parkingSpace, User user) {
     	this.reservationId = id;
     	this.startTime = start_time;
         this.endTime = end_time;
         this.cost = cost;
+        this.totalTime = totalTime;
         this.parkingSpace = parkingSpace;
         this.user = user;
     }
@@ -37,6 +39,7 @@ public class Reservation implements ParkTypes, Parcelable {
         startTime = in.readString();
         endTime = in.readString();
         cost = in.readInt();
+        totalTime = in.readString();
         if (in.readInt() == 1) {
         	parkingSpace = in.readParcelable(ParkingSpace.class.getClassLoader());
         }
@@ -73,7 +76,8 @@ public class Reservation implements ParkTypes, Parcelable {
         out.writeInt(reservationId);
         out.writeString(startTime);
         out.writeString(endTime);
-        out.writeInt(cost);        
+        out.writeInt(cost);   
+        out.writeString(totalTime);
         if (parkingSpace != null) {
             out.writeInt(1);
             out.writeParcelable(parkingSpace, flags);
@@ -113,13 +117,21 @@ public class Reservation implements ParkTypes, Parcelable {
     public void setEndTime(String end_time) {
         this.endTime = end_time;
     }
-    
+        
     public int getCost() {
         return cost;
     }
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+    
+    public String getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(String totalTime) {
+        this.totalTime = totalTime;
     }
     
     public ParkingSpace getParkingSpace() {
