@@ -4,6 +4,8 @@
 package com.licenta.parkdroid;
 
 import com.licenta.park.Park;
+import com.licenta.park.types.User;
+
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
@@ -40,7 +42,7 @@ public class Preferences {
             return false;
         }
 
-        Park.User user = park.user(login, password);
+        User user = park.user(login, password);
         storeUser(editor, user);
         if (!editor.commit()) {
             if (DEBUG) Log.d(TAG, "storeUser commit failed");
@@ -79,10 +81,10 @@ public class Preferences {
         editor.putString(PREFERENCE_PASSWORD, password);
     }
     
-    public static void storeUser(final Editor editor, Park.User user) {
+    public static void storeUser(final Editor editor, User user) {
         if (DEBUG) Log.d(TAG, "storeUser");
-        if (user != null && user.getId() != null) {
-            editor.putString(PREFERENCE_ID, user.getId());
+        if (user != null && Integer.toString(user.getId()) != null) {
+            editor.putString(PREFERENCE_ID, Integer.toString(user.getId()));
             editor.putString(PREFERENCE_USER_EMAIL, user.getEmail());           
             if (DEBUG) Log.d(TAG, "Setting user info");
         } else {

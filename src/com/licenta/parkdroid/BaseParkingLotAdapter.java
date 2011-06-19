@@ -1,6 +1,5 @@
 package com.licenta.parkdroid;
 
-import com.licenta.park.types.ParkingLot;
 import android.content.Context;
 
 
@@ -12,7 +11,7 @@ import android.content.Context;
  * @author vladucu
  *
  */
-public abstract class BaseParkingLotAdapter extends BaseGroupAdapter<ParkingLot> {
+public abstract class BaseParkingLotAdapter extends BaseGroupAdapter<ParkingSpace> {
     
     public BaseParkingLotAdapter(Context context) {
         super(context);
