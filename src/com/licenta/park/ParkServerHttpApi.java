@@ -54,7 +54,7 @@ class ParkServerHttpApi {
 		if (DEBUG) Log.d(TAG, "user("+login+", "+password+")");
 		
 		//Prepare the request
-    	clientResource = new ClientResource("http://89.37.147.104:8080/users/1");
+    	clientResource = new ClientResource("http://10.0.2.2:8080/users/1");
     	
     	clientResource.setChallengeResponse(authentication);
     	
@@ -84,7 +84,7 @@ class ParkServerHttpApi {
 
 	public ParkingSpaces parkingspaces(int userId) throws IOException {
 		
-		clientResource = new ClientResource("http://89.37.147.104:8080/users/"+userId+"/parkingspaces");
+		clientResource = new ClientResource("http://10.0.2.2:8080/users/"+userId+"/parkingspaces");
 		clientResource.setChallengeResponse(authentication);
 		parkingSpacesResource = clientResource.wrap(ParkingSpacesResource.class);
 		ParkingSpaces parkingSpaces = parkingSpacesResource.retrieve();
@@ -103,7 +103,7 @@ class ParkServerHttpApi {
 	
 	public ParkingSpace parkingSpace(int userId, int parkingSpaceId) throws IOException {
 		
-		ClientResource clientResource = new ClientResource("http://89.37.147.104:8080/users/"+userId+"/parkingspaces/"+parkingSpaceId);
+		ClientResource clientResource = new ClientResource("http://10.0.2.2:8080/users/"+userId+"/parkingspaces/"+parkingSpaceId);
 		clientResource.setChallengeResponse(authentication);
 		ParkingSpaceResource parkingSpaceResource = clientResource.wrap(ParkingSpaceResource.class);
 		
@@ -118,7 +118,7 @@ class ParkServerHttpApi {
 
 	public Reservations reservations() throws IOException {
 		
-		clientResource = new ClientResource("http://89.37.147.104:8080/users/1/reservations");
+		clientResource = new ClientResource("http://10.0.2.2:8080/users/1/reservations");
 		clientResource.setChallengeResponse(authentication);
 		reservationsResource = clientResource.wrap(ReservationsResource.class);
 		Reservations reservations = null;
@@ -147,7 +147,7 @@ class ParkServerHttpApi {
 		reservation.setTotalTime(mTotalTime);
 		reservation.setCost(mCost);
 		
-		clientResource = new ClientResource("http://89.37.147.104:8080/users/"+userId+"/reservations");
+		clientResource = new ClientResource("http://10.0.2.2:8080/users/"+userId+"/reservations");
 		clientResource.setChallengeResponse(authentication);
 		reservationsResource = clientResource.wrap(ReservationsResource.class);
 		
@@ -165,7 +165,7 @@ class ParkServerHttpApi {
 
 	public Reservation updateReservation(Reservation reservation) throws IOException {
 		
-		clientResource = new ClientResource("http://89.37.147.104:8080/users/"+reservation.getUser().getId()+"/reservations/"+reservation.getId());
+		clientResource = new ClientResource("http://10.0.2.2:8080/users/"+reservation.getUser().getId()+"/reservations/"+reservation.getId());
 		clientResource.setChallengeResponse(authentication);
 		reservationResource = clientResource.wrap(ReservationResource.class);
 		
