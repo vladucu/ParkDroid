@@ -282,10 +282,7 @@
             android:layout_toRightOf="@+id/parkingLotActivityHourLabel"
             android:gravity="center"
             android:paddingLeft="5dip"
-            android:layout_marginRight="15dip"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:ellipsize="marquee" />
+            android:layout_marginRight="15dip" />
             
         </RelativeLayout>
         
@@ -332,17 +329,5 @@
       
     </RelativeLayout>
 
- </LinearLayout><!--
-
-  <ImageView
-    android:id="@+id/venueActivitySpecialHere"
-    android:src="@drawable/special_banners"
-    android:layout_width="80dip"
-    android:layout_height="53dip"
-    android:layout_marginRight="1dip"
-    android:scaleType="fitXY"
-    android:padding="0dip"
-    android:layout_gravity="right"
-    android:visibility="gone" />
-
---></FrameLayout>
+  </LinearLayout>
+</FrameLayout>

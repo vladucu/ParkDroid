@@ -1,5 +1,7 @@
 package com.licenta.parkdroid;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -7,8 +9,9 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
 import com.licenta.park.types.ParkingSpace;
 import com.licenta.park.utils.GeoUtils;
-import com.licenta.parkdroid.ParkingSpaceItemizedOverlayIcons;
-import com.licenta.parkdroid.ParkingSpaceItemizedOverlayIcons.ParkingSpaceItemizedOverlayTapListener;
+import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons;
+import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons.ParkingSpaceItemizedOverlayTapListener;
+
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -52,29 +55,19 @@ public class MapActivity extends com.google.android.maps.MapActivity {
 
         ensureUi();        
     }
-    
-    /* (non-Javadoc)
-     * @see com.google.android.maps.MapActivity#onPause()
-     */
-    
+
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
     }
 
-    /* (non-Javadoc)
-     * @see com.google.android.maps.MapActivity#onResume()
-     */
     @Override
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
     }
 
-    /* (non-Javadoc)
-     * @see com.google.android.maps.MapActivity#isRouteDisplayed()
-     */
     @Override
     protected boolean isRouteDisplayed() {
         return false;
@@ -98,7 +91,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
     }
     */
     private void ensureUi() {
-        if (DEBUG) Log.d(TAG, "ensureUi()="+(Group<ParkingSpace>)mStateHolder.getParkingSpaces());
+        if (DEBUG) Log.d(TAG, "ensureUi()="+(List<ParkingSpace>)mStateHolder.getParkingSpaces());
         
         mMapView = (MapView) findViewById(R.id.mapView);
         // Display zoom controls (+/-)
@@ -110,7 +103,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         mMapView.getOverlays().add(mMyLocationOverlay);
               
         mOverlay = new ParkingSpaceItemizedOverlayIcons(this, getResources().getDrawable(R.drawable.map_marker_blue), mParkingSpaceOverlayTapListener);        
-        Group<ParkingSpace> g = new Group<ParkingSpace>();
+        List<ParkingSpace> g = new ArrayList<ParkingSpace>();
         for (ParkingSpace it:mStateHolder.getParkingSpaces()) {
             g.add(it);
         }
@@ -179,7 +172,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         private static final String TAG = "MapActivity - StateHolder";
         private static final boolean DEBUG = true;
     
-        private Group<ParkingSpace> mParkingSpaces;
+        private List<ParkingSpace> mParkingSpaces;
         
         public StateHolder(){
             if (DEBUG) Log.d(TAG, "StateHolder()");
@@ -211,13 +204,13 @@ public class MapActivity extends com.google.android.maps.MapActivity {
             ///mPark2.setTotalSpaces("1500");
             //mPark2.setPrice("125");
             //mPark2.setOpenHours("09-20"); 
-            mParkingSpaces = new Group<ParkingSpace>();
+            mParkingSpaces = new ArrayList<ParkingSpace>();
             mParkingSpaces.add(mPark1);mParkingSpaces.add(mPark2);       
            /* Log.d(TAG, "p1="+mParkingSpaces.get(0).getName());
             Log.d(TAG, "p1="+mParkingSpaces.get(1).getName());*/
         }
 
-        public Group<ParkingSpace> getParkingSpaces() {
+        public List<ParkingSpace> getParkingSpaces() {
             if (DEBUG) Log.d(TAG, "getParkingSpaces()");
             return mParkingSpaces;
         }

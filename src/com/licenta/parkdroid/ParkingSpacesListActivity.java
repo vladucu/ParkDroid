@@ -212,7 +212,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         if (result != null) {
             mStateHolder.setResults(result);
        } else {
-            mStateHolder.setResults(new Group<ParkingSpace>());
+            mStateHolder.setResults(new ArrayList<ParkingSpace>());
             //notification of failure ?
         }
         

@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 /**
@@ -43,11 +42,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
     };
     
     //TODO ce facem cu rezervarile care au expirat?
-    //TODO afisam pretul parcarii pe ora sau costul rezervarii
-    
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -60,7 +55,6 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
             mStateHolder = (StateHolder) retained;
             mStateHolder.setActivity(this);
         } else {            
-            ParkDroid parkDroid = (ParkDroid) getApplication();
             mStateHolder = new StateHolder();
             mStateHolder.startActiveReservationsTask(this);
         }
@@ -80,8 +74,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         listView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
-                
+            public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {                
                 Reservation reservation = (Reservation) parent.getAdapter().getItem(position);
                 if (DEBUG) Log.d(TAG, "ensureUi() =" + reservation.getParkingSpace().getName());
                 startItemActivity(reservation);
@@ -92,20 +85,17 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
     
     private void startItemActivity(Reservation reservation) {
         if (DEBUG) Log.d(TAG, "startItemActivity()");
-        Intent intent = new Intent(ActiveReservationsListActivity.this, ReservationActivity.class);
-        intent.putExtra(ReservationActivity.INTENT_EXTRA_RESERVATION, reservation);
+        Intent intent = new Intent(ActiveReservationsListActivity.this, ActiveReservationActivity.class);
+        intent.putExtra(ActiveReservationActivity.INTENT_EXTRA_RESERVATION, reservation);
         startActivityForResult(intent, RESULT_CODE_ACTIVITY_RESERVATION);        
     }
-        
-    /* (non-Javadoc)
-	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
-	 */
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 			case RESULT_CODE_ACTIVITY_RESERVATION:
-				if (resultCode == Activity.RESULT_OK && data.hasExtra(ReservationActivity.INTENT_EXTRA_RESERVATION)) {
-					Reservation reservation = data.getParcelableExtra(ReservationActivity.INTENT_EXTRA_RESERVATION);
+				if (resultCode == Activity.RESULT_OK && data.hasExtra(ActiveReservationActivity.INTENT_EXTRA_RESERVATION)) {
+					Reservation reservation = data.getParcelableExtra(ActiveReservationActivity.INTENT_EXTRA_RESERVATION);
 					mStateHolder.updateReservation(reservation);
 					mListAdapter.notifyDataSetChanged();
 					ensureUi();
@@ -158,17 +148,10 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         @Override
         protected Reservations doInBackground(Void... params) {
             if (DEBUG) Log.d(TAG, "doInBackground()");
-            // TODO Auto-generated method stub
-            /*try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }*/
+       
             try {
-            	reservations = mPark.reservations();            
+            	reservations = mPark.getReservations();            
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return reservations;

@@ -4,29 +4,22 @@
 package com.licenta.parkdroid;
 
 import com.licenta.park.types.ParkingSpace;
-import com.licenta.park.types.Reservation;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @author vladucu
@@ -43,10 +36,8 @@ public class ParkingSpaceActivity extends Activity {
     
     public static final String INTENT_EXTRA_PARKING_SPACE_ID = ParkDroid.PACKAGE_NAME + ".ParkingSpaceActivity.INTENT_EXTRA_PARKING_SPACE_ID";
     public static final String INTENT_EXTRA_PARKING_SPACE = ParkDroid.PACKAGE_NAME + ".ParkingSpaceActivity.INTENT_EXTRA_PARKING_SPACE";
-    private static final String EXTRA_PARKKING_SPACE_RETURNED = ParkDroid.PACKAGE_NAME + ".ParkingSpaceActivity.EXTRA_PARKKING_SPACE_RETURNED";
     
     private static final int RESULT_CODE_ACTIVITY_ADD_RESERVATION = 1;
-    private static final int RESULT_CODE_ACTIVITY_RESERVATION = 2;
     
     private static final int MENU_CALL = 1;
     
@@ -79,26 +70,17 @@ public class ParkingSpaceActivity extends Activity {
             mStateHolder = new StateHolder();
             if (getIntent().hasExtra(INTENT_EXTRA_PARKING_SPACE)) {
                 if (DEBUG) Log.d(TAG, "getIntent().hasExtra(INTENT_EXTRA_PARKING_LOT)");
-                mStateHolder.setLoadType(StateHolder.LOAD_TYPE_PARKING_LOT_FULL);
-                mStateHolder.setParkingSpace((ParkingSpace)getIntent().getParcelableExtra(INTENT_EXTRA_PARKING_SPACE));                
-            }
-            else if (getIntent().hasExtra(INTENT_EXTRA_PARKING_SPACE_ID)) {
-                if (DEBUG) Log.d(TAG, "getIntent().hasExtra(INTENT_EXTRA_PARKING_LOT_ID)");
-                mStateHolder.setLoadType(StateHolder.LOAD_TYPE_PARKING_LOT_ID);
-                mStateHolder.setParkingSpaceId(getIntent().getStringExtra(INTENT_EXTRA_PARKING_SPACE_ID));
-                mStateHolder.startTaskParkingSpace(this);
-            }
-            else {
-                if (DEBUG) Log.d(TAG, "ParkingSpaceActivity needs an parking lot Id or parcelable extra");
+               mStateHolder.setParkingSpace((ParkingSpace)getIntent().getParcelableExtra(INTENT_EXTRA_PARKING_SPACE));                
+            } else {
+                if (DEBUG) Log.d(TAG, "ParkingSpaceActivity needs an parking space parcelable extra");
                 finish();
                 return;
             }
-        }
-        else {
+        } else {
             if (DEBUG) Log.d(TAG, "mStateHolder != null");
             mStateHolder = holder;
-            mStateHolder.setActivityForTasks(this);
-            prepareResultIntent();
+            //mStateHolder.setActivityForTasks(this);
+           // prepareResultIntent();
         }
         
         ensureUI();
@@ -121,54 +103,46 @@ public class ParkingSpaceActivity extends Activity {
         View viewOpenHours = findViewById(R.id.parkingLotActivityHourDetails);
         TextView tvOpenHours = (TextView) findViewById(R.id.parkingLotActivityHour);
        
-        ParkingSpace parkingSpace = mStateHolder.getParkingSpace();
+        final ParkingSpace parkingSpace = mStateHolder.getParkingSpace();
+        tvParkingkSpaceActivityName.setText(parkingSpace.getName());
+        tvParkingSpaceActivityAddress.setText(parkingSpace.getAddress());
+        tvParkingSpaceActivitySpaces.setText(Integer.toString(parkingSpace.getSpaces()));
+        tvParkingSpaceActivityDistance.setText(parkingSpace.getDistance());
+        tvParkingSpaceActivityPrice.setText(Integer.toString(parkingSpace.getPrice()) + "$");
         
-        if (mStateHolder.getLoadType() == StateHolder.LOAD_TYPE_PARKING_LOT_FULL) {
-            if (DEBUG) Log.d(TAG, "ensureUI() LOAD_TYPE_PARKING_LOT_FULL");
-            tvParkingkSpaceActivityName.setText(parkingSpace.getName());
-            tvParkingSpaceActivityAddress.setText(parkingSpace.getAddress());
-            tvParkingSpaceActivitySpaces.setText(Integer.toString(parkingSpace.getSpaces()));
-            //tvParkingSpaceActivityDistance.setText(parkingSpace.getDistance()+"m");
-            tvParkingSpaceActivityPrice.setText(Integer.toString(parkingSpace.getPrice()));            
-            btnReserveNow.setText(R.string.parking_lot_activity_reserve_now_button);
-            btnBack.setText(R.string.parking_lot_activity_button_back);
-            setTitle(getTitle()+ " - " + mStateHolder.getParkingSpace().getName());
-       /*     
-            if (mStateHolder.getParkingSpace().getPhone() != null) {
-                tvPhoneText.setText(mStateHolder.getParkingSpace().getPhone());
-                viewPhone.setOnClickListener(new OnClickListener() {                    
-                    @Override
-                    public void onClick(View v) {
-                        Intent dial = new Intent();
-                        dial.setAction(Intent.ACTION_DIAL);
-                        dial.setData(Uri.parse("tel:" + mStateHolder.getParkingSpace().getPhone()));
-                        startActivity(dial);
-                    }
-                });
-                viewPhone.setVisibility(View.VISIBLE);                
-            }
+        btnReserveNow.setText(R.string.parking_lot_activity_reserve_now_button);
+        btnBack.setText(R.string.parking_lot_activity_button_back);
+        setTitle(getTitle()+ " - " + parkingSpace.getName());        
             
-            if (mStateHolder.getParkingSpace().getOpenHours() != null) {
-                tvOpenHours.setText(mStateHolder.getParkingSpace().getOpenHours());
-                viewOpenHours.setVisibility(View.VISIBLE);
-            }
-            
-            if (mStateHolder.getParkingSpace().getHasReservation()) {  
-                btnReserveNow.setEnabled(false);
-            }
-            else {      */          
-                btnReserveNow.setEnabled(true);
-                btnReserveNow.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (DEBUG) Log.d(TAG, "ensureUI() button enabled clicked");
-                        Intent intent = new Intent(ParkingSpaceActivity.this, AddReservationActivity.class);
-                        intent.putExtra(AddReservationActivity.INTENT_EXTRA_PARKING_SPACE, mStateHolder.getParkingSpace());
-                        startActivityForResult(intent, RESULT_CODE_ACTIVITY_ADD_RESERVATION);                        
-                    }                    
-                });
-            }
-      /*  }*/
+        if (parkingSpace.getPhone() != null) {
+            tvPhoneText.setText(parkingSpace.getPhone());
+            viewPhone.setOnClickListener(new OnClickListener() {                    
+                @Override
+                public void onClick(View v) {
+                    Intent dial = new Intent();
+                    dial.setAction(Intent.ACTION_DIAL);
+                    dial.setData(Uri.parse("tel:" + mStateHolder.getParkingSpace().getPhone()));
+                    startActivity(dial);
+                }
+            });
+            viewPhone.setVisibility(View.VISIBLE);                
+        }
+        
+        if (mStateHolder.getParkingSpace().getOpenHours() != null) {
+            tvOpenHours.setText(mStateHolder.getParkingSpace().getOpenHours());
+            viewOpenHours.setVisibility(View.VISIBLE);
+        }        
+                
+        btnReserveNow.setEnabled(true);
+        btnReserveNow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (DEBUG) Log.d(TAG, "ensureUI() button enabled clicked");
+                Intent intent = new Intent(ParkingSpaceActivity.this, AddReservationActivity.class);
+                intent.putExtra(AddReservationActivity.INTENT_EXTRA_PARKING_SPACE, parkingSpace);
+                startActivityForResult(intent, RESULT_CODE_ACTIVITY_ADD_RESERVATION);                        
+            }                    
+        });    
         
         btnBack.setOnClickListener(new OnClickListener() {            
             @Override
@@ -177,81 +151,41 @@ public class ParkingSpaceActivity extends Activity {
                 finish();                
             }
         });
-        //ensureUiReservationHere();
         progress.setVisibility(View.GONE);
     }
 
-   /* private void ensureUiReservationHere() {
-        if (DEBUG) Log.d(TAG, "ensureUiReservationHere()");
-        final ParkingSpace parkingSpace = mStateHolder.getParkingSpace();
-        RelativeLayout rlReservationHere = (RelativeLayout) findViewById(R.id.parkingLotActivityReservationHere); 
-        if (parkingSpace != null && parkingSpace.getHasReservation()) {
-            rlReservationHere.setVisibility(View.VISIBLE);
-            rlReservationHere.setOnClickListener(new OnClickListener() {
-                
-                @Override
-                public void onClick(View arg0) {
-                    if (DEBUG) Log.d(TAG, "ensureUiReservationHere() onclick");
-                    //TODO working I think....check when REST services ready
-                    Intent intent = new Intent(ParkingSpaceActivity.this, ReservationActivity.class);
-                    intent.putExtra(ReservationActivity.INTENT_EXTRA_RESERVATION, parkingSpace.getReservation());
-                    startActivityForResult(intent, RESULT_CODE_ACTIVITY_RESERVATION);
-                }
-            });
-        }
-        else {
-            rlReservationHere.setVisibility(View.GONE);
-        }
-    }*/
-
-    /* (non-Javadoc)
-     * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        super.onActivityResult(requestCode, resultCode, data);
-        //TODO process add reservation returned code
+
+    	//super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RESULT_CODE_ACTIVITY_ADD_RESERVATION:
                 if (resultCode == Activity.RESULT_OK) {
                     if (DEBUG) Log.d(TAG, "onActivityResult() returned with reservation done succesfully");
+                    
                     mStateHolder.setReservationHere(true);
+                    //TODO update reservations list or jump directly to the updated reservations list
                     break;
                 }                
         }
     }
 
-    /* (non-Javadoc)
-     * @see android.app.Activity#onDestroy()
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mLoggedOutReceiver);
     }
 
-    /* (non-Javadoc)
-     * @see android.app.Activity#onResume()
-     */
     @Override
     protected void onResume() {
         super.onResume();
-        //ensureUiCheckinButton();
-        // TODO: ensure mayor photo.
     }
 
-    /* (non-Javadoc)
-     * @see android.app.Activity#onRetainNonConfigurationInstance()
-     */
     @Override
     public Object onRetainNonConfigurationInstance() {
-        // TODO Auto-generated method stub
-        //return super.onRetainNonConfigurationInstance();
-        mStateHolder.setActivityForTasks(null);
         return mStateHolder;
     }
-    
+/*    
     private void prepareResultIntent() {
         if (DEBUG) Log.d(TAG, "prepareResultIntent()");
         ParkingSpace parkingSpace = mStateHolder.getParkingSpace();
@@ -262,7 +196,7 @@ public class ParkingSpaceActivity extends Activity {
         }
         setResult(Activity.RESULT_OK, intent);
     }    
-    
+    */
     /* (non-Javadoc)
      * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
      */
@@ -309,104 +243,20 @@ public class ParkingSpaceActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }*/
 
-
-
-    private static class TaskParkingSpace extends AsyncTask<String, Void, ParkingSpace> {
-
-        public static final String TAG = "TaskParkingSpace";
-        //debug mode
-        public static final boolean DEBUG = true;
-        
-        private ParkingSpaceActivity mActivity;
-        
-        public TaskParkingSpace(ParkingSpaceActivity activity) {
-            if (DEBUG) Log.d(TAG, "TaskParkingSpace()");            
-            mActivity = activity;
-        }
-        
-        /* (non-Javadoc)
-         * @see android.os.AsyncTask#onPreExecute()
-         */
-        @Override
-        protected void onPreExecute() {   
-            if (DEBUG) Log.d(TAG, "onPreExecute()");
-        }
-        
-        @Override
-        protected ParkingSpace doInBackground(String... params) {
-            if (DEBUG) Log.d(TAG, "onPreExecute()");
-            ParkingSpace result = null;
-            try {
-                ParkDroid parkDroid = (ParkDroid) mActivity.getApplication();
-                //result = parkDroid.getPark().parkingSpace(Integer.parseInt("1"));
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                if (DEBUG) Log.d(TAG, "Error getting parking lot details");
-                e.printStackTrace();
-            }
-            return result;
-        }
-        
-        /* (non-Javadoc)
-         * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
-         */
-        @Override
-        protected void onPostExecute(ParkingSpace parkingSpace) {
-            // TODO Auto-generated method stub
-            if (DEBUG) Log.d(TAG, "onPreExecute()"); 
-            
-            if (mActivity != null) {
-                mActivity.mStateHolder.setIsRunningTaskParkingSpace(false);
-                if (parkingSpace != null) {
-                    mActivity.mStateHolder.setLoadType(StateHolder.LOAD_TYPE_PARKING_LOT_FULL);
-                    mActivity.mStateHolder.setParkingSpace(parkingSpace);
-                    mActivity.prepareResultIntent();
-                    mActivity.ensureUI();                    
-                }
-                else {
-                    mActivity.finish();
-                }
-                //TODO verifica si asta la sfarsit
-                /*else {
-                    NotificationsUtil.ToastReasonForFailure(mActivity, mReason);
-                    mActivity.finish();
-                }*/
-            }
-        }
-
-        public void setActivity(ParkingSpaceActivity activity) {
-           mActivity = activity;            
-        }        
-    }
-        
     private static final class StateHolder {
         
         public static final String TAG = "StateHolder";
         //debug mode
         public static final boolean DEBUG = true;
         
-        private boolean mIsRunningTaskParkingSpace;
-        private TaskParkingSpace mTaskParkingSpace;
         private boolean mReservationHere;
         private ParkingSpace mParkingSpace;
-        private String mParkingSpaceId;        
-        private int mLoadType;
-        
-        private static final int LOAD_TYPE_PARKING_LOT_ID = 0;
-        private static final int LOAD_TYPE_PARKING_LOT_FULL = 1;
         
         
         public StateHolder() {
-            if (DEBUG) Log.d(TAG, "StateHolder()");
-            mIsRunningTaskParkingSpace = false;
+            if (DEBUG) Log.d(TAG, "StateHolder()");        
         }
         
-        public void setActivityForTasks(ParkingSpaceActivity activity) {
-            if (mTaskParkingSpace != null) {
-                mTaskParkingSpace.setActivity(activity);
-            }            
-        }
-
         public void setParkingSpace(ParkingSpace parkingSpace) {
             if (DEBUG) Log.d(TAG, "setParkingSpace()");
             mParkingSpace = parkingSpace;
@@ -417,48 +267,12 @@ public class ParkingSpaceActivity extends Activity {
             return mParkingSpace;
         }
         
-        public void setParkingSpaceId(String id) {
-            if (DEBUG) Log.d(TAG, "setParkingSpaceId()");
-            mParkingSpaceId = id;
-        }
-        
-        public void setLoadType(int loadType) {
-            if (DEBUG) Log.d(TAG, "setLoadType()");
-            mLoadType = loadType;
-        }
-        
-        public int getLoadType() {
-            if (DEBUG) Log.d(TAG, "getLoadType()");
-            return mLoadType;
-        }
-        
         public void setReservationHere(boolean reservation) {
             mReservationHere = reservation;
         }
         
         public boolean getReservation() {
             return mReservationHere;
-        }
-        
-        public void setIsRunningTaskParkingSpace(boolean mIsRunningTaskParkingSpace) {
-            if (DEBUG) Log.d(TAG, "setIsRunningTaskParkingSpace()");
-            mIsRunningTaskParkingSpace = mIsRunningTaskParkingSpace;
-        }
-        
-        public void startTaskParkingSpace(ParkingSpaceActivity activity) {
-            if (DEBUG) Log.d(TAG, "startTaskParkingSpace()");
-            if (!mIsRunningTaskParkingSpace) {
-                mIsRunningTaskParkingSpace = true;
-                mTaskParkingSpace = new TaskParkingSpace(activity);
-                if (mLoadType == LOAD_TYPE_PARKING_LOT_ID) {
-                    mTaskParkingSpace.execute(mParkingSpaceId);
-                }
-                else {
-                    mTaskParkingSpace.execute(Integer.toString(mParkingSpace.getId()));
-                }
-            }
-        }
+        }        
     }
-    
-
 }

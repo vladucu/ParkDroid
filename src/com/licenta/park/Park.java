@@ -79,7 +79,7 @@ public class Park {
 		return mParkDroidApi.parkingSpace(userId, parkingSpaceId);
 	}
 
-	public Reservations reservations() throws IOException {
+	public Reservations getReservations() throws IOException {
 		if (DEBUG) Log.d(TAG, "reservations()");
 		return mParkDroidApi.reservations();				
 	}
