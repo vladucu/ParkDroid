@@ -1,15 +1,7 @@
 package com.licenta.park.types;
 
-import java.io.Serializable;
-import java.text.ParseException;
-import java.util.Date;
-
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.licenta.park.utils.FormatStrings;
-import com.licenta.park.utils.ParcelUtils;
-
 
 public class Reservation implements ParkTypes, Parcelable {
 
@@ -67,7 +59,6 @@ public class Reservation implements ParkTypes, Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

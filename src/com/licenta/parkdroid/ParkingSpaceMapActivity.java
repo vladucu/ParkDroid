@@ -3,12 +3,14 @@
  */
 package com.licenta.parkdroid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
-import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkingSpace;
 import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlay;
 import android.os.Bundle;
@@ -70,7 +72,7 @@ public class ParkingSpaceMapActivity extends MapActivity {
         mMapView.getOverlays().add(mMyLocationOverlay);
         
         mOverlay = new ParkingSpaceItemizedOverlay(this.getResources().getDrawable(R.drawable.map_marker_blue));
-        Group<ParkingSpace> group = new Group<ParkingSpace>();
+        List<ParkingSpace> group = new ArrayList<ParkingSpace>();
         group.add(mStateHolder.getParkingSpace());
         mOverlay.setGroup(group);
         mMapView.getOverlays().add(mOverlay);

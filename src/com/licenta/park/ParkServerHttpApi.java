@@ -13,6 +13,7 @@ import org.restlet.ext.jackson.JacksonConverter;
 import org.restlet.resource.ClientResource;
 import android.util.Log;
 import com.licenta.park.types.ParkingSpace;
+import com.licenta.park.types.ParkingSpaceResource;
 import com.licenta.park.types.ParkingSpaces;
 import com.licenta.park.types.ParkingSpacesResource;
 import com.licenta.park.types.ReservationResource;
@@ -21,7 +22,6 @@ import com.licenta.park.types.Reservation;
 import com.licenta.park.types.ReservationsResource;
 import com.licenta.park.types.User;
 import com.licenta.park.types.UserResource;
-import com.licenta.parkdroid.ParkingSpaceResource;
 
 /**
  * @author vladucu

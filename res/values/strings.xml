@@ -62,4 +62,5 @@
     <string name="add_reservation_execute_activity_progress_bar_message">Making Reservation...</string>
     <string name="add_reservation_title_result">Reservation confirmed!</string>
     <string name="add_reservation_activity_reservation_label">Unique ID</string>
+    <string name="refresh">Refresh</string>
 </resources>

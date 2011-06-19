@@ -5,12 +5,10 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
-import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkingSpace;
 import com.licenta.park.utils.GeoUtils;
 import com.licenta.parkdroid.ParkingSpaceItemizedOverlayIcons;
 import com.licenta.parkdroid.ParkingSpaceItemizedOverlayIcons.ParkingSpaceItemizedOverlayTapListener;
-
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;

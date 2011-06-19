@@ -2,7 +2,6 @@ package com.licenta.park.types;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.licenta.park.utils.ParcelUtils;
 
 public class ParkingSpace implements ParkTypes, Parcelable {
@@ -148,7 +147,6 @@ public class ParkingSpace implements ParkTypes, Parcelable {
     
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

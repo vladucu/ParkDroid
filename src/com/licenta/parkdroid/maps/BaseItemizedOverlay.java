@@ -3,13 +3,12 @@
  */
 package com.licenta.parkdroid.maps;
 
+import java.util.List;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
-import com.licenta.park.types.Group;
 import com.licenta.park.types.ParkTypes;
-
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -22,7 +21,7 @@ abstract class BaseItemizedOverlay<T extends ParkTypes> extends ItemizedOverlay<
     private static final String TAG = "BaseItemizedOverlay";
     private static boolean DEBUG = true;
 
-    Group<T> group = null;
+    List<T> group = null;
     
     public BaseItemizedOverlay(Drawable defaultMarker) {
         super(boundCenterBottom(defaultMarker));
@@ -59,7 +58,7 @@ abstract class BaseItemizedOverlay<T extends ParkTypes> extends ItemizedOverlay<
         return super.onTap(index);
     }
 
-    public void setGroup(Group<T> g) {
+    public void setGroup(List<T> g) {
         if (DEBUG) Log.d(TAG, "addGroup()");
         group = g;
         super.populate();

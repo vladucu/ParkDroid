@@ -3,13 +3,7 @@
  */
 package com.licenta.parkdroid;
 
-import java.util.Date;
-
-import com.google.android.maps.GeoPoint;
-import com.licenta.park.types.AddReservationResult;
 import com.licenta.park.types.Reservation;
-import com.licenta.park.utils.FormatStrings;
-import com.licenta.park.utils.GeoUtils;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -174,7 +168,6 @@ public class ReservationActivity extends Activity {
         tvReservationActivityPrice.setText(Integer.toString(reservation.getParkingSpace().getPrice()));
         tvReservationActivityStartingTime.setText(reservation.getStartTime());
         tvReservationActivityEndingTime.setText(reservation.getEndTime());
-        //tvReservationActivityPrice.setText("$ " + reservation.getParkingLot().getPrice());
         tvReservationActivityTime.setText(reservation.getTotalTime());
         tvReservationActivityCosts.setText(Integer.toString(reservation.getCost()));
     }
@@ -189,9 +182,6 @@ public class ReservationActivity extends Activity {
         setResult(Activity.RESULT_OK, intent);
     }
     
-    /* (non-Javadoc)
-	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
-	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {

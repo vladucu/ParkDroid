@@ -6,7 +6,6 @@ package com.licenta.parkdroid;
 import java.util.Iterator;
 import java.util.List;
 import com.licenta.park.Park;
-import com.licenta.park.types.Group;
 import com.licenta.park.types.Reservation;
 import com.licenta.park.types.Reservations;
 import android.app.Activity;

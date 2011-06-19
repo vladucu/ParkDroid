@@ -3,8 +3,6 @@
  */
 package com.licenta.park.types;
 
-import java.io.Serializable;
-import com.licenta.park.utils.ParcelUtils;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -76,7 +74,6 @@ public class User implements  Parcelable, ParkTypes {
      */
     @Override
     public int describeContents() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
