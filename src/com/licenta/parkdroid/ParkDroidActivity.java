@@ -1,5 +1,7 @@
 package com.licenta.parkdroid;
 
+import com.licenta.park.utils.TabsUtil;
+
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -29,6 +31,18 @@ public class ParkDroidActivity extends TabActivity {
         }
     };
     
+    private BroadcastReceiver mRefreshReservations = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("DSADS", "receiving refresh broadcast");
+			if (intent.getAction().equals(ActiveReservationsListActivity.REFRESH_INTENT)) {
+				mTabHost.setCurrentTab(2);
+            }
+			
+		}
+	};
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +51,7 @@ public class ParkDroidActivity extends TabActivity {
         if (DEBUG) Log.d(TAG, "onCreate()");
         //setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL);
         registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));
-        
+        //registerReceiver(mRefreshReservations, new IntentFilter(ActiveReservationsListActivity.REFRESH_INTENT));
         // Don't start the main activity if we don't have credentials
         if (!((ParkDroid) getApplication()).isReady()) {
             if (DEBUG) Log.d(TAG, "Not ready for user.");

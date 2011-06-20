@@ -168,17 +168,11 @@ public class ParkDroid extends Application {
                         Preferences.storeUser(editor, user);
                         editor.commit();*/
                     } catch (Error e) {
-                        if (DEBUG) Log.d(TAG, "FoursquareError", e);
+                        if (DEBUG) Log.d(TAG, "ParkDroid", e);
                     } catch (Exception e) {
-                        if (DEBUG) Log.d(TAG, "FoursquareException", e);
+                        if (DEBUG) Log.d(TAG, "ParkDroid", e);
                     }
                     return;
-
-               /* case MESSAGE_START_SERVICE:
-                    Intent serviceIntent = new Intent(Foursquared.this, FoursquaredService.class);
-                    serviceIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                    startService(serviceIntent);
-                    return;*/
             }
         }
     }

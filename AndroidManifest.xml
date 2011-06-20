@@ -18,6 +18,9 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+        			<action android:name="com.licenta.parkdroid.intent.action.REFRESH_INTENT"/>
+        		</intent-filter>
         </activity>
         
         <activity android:name=".MapActivity">
@@ -29,7 +32,7 @@
         <activity android:name=".PreferencesActivity">
         		  <intent-filter>
         		  	<action android:name="android.intent.action.MAIN" />
-        			<category android:name="android.intent.category.PREFERENCE" />
+        				<category android:name="android.intent.category.PREFERENCE" />
         		  </intent-filter>
         </activity>
 
@@ -64,9 +67,12 @@
         </activity>
         
         <activity android:name=".ActiveReservationsListActivity">
+        <intent-filter>
+        	<action android:name="com.licenta.parkdroid.intent.action.REFRESH_INTENT"/>
+        </intent-filter>
         </activity>
         
-        <activity android:name=".ReservationActivity">
+        <activity android:name=".ActiveReservationActivity">
         </activity>
         		  
     </application>

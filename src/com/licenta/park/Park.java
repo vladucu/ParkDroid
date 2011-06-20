@@ -94,4 +94,9 @@ public class Park {
 		if (DEBUG) Log.d(TAG, "updateReservation()");
 		return mParkDroidApi.updateReservation(reservation);
 	}
+
+	public boolean deleteReservation(int userId, int reservationId) throws IOException {
+		if (DEBUG) Log.d(TAG, "updateReservation()");
+		return mParkDroidApi.deleteReservation(userId, reservationId);
+	}
 }

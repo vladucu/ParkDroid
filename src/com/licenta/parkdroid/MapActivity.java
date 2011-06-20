@@ -11,13 +11,10 @@ import com.licenta.park.types.ParkingSpace;
 import com.licenta.park.utils.GeoUtils;
 import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons;
 import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons.ParkingSpaceItemizedOverlayTapListener;
-
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 
 /**
  * @author vladucu
@@ -56,7 +53,12 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         ensureUi();        
     }
 
-    @Override
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return mStateHolder;
+	}
+
+	@Override
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();

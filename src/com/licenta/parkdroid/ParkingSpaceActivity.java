@@ -4,6 +4,8 @@
 package com.licenta.parkdroid;
 
 import com.licenta.park.types.ParkingSpace;
+import com.licenta.park.types.Reservation;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -157,13 +159,16 @@ public class ParkingSpaceActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-    	//super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RESULT_CODE_ACTIVITY_ADD_RESERVATION:
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK && data.hasExtra(AddReservationActivity.INTENT_EXTRA_RETURNED_RESERVATION)) {
                     if (DEBUG) Log.d(TAG, "onActivityResult() returned with reservation done succesfully");
-                    
-                    mStateHolder.setReservationHere(true);
+                    sendBroadcast(new Intent(ActiveReservationsListActivity.REFRESH_INTENT));                    
+                    //momentan doar anunta lista de rezervari sa se autoactualizeze de pe server
+                    /*Reservation reservation = data.getParcelableExtra(AddReservationActivity.INTENT_EXTRA_RETURNED_RESERVATION);
+                    Intent intent = new Intent(ParkingSpaceActivity.this, ActiveReservationsListActivity.class);
+                    intent.putExtra(ActiveReservationsListActivity.INTENT_EXTRA_RESERVATION, reservation);
+                    getParent().getParent().startActivity(intent);*/
                     //TODO update reservations list or jump directly to the updated reservations list
                     break;
                 }                

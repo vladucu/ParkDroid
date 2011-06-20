@@ -17,7 +17,7 @@ import android.widget.TextView;
  * @author vladucu
  *
  */
-public class ActiveReservationsAdapter extends BaseReservationsAdapter implements ObservableAdapter {
+public class ActiveReservationsAdapter extends BaseReservationsAdapter {
     private static final String TAG = "ActiveReservationsAdapter";
     private static boolean DEBUG = true;
     
@@ -87,12 +87,6 @@ public class ActiveReservationsAdapter extends BaseReservationsAdapter implement
         TextView parkingPrice;*/
     }
 
-	@Override
-	public void removeObserver() {
-		// TODO Auto-generated method stub
-		
-	}
-	
     private DataSetObserver mDataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {

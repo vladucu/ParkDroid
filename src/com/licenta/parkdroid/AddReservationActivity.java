@@ -70,7 +70,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
     };
 
     //TODO how will reservation be handled? passed a reservation parcelable type ?
-    
+    //TODO validate date and time
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
@@ -92,7 +92,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         Object retained = getLastNonConfigurationInstance();
         if (retained != null && retained instanceof StateHolder) {
             mStateHolder = (StateHolder) retained;
-            //mStateHolder.setActivity(this);
+            mStateHolder.setActivity(this);
         } else {
             mStateHolder = new StateHolder();
             if (getIntent().hasExtra(INTENT_EXTRA_PARKING_SPACE)) {

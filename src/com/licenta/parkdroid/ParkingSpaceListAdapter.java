@@ -16,7 +16,7 @@ import android.widget.TextView;
  * @author vladucu
  *
  */
-public class ParkingSpaceListAdapter extends BaseParkingSpaceAdapter implements ObservableAdapter {
+public class ParkingSpaceListAdapter extends BaseParkingSpaceAdapter {
     
     private static final String TAG = "ParkingSpaceListAdapter";
     private static boolean DEBUG = true;
@@ -115,9 +115,4 @@ public class ParkingSpaceListAdapter extends BaseParkingSpaceAdapter implements 
         ImageView reservationHere;
     }
 
-	@Override
-	public void removeObserver() {
-		// TODO Auto-generated method stub
-		
-	}
 }

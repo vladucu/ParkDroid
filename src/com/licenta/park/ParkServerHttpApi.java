@@ -89,7 +89,7 @@ class ParkServerHttpApi {
 		parkingSpacesResource = clientResource.wrap(ParkingSpacesResource.class);
 		ParkingSpaces parkingSpaces = parkingSpacesResource.retrieve();
 		
-		if (clientResource.getStatus() == Status.SUCCESS_OK) {
+		if (clientResource.getStatus().isSuccess()) {
 			return parkingSpaces;
 		}
 		else {
@@ -125,7 +125,7 @@ class ParkServerHttpApi {
 		try {
 			reservations = reservationsResource.getReservations();
 		} catch (Exception e) {}
-		if (clientResource.getStatus() == Status.SUCCESS_OK) {
+		if (clientResource.getStatus().isSuccess()) {
 			return reservations;
 		}
 		else {
@@ -154,7 +154,7 @@ class ParkServerHttpApi {
 		try {
 			reservation = reservationsResource.createReservation(reservation);			
 		} catch (Exception e) {}
-		if (clientResource.getStatus() == Status.SUCCESS_OK) {
+		if (clientResource.getStatus().isSuccess()) {
 		}
 		else {
 			clientResource.getResponseEntity().exhaust();
@@ -172,13 +172,32 @@ class ParkServerHttpApi {
 		try {
 			reservation = reservationResource.updateReservation(reservation);			
 		} catch (Exception e) {}
-		if (clientResource.getStatus() == Status.SUCCESS_OK) {
+		if (clientResource.getStatus().isSuccess()) {
 		}
 		else {
 			clientResource.getResponseEntity().exhaust();
 		}
 		clientResource.release();
 		return reservation;
+	}
+
+	public boolean deleteReservation(int userId, int reservationId) throws IOException {
+		boolean result = false;
+		clientResource = new ClientResource("http://10.0.2.2:8080/users/"+userId+"/reservations/"+reservationId);
+		clientResource.setChallengeResponse(authentication);
+		reservationResource = clientResource.wrap(ReservationResource.class);
+		
+		try {
+			reservationResource.deleteReservation();			
+		} catch (Exception e) {}
+		if (clientResource.getStatus().isSuccess()) {
+			result = true;
+		}
+		else {
+			clientResource.getResponseEntity().exhaust();
+		}
+		clientResource.release();
+		return result;
 	}
 
 }
