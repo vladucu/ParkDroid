@@ -63,4 +63,10 @@
     <string name="add_reservation_title_result">Reservation confirmed!</string>
     <string name="add_reservation_activity_reservation_label">Unique ID</string>
     <string name="refresh">Refresh</string>
+    <string name="add_reservation_dialog_id_label">ReservationID:</string>
+    <string name="add_reservation_dialog_start_time_label">Starting:</string>
+    <string name="add_reservation_dialog_end_time_label">Ending:</string>
+    <string name="add_reservation_dialog_total_time_label">Total time:</string>
+    <string name="add_reservation_dialog_cost_label">Cost:</string>
+    <string name="add_reservation_dialog_price_label">Price/h:</string>
 </resources>

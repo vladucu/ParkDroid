@@ -59,11 +59,6 @@ public class Park {
     
     
 
-    public ParkingSpace parkingLot(String string) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 	public static final ParkServerHttpApi createHttpApi(String domain) {
 		if (DEBUG) Log.d(TAG, "createHttpApi("+domain+")");
 		return new ParkServerHttpApi(domain);

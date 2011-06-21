@@ -1,7 +1,10 @@
 package com.licenta.parkdroid;
 
 import com.licenta.park.types.Reservation;
-import com.licenta.park.utils.FormatStrings;
+import com.licenta.parkdroid.R;
+import com.licenta.parkdroid.R.id;
+import com.licenta.parkdroid.R.layout;
+import com.licenta.parkdroid.utils.FormatStrings;
 
 import android.content.Context;
 import android.database.DataSetObserver;

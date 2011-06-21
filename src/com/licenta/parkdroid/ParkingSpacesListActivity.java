@@ -8,7 +8,7 @@ import com.licenta.park.types.ParkingSpace;
 import com.licenta.park.types.ParkingSpaces;
 import com.licenta.parkdroid.LoadableListActivity;
 import com.licenta.parkdroid.ParkDroid;
-import com.licenta.parkdroid.ParkingSpaceListAdapter;
+
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;

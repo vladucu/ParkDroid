@@ -1,6 +1,6 @@
 package com.licenta.parkdroid;
 
-import com.licenta.park.utils.TabsUtil;
+import com.licenta.parkdroid.utils.TabsUtil;
 
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
@@ -71,8 +71,7 @@ public class ParkDroidActivity extends TabActivity {
     }
     
     private void initTabHost() {
-        //TODO de aflat de ce nu apare pe toata imaginea harta 
-        if (mTabHost != null) {
+    	if (mTabHost != null) {
             throw new IllegalStateException("Trying to intialize already initializd TabHost");
         }
 

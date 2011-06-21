@@ -6,8 +6,8 @@ package com.licenta.parkdroid;
 import com.licenta.park.Park;
 import com.licenta.park.types.ParkingSpace;
 import com.licenta.park.types.Reservation;
-import com.licenta.park.utils.FormatStrings;
-import com.licenta.parkdroid.widgets.DateTimePicker;
+import com.licenta.parkdroid.utils.DateTimePicker;
+import com.licenta.parkdroid.utils.FormatStrings;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -69,11 +69,8 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         }
     };
 
-    //TODO how will reservation be handled? passed a reservation parcelable type ?
     //TODO validate date and time
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,8 +173,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         tvParkingLotName.setText(mStateHolder.getParkingSpace().getName());
         tvParkingLotLocation.setText(mStateHolder.getParkingSpace().getAddress());
         tvParkingHourPrice.setText(Integer.toString(mStateHolder.getParkingSpace().getPrice()));
-        //tvParkingSelectedTime.setText(mStateHolder.getReservation().getTotalTime());
-        //tvParkingTotalCost.setText(Integer.toString(mStateHolder.getReservation().getCost()));
         
         viewStartTime.setOnClickListener(this);
         viewEndTime.setOnClickListener(this);
@@ -207,7 +202,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
     		try {
 				date2 = FormatStrings.DATE_FORMAT.parse(date);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     
@@ -219,7 +213,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
     		try {
 				date2 = FormatStrings.DATE_FORMAT.parse(date);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     
@@ -264,7 +257,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
 	        try {
 				date = FormatStrings.DATE_FORMAT.parse(strDate);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	        
 			calendar.setTime(date);
@@ -289,7 +281,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         ((Button) mDateTimeDialogView.findViewById(R.id.cancelDialog)).setOnClickListener(new OnClickListener() {
 
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 mDateTimeDialog.cancel();
             }
         });
@@ -298,7 +289,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         ((Button) mDateTimeDialogView.findViewById(R.id.resetDateTime)).setOnClickListener(new OnClickListener() {
 
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+
                 mDateTimePicker.reset();
             }
         });
@@ -385,7 +376,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         int price = mStateHolder.getParkingSpace().getPrice();
         int totalCost = (int) ((int) (hours*price) + ((minutes*price)/60));
         mStateHolder.setCost(totalCost);
-        tvParkingTotalCost.setText(Integer.toString(totalCost));
+        tvParkingTotalCost.setText(Integer.toString(totalCost) + "$");
 		
 	}
 
@@ -407,7 +398,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
                 // our dialog would not be re-displayed after the rotation is
                 // complete.
             	AddReservationResultDialog dlg = new AddReservationResultDialog(this, mStateHolder
-                        .getReservation(), ((ParkDroid) getApplication()));
+                        .getReservation());
                 dlg.setOnCancelListener(new OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {

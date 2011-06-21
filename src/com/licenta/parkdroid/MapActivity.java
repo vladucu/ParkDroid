@@ -8,9 +8,10 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
 import com.licenta.park.types.ParkingSpace;
-import com.licenta.park.utils.GeoUtils;
 import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons;
 import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons.ParkingSpaceItemizedOverlayTapListener;
+import com.licenta.parkdroid.utils.GeoUtils;
+
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -60,13 +61,11 @@ public class MapActivity extends com.google.android.maps.MapActivity {
 
 	@Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
     }
 

@@ -28,9 +28,6 @@ abstract class BaseItemizedOverlay<T extends ParkTypes> extends ItemizedOverlay<
         if (DEBUG) Log.d(TAG, "BaseItemizedOverlay()");
     }    
    
-    /* (non-Javadoc)
-     * @see com.google.android.maps.ItemizedOverlay#size()
-     */
     @Override
     public int size() {
         if (DEBUG) Log.d(TAG, "size()");
@@ -40,21 +37,13 @@ abstract class BaseItemizedOverlay<T extends ParkTypes> extends ItemizedOverlay<
         return group.size();
     }
 
-    /* (non-Javadoc)
-     * @see com.google.android.maps.ItemizedOverlay#onTap(com.google.android.maps.GeoPoint, com.google.android.maps.MapView)
-     */
     @Override
     public boolean onTap(GeoPoint p, MapView mapView) {
-        // TODO Auto-generated method stub
         return super.onTap(p, mapView);
     }
 
-    /* (non-Javadoc)
-     * @see com.google.android.maps.ItemizedOverlay#onTap(int)
-     */
     @Override
     protected boolean onTap(int index) {
-        // TODO Auto-generated method stub
         return super.onTap(index);
     }
 

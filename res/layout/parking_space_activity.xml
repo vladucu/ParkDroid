@@ -156,24 +156,24 @@
           android:background="@drawable/parking_lot_activity_space_selector" >  
           
           <TextView 
-	        android:id="@+id/parkingLotActivityDistanceTitle"
+	        	android:id="@+id/parkingLotActivityDistanceTitle"
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:text="@string/parking_lot_activity_distance_title"
-	        android:layout_alignParentTop="true"
-	        android:layout_alignParentLeft="true"
-	        android:layout_centerHorizontal="true"
+	        	android:layout_alignParentTop="true"
+	        	android:layout_alignParentLeft="true"
+	        	android:layout_centerHorizontal="true"
             android:paddingLeft="2dip"
             android:textAppearance="@style/TextViewStyleParkingLotActivityTitle"  />
           
 	      <TextView 
-	        android:id="@+id/parkingLotActivityDistanceValue"
+	        	android:id="@+id/parkingLotActivityDistanceValue"
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:text="4"
             android:layout_centerHorizontal="true"
             android:textAppearance="@style/TextViewStyleParkingLotActivityValue"
-	        android:layout_below="@+id/parkingLotActivityDistanceTitle" />
+	        	android:layout_below="@+id/parkingLotActivityDistanceTitle" />
 	        
         </RelativeLayout>
         

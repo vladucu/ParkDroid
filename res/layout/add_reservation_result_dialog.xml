@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-  <!-- 
-    Server Message
-    List of badges          (SeparatedListAdapter) ...
-    List of scores items                             |
-           Score sub-total  (FooterView)           ...
-    Mayor block
-   -->
-
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:id="@+id/add_reservation_result"
@@ -16,71 +8,167 @@
   android:orientation="vertical"
   android:background="@color/white"
   >
-  
-  <TextView
-    android:id="@+id/textViewAddReservationMessage"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:textColor="#333"
-    android:paddingTop="5dip"
-    android:paddingLeft="5dip"
-    android:paddingRight="5dip"
-    android:paddingBottom="5dip" /> 
-    
-  <LinearLayout
-    android:id="@+id/llCheckinMayorInfo"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@color/color_score_mayor_section_background"    
-    android:paddingLeft="7dip"
-    android:paddingRight="7dip"
-    android:paddingTop="9dip"
-    android:paddingBottom="7dip" >
 
-    <TextView
-      android:id="@+id/textViewReservationId"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center_vertical"
-      android:paddingLeft="10dip"
-      android:paddingRight="5dip"
-      android:paddingTop="5dip"
-      android:paddingBottom="5dip"
-      android:textColor="#333" />
+     <RelativeLayout 
+	     android:id="@+id/addResResultDialogIdLayout"
+	     android:layout_width="fill_parent" 
+	     android:layout_height="wrap_content"
+	     android:padding="7dip"  
+	     android:focusable="true" >
+        
+       <TextView
+         android:id="@+id/addResResultDialogIdLabel"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/add_reservation_dialog_id_label"
+         android:minWidth="95dip"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true" />
+       <TextView 
+         android:id="@+id/addResResultDialogId"
+         android:layout_width="fill_parent" 
+         android:layout_height="wrap_content"
+         android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
+         android:layout_toRightOf="@+id/addResResultDialogIdLabel"
+         android:paddingLeft="5dip"
+         android:layout_marginRight="15dip"
+         android:singleLine="true" />
+         
+      </RelativeLayout>
       
-  </LinearLayout>
-  
-  
-  <LinearLayout
-    android:id="@+id/llCheckinExtras"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="#b8d324"
-    android:paddingLeft="7dip"
-    android:paddingRight="7dip"
-    android:paddingTop="9dip"
-    android:paddingBottom="7dip"
-    android:gravity="center" >
-
-    <TextView
-      android:id="@+id/textViewCheckinExtrasMessage"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:gravity="center_vertical"
-      android:paddingTop="5dip"
-      android:paddingBottom="5dip"
-      android:paddingRight="10dip"
-      android:textColor="#333"
-      android:text="Check out your SXSW stats here!" />
+      <RelativeLayout 
+	     android:id="@+id/addResResultDialogStartTimeLayout"
+	     android:layout_width="fill_parent" 
+	     android:layout_height="wrap_content"
+	     android:padding="7dip"  
+	     android:focusable="true" >
+        
+       <TextView
+         android:id="@+id/addResResultDialogStartTimeLabel"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/add_reservation_dialog_start_time_label"
+         android:minWidth="95dip"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true" />
+       <TextView 
+         android:id="@+id/addResResultDialogStartTime"
+         android:layout_width="fill_parent" 
+         android:layout_height="wrap_content"
+         android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
+         android:layout_toRightOf="@+id/addResResultDialogStartTimeLabel"
+         android:paddingLeft="5dip"
+         android:layout_marginRight="15dip"
+         android:singleLine="true" />
+         
+      </RelativeLayout>     
+  		
+  		<RelativeLayout 
+	     android:id="@+id/addResResultDialogEndTimeLayout"
+	     android:layout_width="fill_parent" 
+	     android:layout_height="wrap_content"
+	     android:padding="7dip"  
+	     android:focusable="true" >
+        
+       <TextView
+         android:id="@+id/addResResultDialogEndTimeLabel"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/add_reservation_dialog_end_time_label"
+         android:minWidth="95dip"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true" />
+       <TextView 
+         android:id="@+id/addResResultDialogEndTime"
+         android:layout_width="fill_parent" 
+         android:layout_height="wrap_content"
+         android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
+         android:layout_toRightOf="@+id/addResResultDialogEndTimeLabel"
+         android:paddingLeft="5dip"
+         android:layout_marginRight="15dip"
+         android:singleLine="true" />
+         
+      </RelativeLayout>
       
-    <ImageView
-      android:layout_height="wrap_content"
-      android:layout_width="wrap_content"
-      android:gravity="center_vertical"
-      android:src="@drawable/arrow_white" />
+      <RelativeLayout 
+	     android:id="@+id/addResResultDialogTotalTimeLayout"
+	     android:layout_width="fill_parent" 
+	     android:layout_height="wrap_content"
+	     android:padding="7dip"  
+	     android:focusable="true" >
+        
+       <TextView
+         android:id="@+id/addResResultDialogTotalTimeLabel"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/add_reservation_dialog_total_time_label"
+         android:minWidth="95dip"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true" />
+       <TextView 
+         android:id="@+id/addResResultDialogTotalTime"
+         android:layout_width="fill_parent" 
+         android:layout_height="wrap_content"
+         android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
+         android:layout_toRightOf="@+id/addResResultDialogTotalTimeLabel"
+         android:paddingLeft="5dip"
+         android:layout_marginRight="15dip"
+         android:singleLine="true" />
+         
+      </RelativeLayout>
       
-  </LinearLayout>
+     <RelativeLayout 
+	     android:id="@+id/addResResultDialogPriceLayout"
+	     android:layout_width="fill_parent" 
+	     android:layout_height="wrap_content"
+	     android:padding="7dip"  
+	     android:focusable="true" >
+        
+       <TextView
+         android:id="@+id/addResResultDialogPriceLabel"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/add_reservation_dialog_price_label"
+         android:minWidth="95dip"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true" />
+       <TextView 
+         android:id="@+id/addResResultDialogPrice"
+         android:layout_width="fill_parent" 
+         android:layout_height="wrap_content"
+         android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
+         android:layout_toRightOf="@+id/addResResultDialogPriceLabel" 
+         android:paddingLeft="5dip"
+         android:layout_marginRight="15dip"
+         android:singleLine="true" />
+         
+      </RelativeLayout>
+      
+      <RelativeLayout 
+	     android:id="@+id/addResResultDialogCostLayout"
+	     android:layout_width="fill_parent" 
+	     android:layout_height="wrap_content"
+	     android:padding="7dip"  
+	     android:focusable="true" >
+        
+       <TextView
+         android:id="@+id/addResResultDialogCostLabel"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/add_reservation_dialog_cost_label"
+         android:minWidth="95dip"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true" />
+       <TextView 
+         android:id="@+id/addResResultDialogCost"
+         android:layout_width="fill_parent" 
+         android:layout_height="wrap_content"
+         android:textAppearance="@style/TextViewStyleParkingLotActivityBold"
+         android:layout_toRightOf="@+id/addResResultDialogCostLabel" 
+         android:paddingLeft="5dip"
+         android:layout_marginRight="15dip"
+         android:singleLine="true" />
+         
+      </RelativeLayout>      
 
 </LinearLayout>

@@ -2,7 +2,8 @@ package com.licenta.park.types;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.licenta.park.utils.ParcelUtils;
+
+import com.licenta.parkdroid.utils.ParcelUtils;
 
 public class ParkingSpace implements ParkTypes, Parcelable {
 
