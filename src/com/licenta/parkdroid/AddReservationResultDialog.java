@@ -21,7 +21,6 @@ public class AddReservationResultDialog extends Dialog {
     
     private Reservation mReservationResult;
     
-    //TODO use this class to show a confirmation dialog with reservation results (ID + others)
     public AddReservationResultDialog(Context context, Reservation result) {
     	super(context);
     	mReservationResult = result;

@@ -93,10 +93,7 @@ public class ParkDroidActivity extends TabActivity {
         inflater.inflate(R.menu.menu, menu);
         return true;
     }    
-    
-    /* 
-     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-     */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {        
         switch (item.getItemId()) {
@@ -109,7 +106,6 @@ public class ParkDroidActivity extends TabActivity {
     }
     
     private void redirectToLoginActivity() {
-        // TODO implement redirectToLogin
         setVisible(false);
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setAction(Intent.ACTION_MAIN);
