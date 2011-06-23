@@ -3,9 +3,8 @@
  */
 package com.licenta.parkdroid;
 
-import com.licenta.park.Park;
-import com.licenta.park.types.ParkingSpace;
-import com.licenta.park.types.Reservation;
+import com.licenta.parkdroid.types.ParkingSpace;
+import com.licenta.parkdroid.types.Reservation;
 import com.licenta.parkdroid.utils.DateTimePicker;
 import com.licenta.parkdroid.utils.FormatStrings;
 import android.app.Activity;
@@ -27,8 +26,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -445,7 +442,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
         
         private AddReservationActivity mActivity;
         private ParkDroid mParkDroid;
-        private Park mPark;
         private ParkingSpace mParkingSpace;
 		private String mStartTime;
 		private String mEndTime;
@@ -480,11 +476,11 @@ public class AddReservationActivity extends Activity implements OnClickListener 
             Reservation result = (Reservation) mStateHolder.getReservation();         
 			try {
 				if (result == null) {
-					result = mParkDroid.getPark().createReservation(mUserId, mParkingSpace, mStartTime, mEndTime, mTotalTime, mCost);
+					result = mParkDroid.createReservation(mUserId, mParkingSpace, mStartTime, mEndTime, mTotalTime, mCost);
 				} else {
 					result.setStartTime(mStartTime);result.setEndTime(mEndTime);
 		            result.setTotalTime(mTotalTime);result.setCost(mCost);
-		            result = mParkDroid.getPark().updateReservation(result);
+		            result = mParkDroid.updateReservation(result);
 				}
 			} catch (Exception e) {	}
 			

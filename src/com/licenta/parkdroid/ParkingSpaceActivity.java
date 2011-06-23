@@ -3,8 +3,8 @@
  */
 package com.licenta.parkdroid;
 
-import com.licenta.park.types.ParkingSpace;
-import com.licenta.park.types.Reservation;
+import com.licenta.parkdroid.types.ParkingSpace;
+import com.licenta.parkdroid.types.Reservation;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

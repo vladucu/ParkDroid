@@ -7,9 +7,9 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
-import com.licenta.park.types.ParkingSpace;
 import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons;
 import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons.ParkingSpaceItemizedOverlayTapListener;
+import com.licenta.parkdroid.types.ParkingSpace;
 import com.licenta.parkdroid.utils.GeoUtils;
 
 import android.content.Intent;

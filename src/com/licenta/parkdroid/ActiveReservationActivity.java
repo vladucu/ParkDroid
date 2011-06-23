@@ -1,7 +1,7 @@
 package com.licenta.parkdroid;
 
-import com.licenta.park.Park;
-import com.licenta.park.types.Reservation;
+import com.licenta.parkdroid.types.Reservation;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -24,6 +24,7 @@ import android.widget.TextView;
  */
 public class ActiveReservationActivity extends Activity {
 
+	//TODO change delete text messages
     public static final String TAG = "ActiveReservationActivity";
     public static final boolean DEBUG = true;
     
@@ -289,8 +290,7 @@ public class ActiveReservationActivity extends Activity {
             boolean result = false;
 			try {
 				final ParkDroid mParkDroid = (ParkDroid) mActivity.getApplication();
-				final Park mPark = mParkDroid.getPark();
-				result = mPark.deleteReservation(mUserId, mReservationId);
+				result = mParkDroid.deleteReservation(mUserId, mReservationId);
 			} catch (Exception e) {	}
 			
 			return result;			

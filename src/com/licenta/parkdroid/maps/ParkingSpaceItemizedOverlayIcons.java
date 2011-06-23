@@ -6,8 +6,8 @@ package com.licenta.parkdroid.maps;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
-import com.licenta.park.types.ParkingSpace;
 import com.licenta.parkdroid.R;
+import com.licenta.parkdroid.types.ParkingSpace;
 
 import android.content.Context;
 import android.graphics.Bitmap;

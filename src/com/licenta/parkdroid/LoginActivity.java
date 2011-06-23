@@ -3,14 +3,12 @@
  */
 package com.licenta.parkdroid;
 
-import com.licenta.park.Park;
 import com.licenta.parkdroid.preferences.Preferences;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,7 +21,6 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -36,12 +33,10 @@ public class LoginActivity extends Activity {
     private static final boolean DEBUG = false;
     
     //TODO drawable/main_logo.png trebuie facut 355*158
-    private TextView mNewAccountTextView;
+    //private TextView mNewAccountTextView;
     private EditText mUserNameEditText;
     private EditText mPasswordEditText;
     
-    private AsyncTask<Void, Void, Boolean> mLoginTask;
-
     private ProgressDialog mProgressDialog;
 
     /* Called when the activity is first created.
@@ -85,7 +80,7 @@ public class LoginActivity extends Activity {
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLoginTask = new LoginTask().execute();
+                new LoginTask().execute();
                 if (DEBUG) Log.d(TAG, "onClick Fa login");
             }
         });
@@ -119,9 +114,6 @@ public class LoginActivity extends Activity {
             }
 
             private boolean phoneNumberEditTextFieldIsValid() {
-                // This can be either a phone number or username so we don't
-                // care too much about the
-                // format.
                 return !TextUtils.isEmpty(mUserNameEditText.getText());
             }
 
@@ -139,8 +131,6 @@ public class LoginActivity extends Activity {
         private static final String TAG = "LoginTask";
         private static final boolean DEBUG = true;
 
-        private Exception mReason;
-
         @Override
         protected void onPreExecute() {
             if (DEBUG) Log.d(TAG, "onPreExecute()");
@@ -150,16 +140,15 @@ public class LoginActivity extends Activity {
         @Override
         protected Boolean doInBackground(Void... params) {
             if (DEBUG) Log.d(TAG, "doInBackground()");
-            SharedPreferences prefs = PreferenceManager
-                    .getDefaultSharedPreferences(LoginActivity.this);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
             Editor editor = prefs.edit();
-            ParkDroid parkDroid = (ParkDroid) getApplication();
-            Park park = parkDroid.getPark();           
+            ParkDroid mParkDroid = (ParkDroid) getApplication();
+
             try {
                 String phoneNumber = mUserNameEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
 
-                boolean loggedIn = Preferences.loginUser(park, phoneNumber, password,
+                boolean loggedIn = Preferences.loginUser(mParkDroid, phoneNumber, password,
                         editor);
 
                 if (DEBUG) Log.d(TAG, "doInBackground() logged in ="+loggedIn);
@@ -175,8 +164,7 @@ public class LoginActivity extends Activity {
 
             } catch (Exception e) {
                 if (DEBUG) Log.d(TAG, "Caught Exception logging in.", e);
-                mReason = e;
-                Preferences.logoutUser(park, editor);
+                Preferences.logoutUser(mParkDroid, editor);
                 return false;
             }
         }
@@ -184,7 +172,6 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(Boolean loggedIn) {
             if (DEBUG) Log.d(TAG, "onPostExecute(): " + ParkDroid.INTENT_ACTION_LOGGED_IN);
-            ParkDroid parkDroid = (ParkDroid) getApplication();
 
             if (loggedIn) {
                 //we are logged in, send the message

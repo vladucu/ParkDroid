@@ -5,9 +5,10 @@ package com.licenta.parkdroid;
 
 import java.util.Iterator;
 import java.util.List;
-import com.licenta.park.Park;
-import com.licenta.park.types.Reservation;
-import com.licenta.park.types.Reservations;
+
+import com.licenta.parkdroid.types.Reservation;
+import com.licenta.parkdroid.types.Reservations;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,6 +28,7 @@ import android.widget.AdapterView.OnItemClickListener;
  */
 public class ActiveReservationsListActivity extends LoadableListActivity {
     
+	//TODO add top bar intermediate progress bar
     private static final String TAG = "ActiveReservationsListActivity";
     private static boolean DEBUG = true;
     
@@ -180,14 +182,12 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         
         private ActiveReservationsListActivity mActivity;
         private Reservations reservations;
-        private Park mPark;
         private ParkDroid mParkDroid;
         
         public ActiveReservationsTask(ActiveReservationsListActivity activity) {
             if (DEBUG) Log.d(TAG, "ActiveReservationsTask()");
             mActivity = activity;
             mParkDroid = (ParkDroid) mActivity.getApplication();
-            mPark = mParkDroid.getPark();
         }
         
         @Override
@@ -201,7 +201,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
             if (DEBUG) Log.d(TAG, "doInBackground()");
        
             try {
-            	reservations = mPark.getReservations();            
+            	reservations = mParkDroid.getReservations();            
             } catch (Exception e) {
                 e.printStackTrace();
             }

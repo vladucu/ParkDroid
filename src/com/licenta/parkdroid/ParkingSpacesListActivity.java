@@ -3,11 +3,10 @@
  */
 package com.licenta.parkdroid;
 
-import com.licenta.park.Park;
-import com.licenta.park.types.ParkingSpace;
-import com.licenta.park.types.ParkingSpaces;
 import com.licenta.parkdroid.LoadableListActivity;
 import com.licenta.parkdroid.ParkDroid;
+import com.licenta.parkdroid.types.ParkingSpace;
+import com.licenta.parkdroid.types.ParkingSpaces;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -38,7 +37,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
     
     private static final String TAG = "ParkingSpacesListActivity";
     private static boolean DEBUG = false;
-    
+    //TODO fix display of parking spaces
     private static final int RESULT_CODE_ACTIVITY_PARKING_SPACE = 1;
     private static final int MENU_REFRESH = 0;
     
@@ -254,7 +253,6 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         
         private ParkingSpacesListActivity mActivity;
         private String mQuery;
-        private Park mPark;
         private ParkDroid mParkDroid;
         private ParkingSpaces results = null;
         
@@ -266,7 +264,6 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
             mActivity = activity;
             mQuery = query;
             mParkDroid = (ParkDroid) mActivity.getApplication();
-            mPark = mParkDroid.getPark();
         }
         
         @Override
@@ -279,7 +276,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
             Log.d(TAG, "doInBackground()");
             
             try {            	
-            	results = mPark.parkingSpaces(Integer.parseInt(mParkDroid.getUserId()));
+            	results = mParkDroid.parkingSpaces(Integer.parseInt(mParkDroid.getUserId()));
             } catch (Exception e) {
                
             }

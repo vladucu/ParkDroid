@@ -1,13 +1,8 @@
 package com.licenta.parkdroid;
 
-import com.licenta.park.types.ParkingSpace;
+import com.licenta.parkdroid.types.ParkingSpace;
 
 import android.content.Context;
-
-
-/**
- * 
- */
 
 /**
  * @author vladucu

@@ -3,7 +3,8 @@
  */
 package com.licenta.parkdroid;
 
-import com.licenta.park.types.Reservation;
+import com.licenta.parkdroid.types.Reservation;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -23,8 +24,7 @@ public class AddReservationResultDialog extends Dialog {
     
     public AddReservationResultDialog(Context context, Reservation result) {
     	super(context);
-    	mReservationResult = result;
-  
+    	mReservationResult = result;  
     	if (DEBUG) Log.d(TAG, "AddReservationResultDialog");
     }
 

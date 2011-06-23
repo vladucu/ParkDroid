@@ -3,8 +3,8 @@
  */
 package com.licenta.parkdroid.preferences;
 
-import com.licenta.park.Park;
-import com.licenta.park.types.User;
+import com.licenta.parkdroid.ParkDroid;
+import com.licenta.parkdroid.types.User;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -35,17 +35,17 @@ public class Preferences {
     // Extra for storing user's supplied name.
     private static final String PREFERENCE_USER_NAME = "user_name";
     
-    public static boolean loginUser(Park park, String login, String password, Editor editor) {
+    public static boolean loginUser(ParkDroid parkDroid, String login, String password, Editor editor) {
         if (DEBUG) Log.d(Preferences.TAG, "Trying to log in.");
 
-        park.setCredentials(login, password);
+        parkDroid.setCredentials(login, password);
         storeLoginAndPassword(editor, login, password);
         if (!editor.commit()) {
             if (DEBUG) Log.d(TAG, "storeLoginAndPassword commit failed");
             return false;
         }
 
-        User user = park.user(login, password);
+        User user = parkDroid.user(login, password);
         storeUser(editor, user);
         if (!editor.commit()) {
             if (DEBUG) Log.d(TAG, "storeUser commit failed");
@@ -56,9 +56,9 @@ public class Preferences {
         return true;
     }
 
-    public static boolean logoutUser(Park park, Editor editor) {
+    public static boolean logoutUser(ParkDroid parkDroid, Editor editor) {
         if (DEBUG) Log.d(Preferences.TAG, "Trying to log out.");
-        park.setCredentials(null, null);
+        parkDroid.setCredentials(null, null);
         return editor.clear().commit();
     }
     

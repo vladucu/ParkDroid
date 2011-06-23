@@ -1,9 +1,9 @@
 package com.licenta.parkdroid;
 
-import com.licenta.park.types.ParkingSpace;
 import com.licenta.parkdroid.R;
 import com.licenta.parkdroid.R.id;
 import com.licenta.parkdroid.R.layout;
+import com.licenta.parkdroid.types.ParkingSpace;
 
 import android.content.Context;
 import android.os.Handler;

@@ -81,7 +81,7 @@ public class PreferencesActivity extends android.preference.PreferenceActivity {
         if (Preferences.PREFERENCE_LOGOUT.equals(key)) {
             if (DEBUG) Log.d(TAG, "onPreferenceTreeClick sent logout message");
             mPrefs.edit().clear().commit();
-            ((ParkDroid) getApplication()).getPark().setCredentials(null, null);
+            ((ParkDroid) getApplication()).setCredentials(null, null);
             
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setAction(Intent.ACTION_MAIN);
