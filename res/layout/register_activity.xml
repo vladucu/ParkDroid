@@ -47,6 +47,13 @@
             android:id="@+id/userNameEditText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:hint="@string/login_email" />
+        <EditText
+            android:id="@+id/userEmailEditText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:textAppearance="@android:style/TextAppearance.Large"
             android:hint="@string/login_email" />

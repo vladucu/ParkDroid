@@ -290,7 +290,7 @@ public class ActiveReservationActivity extends Activity {
             boolean result = false;
 			try {
 				final ParkDroid mParkDroid = (ParkDroid) mActivity.getApplication();
-				result = mParkDroid.deleteReservation(mUserId, mReservationId);
+				result = mParkDroid.deleteReservation(mParkDroid.getUserId(), mReservationId);
 			} catch (Exception e) {	}
 			
 			return result;			

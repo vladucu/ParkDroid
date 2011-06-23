@@ -21,6 +21,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -33,7 +34,7 @@ public class LoginActivity extends Activity {
     private static final boolean DEBUG = false;
     
     //TODO drawable/main_logo.png trebuie facut 355*158
-    //private TextView mNewAccountTextView;
+    private TextView mNewAccountTextView;
     private EditText mUserNameEditText;
     private EditText mPasswordEditText;
     
@@ -84,16 +85,15 @@ public class LoginActivity extends Activity {
                 if (DEBUG) Log.d(TAG, "onClick Fa login");
             }
         });
-/*
+
         mNewAccountTextView = (TextView) findViewById(R.id.newAccountTextView);
         mNewAccountTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO implement "Need an account" link
-                //startActivity(new Intent(Intent.ACTION_VIEW, Uri
-                //        .parse(Foursquare.FOURSQUARE_MOBILE_SIGNUP)));              
+                Toast.makeText(LoginActivity.this, "Creating account", Toast.LENGTH_LONG);        
             }
-        });*/
+        });
 
         mUserNameEditText = ((EditText) findViewById(R.id.userNameEditText));
         mPasswordEditText = ((EditText) findViewById(R.id.passwordEditText));
@@ -145,10 +145,10 @@ public class LoginActivity extends Activity {
             ParkDroid mParkDroid = (ParkDroid) getApplication();
 
             try {
-                String phoneNumber = mUserNameEditText.getText().toString();
+                String email = mUserNameEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
 
-                boolean loggedIn = Preferences.loginUser(mParkDroid, phoneNumber, password,
+                boolean loggedIn = Preferences.loginUser(mParkDroid, email, password,
                         editor);
 
                 if (DEBUG) Log.d(TAG, "doInBackground() logged in ="+loggedIn);
@@ -160,6 +160,7 @@ public class LoginActivity extends Activity {
                     throw new Exception(getResources().getString(
                             R.string.login_failed_login_toast));
                 }
+                //mParkDroid.setCredentials(login, password);
                 return loggedIn;
 
             } catch (Exception e) {

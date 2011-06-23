@@ -276,7 +276,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
             Log.d(TAG, "doInBackground()");
             
             try {            	
-            	results = mParkDroid.parkingSpaces(Integer.parseInt(mParkDroid.getUserId()));
+            	results = mParkDroid.getParkingSpaces(mParkDroid.getUserId());
             } catch (Exception e) {
                
             }

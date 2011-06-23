@@ -13,7 +13,7 @@ import com.licenta.parkdroid.types.Reservations;
 import com.licenta.parkdroid.types.ReservationsResource;
 import com.licenta.parkdroid.types.User;
 import com.licenta.parkdroid.types.UserResource;
-
+import com.licenta.parkdroid.types.UsersResource;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -33,9 +33,12 @@ import java.io.IOException;
 import java.util.Observer;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
+import org.restlet.data.Form;
 import org.restlet.engine.Engine;
 import org.restlet.ext.httpclient.HttpClientHelper;
 import org.restlet.ext.jackson.JacksonConverter;
+import org.restlet.ext.ssl.HttpsClientHelper;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 /**
@@ -51,8 +54,8 @@ public class ParkDroid extends Application {
     public static final String INTENT_ACTION_LOGGED_OUT = "com.licenta.parkdroid.intent.action.LOGGED_OUT";
     public static final String INTENT_ACTION_LOGGED_IN = "com.licenta.parkdroid.intent.action.LOGGED_IN";
     public static final String PACKAGE_NAME = "com.licenta.parkdroid";;
-    public static final String DOMAIN = "89.37.147.104:8443";
-    public static final String PROTOCOL = "https://";
+    public static final String DOMAIN = "10.0.2.2:8080";
+    public static final String PROTOCOL = "http://";
     public static final String USERS = "/users";
     public static final String RESERVATIONS = "/reservations";
     public static final String PARKINGSPACES = "/parkingspaces";
@@ -61,6 +64,7 @@ public class ParkDroid extends Application {
     private ChallengeScheme scheme = ChallengeScheme.HTTP_BASIC;
 	private ParkingSpacesResource parkingSpacesResource;
 	private UserResource userResource;
+	private UsersResource usersResource;
 	private ReservationsResource reservationsResource;
 	private ReservationResource reservationResource;
 	
@@ -71,13 +75,11 @@ public class ParkDroid extends Application {
     private TaskHandler mTaskHandler;
     private HandlerThread mTaskThread;
     private BestLocationListener mBestLocationListener;
+    private static boolean isLoggedIn = false;
     
     //sa vedem daca revenim de la login sau e start de aplicatie
     //private static boolean isLoggedIn = false;
 
-    /* (non-Javadoc)
-     * @see android.app.Application#onCreate()
-     */
     @Override
     public void onCreate() {
         // TODO finish ParkDroid
@@ -105,10 +107,11 @@ public class ParkDroid extends Application {
     }
     
     public boolean isReady() {
-        /*if (isLoggedIn) return true;
-        else return false;*/
-        if (DEBUG) Log.d(TAG, "isReady()");
-        return hasCredentials() && !TextUtils.isEmpty(getUserId());
+    	if (DEBUG) Log.d(TAG, "isReady()");
+        if (isLoggedIn) return true;
+        else return false;
+        
+        /*return hasCredentials() && !TextUtils.isEmpty(getUserId());*/
     }
     
     public String getUserId() {
@@ -144,11 +147,9 @@ public class ParkDroid extends Application {
         //mLogin = email;
         //mPassword = password;
         if (email == null || email.length() == 0 || password == null || password.length() == 0) {
-            if (DEBUG) Log.d(TAG, "setCredentials() Clearing Credentials");
             authentication = null;
             
         } else {
-        	if (DEBUG) Log.d(TAG, "setCredentials() email="+email+" password="+password);
             authentication = new ChallengeResponse(scheme, email, password);
         }    
     }
@@ -162,7 +163,7 @@ public class ParkDroid extends Application {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (INTENT_ACTION_LOGGED_IN.equals(intent.getAction())) {
-                //isLoggedIn = true;
+                isLoggedIn = true;
                 requestUpdateUser();
             }
         }
@@ -194,8 +195,8 @@ public class ParkDroid extends Application {
                         // Update user info
                         Log.d(TAG, "Updating user.");
 
-             
-                        /*User user = getPark().createUser(login, password);
+             /*
+                        //User user = getPark().createUser(login, password);
 
                         Editor editor = mPrefs.edit();
                         Preferences.storeUser(editor, user);
@@ -222,10 +223,24 @@ public class ParkDroid extends Application {
         mBestLocationListener.unregister((LocationManager) getSystemService(Context.LOCATION_SERVICE));        
     }
         
-    public User user(String login, String password) {
-    	//TODO de vazut cu email si parola locala cum putem face
+    public String buildURI(String arg1, String arg2, String arg3) {
+    	StringBuilder uri = new StringBuilder();
+    	uri.append(PROTOCOL);uri.append(DOMAIN);
+    	uri.append(USERS);
+    	if (arg1 != null) {
+    		uri.append("/"+arg1);
+    		if (arg2 != null) {
+    			uri.append(arg2);
+    			if (arg3 != null) uri.append("/"+arg3);    			
+    		}
+    	}
+    	return uri.toString();
+    }
+    
+    public User getUser(String login, String password) {
+
     	//Prepare the request
-    	//clientResource = new ClientResource(PROTOCOL+DOMAIN/users/1");
+    	clientResource = new ClientResource(buildURI(login, null, null));
     	
     	clientResource.setChallengeResponse(authentication);
     	
@@ -236,24 +251,28 @@ public class ParkDroid extends Application {
 		return user;
     }
     
-    public String buildURI(String arg1, String arg2, String arg3) {
-    	StringBuilder uri = new StringBuilder();
-    	uri.append(PROTOCOL);uri.append(DOMAIN);
-    	uri.append(USERS);
-    	if (arg1 != null) {
-    		uri.append("/"+arg1);
-    		if (arg2 != null) {
-    			uri.append(arg2);
-    			uri.append("/"+arg3);    			
-    		}
-    	}
-    	return uri.toString();
+    public User createUser(String login, String password, String name) {
+
+    	//Prepare the request
+    	clientResource = new ClientResource(buildURI(login, null, null));
+    	
+    	clientResource.setChallengeResponse(authentication);
+    	
+    	usersResource = clientResource.wrap(UsersResource.class);
+    	Form form = new Form();
+    	form.add("name", name);
+    	form.add("email", login);
+    	form.add("password", password);
+    	User user = usersResource.createUser(form.getWebRepresentation());
+    	clientResource.release();
+    	
+		return user;
     }
     
-    public ParkingSpaces parkingSpaces(int userId) throws IOException {
+    public ParkingSpaces getParkingSpaces(String userId) throws IOException {
 		if (DEBUG) Log.d(TAG, "parkingSpaces()");
 		
-		clientResource = new ClientResource(buildURI(Integer.toString(userId), PARKINGSPACES, null));
+		clientResource = new ClientResource(buildURI(userId, PARKINGSPACES, null));
 		clientResource.setChallengeResponse(authentication);
 		parkingSpacesResource = clientResource.wrap(ParkingSpacesResource.class);
 		ParkingSpaces parkingSpaces = parkingSpacesResource.retrieve();
@@ -270,9 +289,9 @@ public class ParkDroid extends Application {
 		return parkingSpaces;
 	}
     
-	public Reservations getReservations() throws IOException {
-		if (DEBUG) Log.d(TAG, "reservations()");
-		clientResource = new ClientResource("http://10.0.2.2:8080/users/1/reservations");
+	public Reservations getReservations(String userId) throws IOException {
+		if (DEBUG) Log.d(TAG, "reservations()");		
+		clientResource = new ClientResource(buildURI(userId, RESERVATIONS, null));
 		clientResource.setChallengeResponse(authentication);
 		reservationsResource = clientResource.wrap(ReservationsResource.class);
 		Reservations reservations = null;
@@ -291,7 +310,7 @@ public class ParkDroid extends Application {
 		return reservations;	
 	}
 	
-	public  Reservation createReservation(int userId, ParkingSpace mParkingSpace, String mStartTime, String mEndTime, String mTotalTime, int mCost) throws IOException {
+	public  Reservation createReservation(String userId, ParkingSpace mParkingSpace, String mStartTime, String mEndTime, String mTotalTime, int mCost) throws IOException {
 		if (DEBUG) Log.d(TAG, "createReservation()");
 		Reservation reservation = new Reservation();
 		reservation.setParkingSpace(mParkingSpace);
@@ -300,9 +319,8 @@ public class ParkDroid extends Application {
 		reservation.setEndTime(mEndTime);
 		reservation.setTotalTime(mTotalTime);
 		reservation.setCost(mCost);
-		//TODO on the server return full reservation with user and parkingspace
 		
-		clientResource = new ClientResource("http://10.0.2.2:8080/users/"+userId+"/reservations");
+		clientResource = new ClientResource(buildURI(userId, RESERVATIONS, null));
 		clientResource.setChallengeResponse(authentication);
 		reservationsResource = clientResource.wrap(ReservationsResource.class);
 		
@@ -321,7 +339,8 @@ public class ParkDroid extends Application {
 	
 	public Reservation updateReservation(Reservation reservation) throws IOException {
 		if (DEBUG) Log.d(TAG, "updateReservation()");
-		clientResource = new ClientResource("http://10.0.2.2:8080/users/"+reservation.getUser().getId()+"/reservations/"+reservation.getId());
+
+		clientResource = new ClientResource(buildURI(Integer.toString(reservation.getUser().getId()), RESERVATIONS, Integer.toString(reservation.getId())));
 		clientResource.setChallengeResponse(authentication);
 		reservationResource = clientResource.wrap(ReservationResource.class);
 		
@@ -337,10 +356,11 @@ public class ParkDroid extends Application {
 		return reservation;
 	}
 	
-	public boolean deleteReservation(int userId, int reservationId) throws IOException {
+	public boolean deleteReservation(String userId, int reservationId) throws IOException {
 		if (DEBUG) Log.d(TAG, "updateReservation()");
 		boolean result = false;
-		clientResource = new ClientResource("http://10.0.2.2:8080/users/"+userId+"/reservations/"+reservationId);
+		
+		clientResource = new ClientResource(buildURI(userId, RESERVATIONS, Integer.toString(reservationId)));
 		clientResource.setChallengeResponse(authentication);
 		reservationResource = clientResource.wrap(ReservationResource.class);
 		

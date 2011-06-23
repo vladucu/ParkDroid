@@ -447,7 +447,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
 		private String mEndTime;
 		private String mTotalTime;
 		private int mCost;
-		private int mUserId;
+		private String mUserId;
         
         public ReservationTask(AddReservationActivity activity, ParkingSpace parkingSpace, String startTime, String endTime,
         		String totalTime, int cost) {
@@ -457,7 +457,7 @@ public class AddReservationActivity extends Activity implements OnClickListener 
 			mStartTime = startTime;
 			mEndTime = endTime;
 			mParkDroid = (ParkDroid) mActivity.getApplication();
-			mUserId = Integer.parseInt(mParkDroid.getUserId());
+			mUserId = mParkDroid.getUserId();
 			mTotalTime = totalTime;
 			mCost = cost;
 			

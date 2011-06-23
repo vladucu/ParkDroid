@@ -2,6 +2,9 @@ package com.licenta.parkdroid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -30,6 +33,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
     private MapController mMapController;
     private MyLocationOverlay mMyLocationOverlay = null;
     private ParkingSpaceItemizedOverlayIcons mOverlay = null; 
+  //  private SearchLocationObserver mSearchLocationObserver = new SearchLocationObserver();
     
     private String mTappedParkingSpace;
     private StateHolder mStateHolder;
@@ -74,7 +78,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         return false;
     }
 
-/*    private void initMyLocation() {
+    private void initMyLocation() {
         if (DEBUG) Log.d(TAG, "initMyLocation()");
         mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
         mMyLocationOverlay.enableMyLocation();
@@ -90,7 +94,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         });
         mMapView.getOverlays().add(mMyLocationOverlay);
     }
-    */
+    
     private void ensureUi() {
         if (DEBUG) Log.d(TAG, "ensureUi()="+(List<ParkingSpace>)mStateHolder.getParkingSpaces());
         
@@ -100,10 +104,11 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         mMapController = mMapView.getController();
         mMapView.setSatellite(false);
         
-        mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
-        mMapView.getOverlays().add(mMyLocationOverlay);
-              
-        mOverlay = new ParkingSpaceItemizedOverlayIcons(this, getResources().getDrawable(R.drawable.map_marker_blue), mParkingSpaceOverlayTapListener);        
+        /*mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
+        mMapView.getOverlays().add(mMyLocationOverlay);*/
+        initMyLocation();
+        
+        mOverlay = new ParkingSpaceItemizedOverlayIcons(this, getResources().getDrawable(R.drawable.pin), mParkingSpaceOverlayTapListener);        
         List<ParkingSpace> g = new ArrayList<ParkingSpace>();
         for (ParkingSpace it:mStateHolder.getParkingSpaces()) {
             g.add(it);
@@ -166,7 +171,33 @@ public class MapActivity extends com.google.android.maps.MapActivity {
             
         }
     };
+/*
+    *//** If location changes, auto-start a nearby parkingspaces search. *//*
+    private class SearchLocationObserver implements Observer {
 
+        private boolean mRequestedFirstSearch = false;
+
+        @Override
+        public void update(Observable observable, Object data) {
+            Location location = (Location) data;
+            // Fire a search if we haven't done so yet.
+            if (!mRequestedFirstSearch
+                    && ((BestLocationListener) observable).isAccurateEnough(location)) {
+                mRequestedFirstSearch = true;
+                if (mStateHolder.getIsRunningTask() == false) {
+                    // Since we were told by the system that location has
+                    // changed, no need to make the
+                    // task wait before grabbing the current location.
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            startTask(0L);
+                        }
+                    });
+                }
+            }
+        }
+    }
+*/
 
     private class StateHolder {
         

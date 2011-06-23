@@ -45,7 +45,7 @@ public class Preferences {
             return false;
         }
 
-        User user = parkDroid.user(login, password);
+        User user = parkDroid.getUser(login, password);
         storeUser(editor, user);
         if (!editor.commit()) {
             if (DEBUG) Log.d(TAG, "storeUser commit failed");

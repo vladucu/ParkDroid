@@ -69,4 +69,5 @@
     <string name="add_reservation_dialog_total_time_label">Total time:</string>
     <string name="add_reservation_dialog_cost_label">Cost:</string>
     <string name="add_reservation_dialog_price_label">Price/h:</string>
+    <string name="need_an_account">Need an accout?</string>
 </resources>

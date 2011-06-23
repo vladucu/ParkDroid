@@ -201,7 +201,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
             if (DEBUG) Log.d(TAG, "doInBackground()");
        
             try {
-            	reservations = mParkDroid.getReservations();            
+            	reservations = mParkDroid.getReservations(mParkDroid.getUserId());            
             } catch (Exception e) {
                 e.printStackTrace();
             }
