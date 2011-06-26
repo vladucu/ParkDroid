@@ -1,11 +1,15 @@
 package com.licenta.parkdroid;
 
+import com.licenta.parkdroid.types.ParkingSpace;
 import com.licenta.parkdroid.types.Reservation;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
@@ -24,12 +28,13 @@ import android.widget.TextView;
  */
 public class ActiveReservationActivity extends Activity {
 
-	//TODO change delete text messages
     public static final String TAG = "ActiveReservationActivity";
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = ParkDroid.DEBUG;
     
     public static final String INTENT_EXTRA_RESERVATION = ParkDroid.PACKAGE_NAME + ".ActiveReservationActivity.INTENT_EXTRA_RESERVATION";
     private static final int RESULT_CODE_ACTIVITY_EXTEND_RESERVATION = 1;
+    
+    private static final int DIALOG_CONFIRM_DELETION = 2;
     
     private Handler mHandler;
     private StateHolder mStateHolder;
@@ -42,7 +47,7 @@ public class ActiveReservationActivity extends Activity {
             finish();
         }
     };
-	//TODO add delete confirmation dialog box
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +56,7 @@ public class ActiveReservationActivity extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));
         setContentView(R.layout.reservation_activity);
-        
+                
         mHandler = new Handler();
         
         Object retained = getLastNonConfigurationInstance();
@@ -87,12 +92,16 @@ public class ActiveReservationActivity extends Activity {
         Button btnCancel = (Button)findViewById(R.id.reservationActivityButtonCancel);
         
         final Reservation reservation = mStateHolder.getReservation();
-        tvReservationActivityParkingLotName.setText(reservation.getParkingSpace().getName());
-        tvReservationActivityParkingLotAddress.setText(reservation.getParkingSpace().getAddress());        
+        final ParkingSpace parkingSpace = reservation.getParkingSpace();
+        tvReservationActivityParkingLotName.setText(parkingSpace.getName());
+        tvReservationActivityParkingLotAddress.setText(parkingSpace.getAddress());        
    
         
         tvReservationActivityId.setText(Integer.toString(reservation.getId()));
         viewId.setVisibility(View.VISIBLE);
+        
+        //set the title of the activity
+        setTitle("Reservation - " + parkingSpace.getName() );
         
         updateView();
  /*        
@@ -121,7 +130,7 @@ public class ActiveReservationActivity extends Activity {
         });*/
         
         btnExtend.setEnabled(true);
-        btnExtend.setText(R.string.reservation_activity_extend_button);
+        btnExtend.setText(R.string.reservation_activity_modify_button);
         btnExtend.setOnClickListener(new OnClickListener() {
             
             @Override
@@ -129,7 +138,7 @@ public class ActiveReservationActivity extends Activity {
                 if (DEBUG) Log.d(TAG, "ensureUI() button extend clicked");
                  
                 Intent intent = new Intent(ActiveReservationActivity.this, AddReservationActivity.class);
-                intent.putExtra(AddReservationActivity.INTENT_EXTRA_PARKING_SPACE, reservation.getParkingSpace());
+                intent.putExtra(AddReservationActivity.INTENT_EXTRA_PARKING_SPACE, parkingSpace);
                 intent.putExtra(AddReservationActivity.INTENT_EXTRA_RESERVATION, reservation);
                 startActivityForResult(intent, RESULT_CODE_ACTIVITY_EXTEND_RESERVATION);       
             }
@@ -142,7 +151,7 @@ public class ActiveReservationActivity extends Activity {
             public void onClick(View v) {
                 
                 if (DEBUG) Log.d(TAG, "ensureUI() button cancel clicked");
-                mStateHolder.startDeleteTask(ActiveReservationActivity.this, reservation.getUser().getId(), reservation.getId());
+                showDialog(DIALOG_CONFIRM_DELETION);
             }
         });        
     }    
@@ -173,6 +182,30 @@ public class ActiveReservationActivity extends Activity {
         setResult(Activity.RESULT_OK, intent);
     }
     
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+	        case DIALOG_CONFIRM_DELETION:
+	        	AlertDialog.Builder alertDelete = new AlertDialog.Builder(this);
+	        	alertDelete.setMessage("Are you sure you want to delete this reservation?")
+	        	       .setCancelable(false)
+	        	       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	        	           public void onClick(DialogInterface dialog, int id) {
+	        	        	   final Reservation reservation = mStateHolder.getReservation();	        	        	   
+	        	        	   mStateHolder.startDeleteTask(ActiveReservationActivity.this, reservation.getUser().getId(), reservation.getId());
+	        	           }
+	        	       })
+	        	       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+	        	           public void onClick(DialogInterface dialog, int id) {
+	        	                dialog.cancel();
+	        	           }
+	        	       });
+	        	AlertDialog alert = alertDelete.create();
+	        	alert.show();              
+	    }
+    return null;
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -216,7 +249,7 @@ public class ActiveReservationActivity extends Activity {
         if (DEBUG) Log.d(TAG, "onResume()");
         if (mStateHolder.getIsRunning()) {
             startProgressBar(getResources().getString(R.string.add_reservation_action_label),
-                    getResources().getString(R.string.add_reservation_activity_progress_bar_message));
+                    getResources().getString(R.string.add_reservation_activity_delete_progress_bar_message));
         }
     }
 
@@ -267,21 +300,19 @@ public class ActiveReservationActivity extends Activity {
         private static boolean DEBUG = true;
         
         private ActiveReservationActivity mActivity;
-		private int mUserId;
 		private int mReservationId;
         
         public DeleteReservationTask(ActiveReservationActivity activity, int userId, int reservationId) {
             if (DEBUG) Log.d( TAG, "ReservationTask()");
             mActivity = activity;
 			mReservationId = reservationId;
-			mUserId = userId;
         }        
         
         @Override
         public void onPreExecute() {
             if (DEBUG) Log.d( TAG, "onPreExecute()");
             mActivity.startProgressBar(mActivity.getResources().getString(R.string.add_reservation_action_label), 
-                    mActivity.getResources().getString(R.string.add_reservation_activity_progress_bar_message));
+                    mActivity.getResources().getString(R.string.add_reservation_activity_delete_progress_bar_message));
         }
 
         @Override
@@ -313,15 +344,9 @@ public class ActiveReservationActivity extends Activity {
 
     private static class StateHolder {
         
-        private Reservation mReservation;
-        private boolean mIsRunning;
-        private DeleteReservationTask mDeleteTask;
-        
-        public void StateHolder() {  
-        	mReservation = null;
-        	mDeleteTask = null;
-        	mIsRunning = false;
-        }
+        private Reservation mReservation = null;
+        private boolean mIsRunning = false;
+        private DeleteReservationTask mDeleteTask = null;
         
         public void setActivity(ActiveReservationActivity activity) {
     		if (DEBUG) Log.d( TAG, "setActivity()");

@@ -163,13 +163,8 @@ public class ParkingSpaceActivity extends Activity {
             case RESULT_CODE_ACTIVITY_ADD_RESERVATION:
                 if (resultCode == Activity.RESULT_OK && data.hasExtra(AddReservationActivity.INTENT_EXTRA_RETURNED_RESERVATION)) {
                     if (DEBUG) Log.d(TAG, "onActivityResult() returned with reservation done succesfully");
-                    sendBroadcast(new Intent(ActiveReservationsListActivity.REFRESH_INTENT));                    
-                    //momentan doar anunta lista de rezervari sa se autoactualizeze de pe server
-                    /*Reservation reservation = data.getParcelableExtra(AddReservationActivity.INTENT_EXTRA_RETURNED_RESERVATION);
-                    Intent intent = new Intent(ParkingSpaceActivity.this, ActiveReservationsListActivity.class);
-                    intent.putExtra(ActiveReservationsListActivity.INTENT_EXTRA_RESERVATION, reservation);
-                    getParent().getParent().startActivity(intent);*/
-                    //TODO update reservations list or jump directly to the updated reservations list
+                    sendBroadcast(new Intent(ActiveReservationsListActivity.REFRESH_INTENT));               
+                    finish();
                     break;
                 }                
         }
@@ -207,7 +202,7 @@ public class ParkingSpaceActivity extends Activity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // TODO sa vedem ce mai putem adauga aici
+        // TODO vazut ce facem cu meniul pana la urma
         super.onCreateOptionsMenu(menu);
         
         menu.add(Menu.NONE, MENU_CALL, 1, R.string.parking_lot_activity_menu_call).setIcon(R.drawable.ic_menu_call);

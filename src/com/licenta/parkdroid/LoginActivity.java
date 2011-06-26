@@ -31,7 +31,7 @@ import android.widget.Toast;
 public class LoginActivity extends Activity {
     
     private static final String TAG = "LoginActivity";
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = ParkDroid.DEBUG;
     
     //TODO drawable/main_logo.png trebuie facut 355*158
     private TextView mNewAccountTextView;
@@ -40,9 +40,6 @@ public class LoginActivity extends Activity {
     
     private ProgressDialog mProgressDialog;
 
-    /* Called when the activity is first created.
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +73,6 @@ public class LoginActivity extends Activity {
     }
     
     private void ensureUi() {
-        // TODO implement ensureUi LoginActivity
         final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new OnClickListener() {
             @Override

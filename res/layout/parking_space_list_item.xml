@@ -38,7 +38,7 @@
     android:layout_height="wrap_content"
     android:layout_toRightOf="@id/icon"
     android:layout_alignParentRight="true"
-    android:layout_below="@+id/parkingLotName"
+    android:layout_below="@+id/parkingSpaceName"
     android:paddingLeft="7dip"
     android:paddingRight="10dip"
     android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
@@ -50,13 +50,13 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_below="@+id/parkingLotLocationLine1"
+    android:layout_below="@+id/parkingSpaceLocationLine1"
     android:layout_toRightOf="@id/icon"
     android:paddingLeft="7dip"
     >
   
     <TextView
-      android:id="@+id/parkingLotDistance"
+      android:id="@+id/parkingSpaceDistance"
       android:layout_width="90dip"
       android:layout_height="wrap_content"
       android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
@@ -72,14 +72,14 @@
       android:scaleType="fitCenter" />
       
     <TextView
-      android:id="@+id/parkingLotSpaces"
+      android:id="@+id/parkingSpaceSpaces"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:paddingLeft="3dip"
       android:textAppearance="@style/TextViewStyleParkLotAddressListItem"
       android:ellipsize="end" />
     <TextView
-      android:id="@+id/parkingPrice"
+      android:id="@+id/parkingSpacePrice"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:paddingLeft="40dip"
@@ -90,7 +90,7 @@
       
   </LinearLayout>
     
-<ImageView
+<!-- <ImageView
     android:id="@+id/reservationCorner"
     android:src="@drawable/reservation_item_corner"
     android:layout_width="22dip"
@@ -100,6 +100,6 @@
     android:layout_alignParentTop="true"
     android:layout_alignParentRight="true"
     android:visibility="invisible"
-    />
+    /> -->
         
 </RelativeLayout>

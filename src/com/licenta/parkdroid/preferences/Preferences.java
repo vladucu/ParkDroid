@@ -35,6 +35,9 @@ public class Preferences {
     // Extra for storing user's supplied name.
     private static final String PREFERENCE_USER_NAME = "user_name";
     
+    //Extra for storing search radius preference
+    public static final String PREFERENCE_RADIUS = "search_radius";
+    
     public static boolean loginUser(ParkDroid parkDroid, String login, String password, Editor editor) {
         if (DEBUG) Log.d(Preferences.TAG, "Trying to log in.");
 
@@ -77,6 +80,11 @@ public class Preferences {
      */
     public static String getUserEmail(SharedPreferences prefs) {
         return prefs.getString(PREFERENCE_USER_NAME, null);
+    }
+    
+    public static String getRadius(SharedPreferences prefs) {
+    	if (DEBUG) Log.d(TAG, "getRadius="+prefs.getString(PREFERENCE_RADIUS, "1000"));
+    	return prefs.getString(PREFERENCE_RADIUS, "1000");
     }
     
     public static void storeLoginAndPassword(final Editor editor, String login, String password) {

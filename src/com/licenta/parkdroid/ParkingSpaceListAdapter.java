@@ -61,11 +61,11 @@ public class ParkingSpaceListAdapter extends BaseParkingSpaceAdapter {
             holder.icon = (ImageView) convertView.findViewById(R.id.icon);
             holder.parkingSpaceName = (TextView) convertView.findViewById(R.id.parkingSpaceName);
             holder.parkingSpaceLocationLine1 = (TextView) convertView.findViewById(R.id.parkingSpaceLocationLine1);
-            //holder.parkingSpaceSpaces = (TextView) convertView.findViewById(R.id.parkingSpaceSpaces);
-            /*holder.parkingSpaceDistance = (TextView) convertView.findViewById(R.id.parkingSpaceDistance);
+            holder.parkingSpaceSpaces = (TextView) convertView.findViewById(R.id.parkingSpaceSpaces);
+            holder.parkingSpaceDistance = (TextView) convertView.findViewById(R.id.parkingSpaceDistance);
             holder.iconTrending = (ImageView) convertView.findViewById(R.id.iconTrending);
             
-            holder.parkingPrice = (TextView) convertView.findViewById(R.id.parkingPrice);*/
+            holder.parkingPrice = (TextView) convertView.findViewById(R.id.parkingSpacePrice);
             //holder.reservationHere = (ImageView) convertView.findViewById(R.id.reservationCorner);
             convertView.setTag(holder);
         } else {
@@ -85,7 +85,7 @@ public class ParkingSpaceListAdapter extends BaseParkingSpaceAdapter {
         } else {
             holder.parkingSpaceLocationLine1.setText("");
         }
-       /*         
+        parkingSpace.setDistance(Integer.toString(30));
         // Show parking lot distance.
         if (parkingSpace.getDistance() != null) {
             holder.parkingSpaceDistance.setText(parkingSpace.getDistance() + " meters");
@@ -93,8 +93,8 @@ public class ParkingSpaceListAdapter extends BaseParkingSpaceAdapter {
             holder.parkingSpaceDistance.setText("");
         }
         holder.iconTrending.setVisibility(View.VISIBLE);
-        holder.parkingSpaceSpaces.setText(parkingSpace.getEmptySpaces()+"/"+parkingSpace.getTotalSpaces());        
-        holder.parkingPrice.setText(parkingSpace.getPrice()+"/h");       */
+        holder.parkingSpaceSpaces.setText(Integer.toString(parkingSpace.getSpaces()));        
+        holder.parkingPrice.setText(Integer.toString(parkingSpace.getPrice())+"$");       
         
         // If we have a reservation here, show the corner folded over.
      /*   if (parkingSpace.getHasReservation()) {
@@ -110,12 +110,12 @@ public class ParkingSpaceListAdapter extends BaseParkingSpaceAdapter {
         ImageView icon;
         TextView parkingSpaceName;
         TextView parkingSpaceLocationLine1;
-        /*ImageView iconSpecial;
+        ImageView iconSpecial;
         TextView parkingSpaceDistance;
         ImageView iconTrending;
         TextView parkingSpaceSpaces;
-        TextView parkingPrice;*/
-        ImageView reservationHere;
+        TextView parkingPrice;
+        //ImageView reservationHere;
     }
 
 }

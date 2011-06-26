@@ -14,13 +14,15 @@ import com.licenta.parkdroid.types.ReservationsResource;
 import com.licenta.parkdroid.types.User;
 import com.licenta.parkdroid.types.UserResource;
 import com.licenta.parkdroid.types.UsersResource;
+import com.licenta.parkdroid.utils.LocationUtils;
+
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -46,10 +48,10 @@ import org.restlet.resource.ClientResource;
  *
  */
 public class ParkDroid extends Application {
-    
+
     private static final String TAG = "ParkDroidApp";
     //debug mode
-    private static final boolean DEBUG = true;
+    public static final boolean DEBUG = true;
     
     public static final String INTENT_ACTION_LOGGED_OUT = "com.licenta.parkdroid.intent.action.LOGGED_OUT";
     public static final String INTENT_ACTION_LOGGED_IN = "com.licenta.parkdroid.intent.action.LOGGED_IN";
@@ -76,13 +78,9 @@ public class ParkDroid extends Application {
     private HandlerThread mTaskThread;
     private BestLocationListener mBestLocationListener;
     private static boolean isLoggedIn = false;
-    
-    //sa vedem daca revenim de la login sau e start de aplicatie
-    //private static boolean isLoggedIn = false;
 
     @Override
     public void onCreate() {
-        // TODO finish ParkDroid
     	if (DEBUG) Log.d(TAG, "onCreate()");
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         
@@ -114,6 +112,10 @@ public class ParkDroid extends Application {
         /*return hasCredentials() && !TextUtils.isEmpty(getUserId());*/
     }
     
+    public String getRadius() {
+    	return Preferences.getRadius(mPrefs);
+    }
+    
     public String getUserId() {
         return Preferences.getUserId(mPrefs);
     }
@@ -121,6 +123,7 @@ public class ParkDroid extends Application {
     public String getUserEmail() {
         return Preferences.getUserEmail(mPrefs);
     }
+    
     public void requestUpdateUser() {
         mTaskHandler.sendEmptyMessage(TaskHandler.MESSAGE_UPDATE_USER);
     }
@@ -148,6 +151,7 @@ public class ParkDroid extends Application {
         //mPassword = password;
         if (email == null || email.length() == 0 || password == null || password.length() == 0) {
             authentication = null;
+            isLoggedIn = false;
             
         } else {
             authentication = new ChallengeResponse(scheme, email, password);
@@ -201,6 +205,15 @@ public class ParkDroid extends Application {
                         Editor editor = mPrefs.edit();
                         Preferences.storeUser(editor, user);
                         editor.commit();*/
+                        Location location = LocationUtils.createParkDroidLocation(getLastKnownLocation());
+                        if (location == null) {
+	                        android.location.Location primeLocation = new android.location.Location("parkdroid");
+	                        // Very inaccurate, right?
+	                        primeLocation.setTime(System.currentTimeMillis());
+	                        mBestLocationListener.updateLocation(primeLocation);
+                        }
+                        
+                        //mBestLocationListener.updateLocation(getLastKnownLocation());
                     } catch (Error e) {
                         if (DEBUG) Log.d(TAG, "ParkDroid", e);
                     } catch (Exception e) {
@@ -221,6 +234,10 @@ public class ParkDroid extends Application {
 
     public void removeLocationUpdates(Observer observer) {
         mBestLocationListener.unregister((LocationManager) getSystemService(Context.LOCATION_SERVICE));        
+    }
+    
+    public android.location.Location getLastKnownLocation() {
+        return mBestLocationListener.getLastKnownLocation();
     }
         
     public String buildURI(String arg1, String arg2, String arg3) {
@@ -376,6 +393,34 @@ public class ParkDroid extends Application {
 		clientResource.release();
 		return result;
 	}
-	}
+	
+	 @interface LocationRequired {
+	    }
+	 
+	 public static class Location {
+	        String geolat = null;
+	        String geolong = null;
+	        String geohacc = null;
+	        String geovacc = null;
+	        String geoalt = null;
+
+	        public Location() {
+	        }
+
+	        public Location(final String geolat, final String geolong, final String geohacc,
+	                final String geovacc, final String geoalt) {
+	            this.geolat = geolat;
+	            this.geolong = geolong;
+	            this.geohacc = geohacc;
+	            this.geovacc = geovacc;
+	            this.geoalt = geovacc;
+	        }
+
+	        public Location(final String geolat, final String geolong) {
+	            this(geolat, geolong, null, null, null);
+	        }
+	    }
+
+}
 
 

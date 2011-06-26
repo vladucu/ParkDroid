@@ -68,10 +68,8 @@ public class ActiveReservationsAdapter extends BaseReservationsAdapter {
         
         Reservation reservation = (Reservation) getItem(position);
         holder.parkingLotName.setText(reservation.getParkingSpace().getName());        
-        holder.startingTime.setText("From: " + FormatStrings.getHourString(reservation.getStartTime()) 
-                + " " + FormatStrings.getDayString(reservation.getStartTime()) );
-        holder.endingTime.setText("Until: " + FormatStrings.getHourString(reservation.getEndTime()) 
-                + " " + FormatStrings.getDayString(reservation.getEndTime()) );
+        holder.startingTime.setText(reservation.getStartTime());
+        holder.endingTime.setText(reservation.getEndTime());
      /*   holder.parkingLotDistance.setText(reservation.getParkingLot().getDistance() + " meters");
         holder.iconTrending.setVisibility(View.VISIBLE);
         holder.parkingLotSpaces.setText(reservation.getParkingLot().getEmptySpaces()+"/"+reservation.getParkingLot().getTotalSpaces());        

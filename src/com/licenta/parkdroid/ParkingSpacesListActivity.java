@@ -3,31 +3,29 @@
  */
 package com.licenta.parkdroid;
 
+
 import com.licenta.parkdroid.LoadableListActivity;
 import com.licenta.parkdroid.ParkDroid;
 import com.licenta.parkdroid.types.ParkingSpace;
 import com.licenta.parkdroid.types.ParkingSpaces;
-
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * @author vladucu
@@ -36,16 +34,16 @@ import java.util.List;
 public class ParkingSpacesListActivity extends LoadableListActivity {
     
     private static final String TAG = "ParkingSpacesListActivity";
-    private static boolean DEBUG = false;
-    //TODO fix display of parking spaces
-    private static final int RESULT_CODE_ACTIVITY_PARKING_SPACE = 1;
+    private static boolean DEBUG = ParkDroid.DEBUG;
+    
     private static final int MENU_REFRESH = 0;
+    private static final int RESULT_CODE_ACTIVITY_ADD_RESERVATION = 1;
     
     private StateHolder mStateHolder = new StateHolder();
     private ParkingSpaceListAdapter mListAdapter;
-    private ParkingSpaceListAdapter mParkingSpaceListAdapter;
     private ListView mListView;
     private Handler mHandler;
+    private SearchLocationObserver mSearchLocationObserver = new SearchLocationObserver();
     
     
     private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
@@ -67,7 +65,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         mHandler = new Handler();
         mListView = getListView();
         mListAdapter = new ParkingSpaceListAdapter(this);        
-        mListView.setAdapter(mParkingSpaceListAdapter);
+        
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -111,6 +109,8 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
    @Override
     protected void onPause() {
         super.onPause();
+        if (DEBUG) Log.d(TAG, "onPause()");
+        ((ParkDroid) getApplication()).removeLocationUpdates(mSearchLocationObserver);
         
         if (isFinishing()) {
             mStateHolder.cancelAllTasks();
@@ -121,6 +121,8 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
     protected void onResume() {
         super.onResume();
         if (DEBUG) Log.d(TAG, "onResume()");
+        
+        ((ParkDroid) getApplication()).requestLocationUpdates(mSearchLocationObserver);
     }
 
     @Override
@@ -221,7 +223,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         mStateHolder.cancelAllTasks();
     }
 /*
-    *//** If location changes, auto-start a nearby parking space search. *//*
+    *//** If location changes, auto-start a nearby parking space search. */
     private class SearchLocationObserver implements Observer {
 
         private boolean mRequestedFirstSearch = false;
@@ -239,13 +241,13 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
                     // task wait before grabbing the current location.
                     mHandler.post(new Runnable() {
                         public void run() {
-                            startTask(0L);
+                            startTask();
                         }
                     });
                 }
             }
         }
-    }*/
+    }
     
     private static class ParkingSpacesListTask extends AsyncTask<Void, Void, ParkingSpaces> {
         private static final String TAG = "ParkingSpacesListTask";
@@ -256,10 +258,8 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         private ParkDroid mParkDroid;
         private ParkingSpaces results = null;
         
-        public ParkingSpacesListTask(ParkingSpacesListActivity activity, String query) {
-           
-            super();
-            
+        public ParkingSpacesListTask(ParkingSpacesListActivity activity, String query) {           
+            super();            
             Log.d(TAG, "ParkingSpacesListTask()");
             mActivity = activity;
             mQuery = query;
@@ -274,8 +274,15 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         @Override
         public ParkingSpaces doInBackground(Void... params) {
             Log.d(TAG, "doInBackground()");
+            System.out.println(mParkDroid.getRadius());
             
-            try {            	
+            try {      
+            	Thread.sleep(5000);
+            	
+            	// Get last known location.
+                Location location = mParkDroid.getLastKnownLocation();
+                System.out.println("Location="+location);                
+                
             	results = mParkDroid.getParkingSpaces(mParkDroid.getUserId());
             } catch (Exception e) {
                

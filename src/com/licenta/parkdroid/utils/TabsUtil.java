@@ -3,7 +3,6 @@ package com.licenta.parkdroid.utils;
 import com.licenta.parkdroid.R;
 import com.licenta.parkdroid.R.id;
 import com.licenta.parkdroid.R.layout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -12,15 +11,7 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-/**
- * Acts as an interface to the TabSpec class for setting the content view. The
- * level 3 SDK doesn't support setting a View for the content sections of the
- * tab, so we can only use the big native tab style. The level 4 SDK and up
- * support specifying a custom view for the tab.
- * 
- * @date March 9, 2010
- * @author Mark Wyszomierski (markww@gmail.com), foursquare.
- */
+
 public abstract class TabsUtil {
 
     public static void addTab(TabHost host, String title, int drawable, int index, int layout) {

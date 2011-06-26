@@ -21,21 +21,21 @@ public class BestLocationListener extends Observable implements LocationListener
 
     private static final String TAG = "BestLocationListener";
     //debug mode
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = ParkDroid.DEBUG;
     
     private Location mLastLocation;
     
     public static final long LOCATION_UPDATE_MIN_TIME = 0;
     public static final long LOCATION_UPDATE_MIN_DISTANCE = 0;
     //2 minutes update min time
-    public static final long SLOW_LOCATION_UPDATE_MIN_TIME = 1000 * 60 * 2;
+    public static final long SLOW_LOCATION_UPDATE_MIN_TIME = 1000 * 60 * 5;
     //50m min location distance update time
     public static final long SLOW_LOCATION_UPDATE_MIN_DISTANCE = 50;
     
     public static final float REQUESTED_SEARCH_ACCURACY_IN_METERS = 100.0f;
-    public static final int REQUESTED_SEARCH_MAX_DELTA_THRESHOLD = 1000 * 60 * 4;
+    public static final int REQUESTED_SEARCH_MAX_DELTA_THRESHOLD = 1000 * 60 * 5;
     
-    public static final long LOCATION_UPDATE_MAX_DELTA_THRESHOLD = 1000 * 60 * 2;
+    public static final long LOCATION_UPDATE_MAX_DELTA_THRESHOLD = 1000 * 60 * 5;
     
     @Override
     public void onLocationChanged(Location location) {
@@ -43,7 +43,7 @@ public class BestLocationListener extends Observable implements LocationListener
         updateLocation(location);        
     }
 
-    private void updateLocation(Location location) {
+    public void updateLocation(Location location) {
         if (DEBUG) {
             Log.d(TAG, "updateLocation: Old: " + mLastLocation);
             Log.d(TAG, "updateLocation: New: " + location);
@@ -176,6 +176,24 @@ public class BestLocationListener extends Observable implements LocationListener
     public void unregister(LocationManager locationManager) {
         if (DEBUG) Log.d(TAG, "Unregistering this location listener: " + this.toString());
         locationManager.removeUpdates(this);        
+    }
+    
+
+    /**
+     * Updates the current location with the last known location without
+     * registering any location listeners.
+     * 
+     * @param locationManager the LocationManager instance from which to
+     *            retrieve the latest known location
+     */
+    synchronized public void updateLastKnownLocation(LocationManager locationManager) {
+        List<String> providers = locationManager.getProviders(true);
+        for (int i = 0, providersCount = providers.size(); i < providersCount; i++) {
+            String providerName = providers.get(i);
+            if (locationManager.isProviderEnabled(providerName)) {
+                updateLocation(locationManager.getLastKnownLocation(providerName));
+            }
+        }
     }
 
 }

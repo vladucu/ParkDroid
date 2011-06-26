@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -14,10 +13,10 @@ import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons;
 import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons.ParkingSpaceItemizedOverlayTapListener;
 import com.licenta.parkdroid.types.ParkingSpace;
 import com.licenta.parkdroid.utils.GeoUtils;
-
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 /**
@@ -33,10 +32,11 @@ public class MapActivity extends com.google.android.maps.MapActivity {
     private MapController mMapController;
     private MyLocationOverlay mMyLocationOverlay = null;
     private ParkingSpaceItemizedOverlayIcons mOverlay = null; 
-  //  private SearchLocationObserver mSearchLocationObserver = new SearchLocationObserver();
+   // private SearchLocationObserver mSearchLocationObserver = new SearchLocationObserver();
     
     private String mTappedParkingSpace;
     private StateHolder mStateHolder;
+    private Handler mHandler;
     
     /** Called when the activity is first created. */
     @Override
@@ -46,6 +46,8 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         if (DEBUG) Log.d(TAG, "onCreate()");
         
         setContentView(R.layout.map_activity);
+        
+        mHandler = new Handler();
         
         Object retained = getLastNonConfigurationInstance();
         if (retained != null && retained instanceof StateHolder) {
@@ -66,11 +68,20 @@ public class MapActivity extends com.google.android.maps.MapActivity {
 	@Override
     protected void onPause() {
         super.onPause();
+        if (DEBUG) Log.d(TAG, "onPause()");
+     //   ((ParkDroid) getApplication()).removeLocationUpdates(mSearchLocationObserver);
+
+        /*if (isFinishing()) {
+            mStateHolder.cancelAllTasks();
+            mListAdapter.removeObserver();
+        }*/
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (DEBUG) Log.d(TAG, "onResume()");
+        
     }
 
     @Override
@@ -172,7 +183,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         }
     };
 /*
-    *//** If location changes, auto-start a nearby parkingspaces search. *//*
+    // If location changes, auto-start a nearby parkingspaces search.
     private class SearchLocationObserver implements Observer {
 
         private boolean mRequestedFirstSearch = false;
@@ -184,16 +195,16 @@ public class MapActivity extends com.google.android.maps.MapActivity {
             if (!mRequestedFirstSearch
                     && ((BestLocationListener) observable).isAccurateEnough(location)) {
                 mRequestedFirstSearch = true;
-                if (mStateHolder.getIsRunningTask() == false) {
+                //if (mStateHolder.getIsRunningTask() == false) {
                     // Since we were told by the system that location has
                     // changed, no need to make the
                     // task wait before grabbing the current location.
                     mHandler.post(new Runnable() {
                         public void run() {
-                            startTask(0L);
+                           // startTask(0L);
                         }
                     });
-                }
+                //}
             }
         }
     }

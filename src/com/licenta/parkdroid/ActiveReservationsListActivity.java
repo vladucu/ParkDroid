@@ -28,7 +28,6 @@ import android.widget.AdapterView.OnItemClickListener;
  */
 public class ActiveReservationsListActivity extends LoadableListActivity {
     
-	//TODO add top bar intermediate progress bar
     private static final String TAG = "ActiveReservationsListActivity";
     private static boolean DEBUG = true;
     
@@ -51,7 +50,6 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
     			
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("DSADS", "receiving refresh broadcast");
 			if (intent.getAction().equals(ActiveReservationsListActivity.REFRESH_INTENT)) {
                 mStateHolder.startActiveReservationsTask(ActiveReservationsListActivity.this);
                 mListAdapter.notifyDataSetChanged();
@@ -60,7 +58,6 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
 			
 		}
 	};
-    //TODO ce facem cu rezervarile care au expirat?
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +70,11 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         Object retained = getLastNonConfigurationInstance();
         if (retained != null & retained instanceof StateHolder) {
             mStateHolder = (StateHolder) retained;
-            mStateHolder.setActivity(this);
-            if (getIntent().hasExtra(INTENT_EXTRA_RESERVATION)) {
-                mStateHolder.updateReservation((Reservation) getIntent().getParcelableExtra(INTENT_EXTRA_RESERVATION), true);
-            }
+            mStateHolder.setActivity(this);            
         } else {            
             mStateHolder = new StateHolder();
             mStateHolder.startActiveReservationsTask(this);
         }
-        
         ensureUi();
     }
     
@@ -90,7 +83,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
         
         mListAdapter = new ActiveReservationsAdapter(this);
         mListAdapter.setGroup(mStateHolder.getReservations());
-        
+       
         mListView = getListView();
         mListView.setAdapter(mListAdapter);
         mListView.setSmoothScrollbarEnabled(true);
@@ -300,7 +293,6 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
 	        	while (it.hasNext()) {
 	        		res = it.next();        		
 	        		if (res.getId() == mActiveReservation.getId()) {
-	        			//TODO should we calculate the distance here?
 	        			it.remove();        		
 	        			if (reservation != null) mReservations.add(reservation);
 	        			return;
@@ -310,17 +302,5 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
 	        	}            
         	}
         }
-    }    
-    
-    private class RefreshListReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (REFRESH_INTENT.equals(intent.getAction())) {
-            	mStateHolder.startActiveReservationsTask(ActiveReservationsListActivity.this);
-            	//notify the list adapter that data changed and it should automatically refresh
-                mListAdapter.notifyDataSetChanged();
-            }
-        }
-    }    
+    }      
 }

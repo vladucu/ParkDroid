@@ -51,7 +51,7 @@ public class ParkDroidActivity extends TabActivity {
         if (DEBUG) Log.d(TAG, "onCreate()");
         //setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL);
         registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));
-        //registerReceiver(mRefreshReservations, new IntentFilter(ActiveReservationsListActivity.REFRESH_INTENT));
+        registerReceiver(mRefreshReservations, new IntentFilter(ActiveReservationsListActivity.REFRESH_INTENT));
         // Don't start the main activity if we don't have credentials
         if (!((ParkDroid) getApplication()).isReady()) {
             if (DEBUG) Log.d(TAG, "Not ready for user.");
@@ -68,9 +68,16 @@ public class ParkDroidActivity extends TabActivity {
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mLoggedOutReceiver);
+        unregisterReceiver(mRefreshReservations);
     }
     
-    private void initTabHost() {
+	@Override
+	protected void onResume() {
+		super.onResume();
+		//registerReceiver(mLoggedOutReceiver);
+	}
+
+	private void initTabHost() {
     	if (mTabHost != null) {
             throw new IllegalStateException("Trying to intialize already initializd TabHost");
         }
