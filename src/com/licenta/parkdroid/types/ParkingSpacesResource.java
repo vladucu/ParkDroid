@@ -3,6 +3,7 @@
  */
 package com.licenta.parkdroid.types;
 
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 
 

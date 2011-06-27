@@ -18,7 +18,8 @@
     <string name="preferences_logout_summary">Sign out of ParkDroid.</string>
     <string name="preferences_additional_settings">Additional Settings</string>
     <string name="preferences_settings">Settings</string>
-    <string name="no_search_results">No active reservations !</string>
+    <string name="no_search_results">No active reservations !</string>    
+    <string name="no_parking_spaces">No parking spaces on the specified radius !</string>
     <string name="parking_lot_activity_reserve_now_button">Reserve Now</string>
     <string name="addressLabel">Address:</string>
     <string name="freeSpacesLabel">Free Spaces</string>

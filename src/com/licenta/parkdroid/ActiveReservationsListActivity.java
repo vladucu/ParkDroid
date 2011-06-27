@@ -29,7 +29,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class ActiveReservationsListActivity extends LoadableListActivity {
     
     private static final String TAG = "ActiveReservationsListActivity";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = ParkDroid.DEBUG;
     
     private StateHolder mStateHolder;
     private ListView mListView;

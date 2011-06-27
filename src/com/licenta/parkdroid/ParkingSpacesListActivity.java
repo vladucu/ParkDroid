@@ -8,6 +8,9 @@ import com.licenta.parkdroid.LoadableListActivity;
 import com.licenta.parkdroid.ParkDroid;
 import com.licenta.parkdroid.types.ParkingSpace;
 import com.licenta.parkdroid.types.ParkingSpaces;
+import com.licenta.parkdroid.utils.GeoUtils;
+import com.licenta.parkdroid.utils.LocationUtils;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -38,6 +41,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
     
     private static final int MENU_REFRESH = 0;
     private static final int RESULT_CODE_ACTIVITY_ADD_RESERVATION = 1;
+    public static final String REFRESH_PARKING_SPACES_INTENT = "com.licenta.parkdroid.intent.action.REFRESH_PARKING_SPACES_INTENT";
     
     private StateHolder mStateHolder = new StateHolder();
     private ParkingSpaceListAdapter mListAdapter;
@@ -53,6 +57,20 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
             finish();
         }
     };
+    
+    private BroadcastReceiver mRefreshParkingSpaces = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (DEBUG) Log.d(TAG, "onReceive: " + intent);
+			if (intent.getAction().equals(ParkingSpacesListActivity.REFRESH_PARKING_SPACES_INTENT)) {
+                startTask();
+                mListAdapter.notifyDataSetChanged();
+            }
+			
+		}
+	};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +78,8 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         if (DEBUG) Log.d(TAG, "onCreate()");
         
         setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL);        
-        registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));      
+        registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));  
+        registerReceiver(mRefreshParkingSpaces, new IntentFilter(ParkingSpacesListActivity.REFRESH_PARKING_SPACES_INTENT));
         
         mHandler = new Handler();
         mListView = getListView();
@@ -83,7 +102,6 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         } else {
             if (DEBUG) Log.d(TAG, "Creating new StateHolder instance.");
             mStateHolder = new StateHolder();
-            mStateHolder.setQuery("");
         }
         
         // Start a new search if one is not running or we have no results.
@@ -104,6 +122,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
     protected void onDestroy() {        
         super.onDestroy();
         unregisterReceiver(mLoggedOutReceiver);
+        unregisterReceiver(mRefreshParkingSpaces);
     }
 
    @Override
@@ -175,6 +194,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         return super.onOptionsItemSelected(item);
     }
 */
+    
     public void putResultsInAdapter(List<ParkingSpace> group) {
         if (DEBUG) Log.d(TAG, "putResultsInAdapter()");
         
@@ -188,7 +208,12 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         mListView.setAdapter(mListAdapter);
     }
 
-    private void startItemActivity(ParkingSpace parkingSpace) {
+	@Override
+	public int getNoSearchResultsStringId() {
+		return R.string.no_parking_spaces;
+	}
+
+	private void startItemActivity(ParkingSpace parkingSpace) {
         if (DEBUG) Log.d(TAG, "startItemActivity()");
         Intent intent = new Intent(ParkingSpacesListActivity.this, ParkingSpaceActivity.class);
         intent.putExtra(ParkingSpaceActivity.INTENT_EXTRA_PARKING_SPACE, parkingSpace);
@@ -204,12 +229,19 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
                 setLoadingView("");
             }
             if (DEBUG) Log.d(TAG, "startTask()");
-            mStateHolder.startTask(this, mStateHolder.getQuery());
+            mStateHolder.startTask(this);
         }
     }
     
     private void onTaskComplete(List<ParkingSpace> result, Exception ex) {
         if (DEBUG) Log.d(TAG, "onTaskComplete()");
+        Location location = GeoUtils.getBestLastGeolocation(this);
+        for (ParkingSpace it: result) {
+        	Location to = new Location("ParkDroid");
+        	to.setLatitude(Double.parseDouble(it.getGeoLat()));
+        	to.setLongitude(Double.parseDouble(it.getGeoLong()));
+        	it.setDistance(Integer.toString((int) location.distanceTo(to)));
+        }
         if (result != null) {
             mStateHolder.setResults(result);
        } else {
@@ -217,7 +249,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
             //notification of failure ?
         }
         
-        putResultsInAdapter(mStateHolder.getResults());
+        putResultsInAdapter(result);
         setProgressBarIndeterminateVisibility(false);       
 
         mStateHolder.cancelAllTasks();
@@ -254,15 +286,13 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         private static boolean DEBUG = false;
         
         private ParkingSpacesListActivity mActivity;
-        private String mQuery;
         private ParkDroid mParkDroid;
         private ParkingSpaces results = null;
         
-        public ParkingSpacesListTask(ParkingSpacesListActivity activity, String query) {           
+        public ParkingSpacesListTask(ParkingSpacesListActivity activity) {           
             super();            
             Log.d(TAG, "ParkingSpacesListTask()");
             mActivity = activity;
-            mQuery = query;
             mParkDroid = (ParkDroid) mActivity.getApplication();
         }
         
@@ -277,13 +307,14 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
             System.out.println(mParkDroid.getRadius());
             
             try {      
-            	Thread.sleep(5000);
+            	//Thread.sleep(5000);
             	
             	// Get last known location.
                 Location location = mParkDroid.getLastKnownLocation();
                 System.out.println("Location="+location);                
                 
-            	results = mParkDroid.getParkingSpaces(mParkDroid.getUserId());
+            	results = mParkDroid.getParkingSpaces(mParkDroid.getUserId(), LocationUtils.createParkDroidLocation(location),
+            			mParkDroid.getRadius());
             } catch (Exception e) {
                
             }
@@ -306,7 +337,6 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
     
     private static class StateHolder {
         private List<ParkingSpace> mResults;
-        private String mQuery;
         private ParkingSpacesListTask mTask;        
 
         public StateHolder() {            
@@ -314,8 +344,8 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
             mTask = null;           
         }
 
-        public void startTask(ParkingSpacesListActivity activity, String query) {
-        	mTask = new ParkingSpacesListTask(activity, query);
+        public void startTask(ParkingSpacesListActivity activity) {
+        	mTask = new ParkingSpacesListTask(activity);
         	mTask.execute();            
         }
 
@@ -324,14 +354,6 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         	   mTask.setActivity(activity);
            }
             
-        }
-
-        public String getQuery() {
-            return mQuery;
-        }
-
-        public void setQuery(String query) {
-            mQuery = query;
         }
 
         public List<ParkingSpace> getResults() {

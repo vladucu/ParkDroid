@@ -15,6 +15,8 @@ import java.util.Observable;
 
 /**
  * @author vladucu
+ * Best practices for implementing a listener based on Android site
+ * http://developer.android.com/guide/topics/location/obtaining-user-location.html
  *
  */
 public class BestLocationListener extends Observable implements LocationListener {
@@ -27,7 +29,7 @@ public class BestLocationListener extends Observable implements LocationListener
     
     public static final long LOCATION_UPDATE_MIN_TIME = 0;
     public static final long LOCATION_UPDATE_MIN_DISTANCE = 0;
-    //2 minutes update min time
+    //5 minutes update min time
     public static final long SLOW_LOCATION_UPDATE_MIN_TIME = 1000 * 60 * 5;
     //50m min location distance update time
     public static final long SLOW_LOCATION_UPDATE_MIN_DISTANCE = 50;
@@ -52,6 +54,7 @@ public class BestLocationListener extends Observable implements LocationListener
         // Cases where we only have one or the other.
         if (location != null && mLastLocation == null) {
             if (DEBUG) Log.d(TAG, "updateLocation: Null last location");
+            // A new location is always better than no location
             onBestLocationChanged(location);
             return;
 
@@ -59,10 +62,12 @@ public class BestLocationListener extends Observable implements LocationListener
             if (DEBUG) Log.d(TAG, "updated location is null, doing nothing");
             return;
         }
-        
+
+        // Check whether the new location fix is newer or older
         long now = new Date().getTime();
         long locationUpdateDelta = now - location.getTime();
         long lastLocationUpdateDelta = now - mLastLocation.getTime();
+        long timeDelta2 = location.getTime() - mLastLocation.getTime();
         boolean locationIsInTimeThreshold = locationUpdateDelta <= LOCATION_UPDATE_MAX_DELTA_THRESHOLD;
         boolean lastLocationIsInTimeThreshold = lastLocationUpdateDelta <= LOCATION_UPDATE_MAX_DELTA_THRESHOLD;
         boolean locationIsMostRecent = locationUpdateDelta <= lastLocationUpdateDelta;
@@ -88,6 +93,8 @@ public class BestLocationListener extends Observable implements LocationListener
             Log.d(TAG, "lastLocationUpdateDelta:\t\t" + lastLocationUpdateDelta);
             Log.d(TAG, "locationIsInTimeThreshold:\t\t" + locationIsInTimeThreshold);
             Log.d(TAG, "lastLocationIsInTimeThreshold:\t" + lastLocationIsInTimeThreshold);
+            Log.d(TAG, "diff time:\t" + timeDelta2);
+            Log.d(TAG, "now:\t\t\t" + now);
 
             Log.d(TAG, "accuracyComparable:\t\t\t" + accuracyComparable);
             Log.d(TAG, "locationIsMostAccurate:\t\t" + locationIsMostAccurate);
@@ -101,6 +108,7 @@ public class BestLocationListener extends Observable implements LocationListener
         } else if (locationIsInTimeThreshold && !lastLocationIsInTimeThreshold) {
             onBestLocationChanged(location);
         }
+        onBestLocationChanged(location);
     }
     
     synchronized public void onBestLocationChanged(Location location) {
@@ -161,8 +169,9 @@ public class BestLocationListener extends Observable implements LocationListener
     }
 
     public boolean isAccurateEnough(Location location) {
-        if (location != null && location.hasAccuracy()
-                && location.getAccuracy() <= REQUESTED_SEARCH_ACCURACY_IN_METERS) {
+        if (location != null)// && location.hasAccuracy()
+                //&& location.getAccuracy() <= REQUESTED_SEARCH_ACCURACY_IN_METERS) 
+        	{
             long locationUpdateDelta = new Date().getTime() - location.getTime();
             if (locationUpdateDelta < REQUESTED_SEARCH_MAX_DELTA_THRESHOLD) {
                 if (DEBUG) Log.d(TAG, "Location is accurate: " + location.toString());

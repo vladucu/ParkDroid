@@ -22,7 +22,7 @@ import android.widget.TextView;
 public class ParkingSpaceListAdapter extends BaseParkingSpaceAdapter {
     
     private static final String TAG = "ParkingSpaceListAdapter";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = ParkDroid.DEBUG;
     
    // private Group<ParkingLot> items;
     private LayoutInflater mInflater;
@@ -85,7 +85,7 @@ public class ParkingSpaceListAdapter extends BaseParkingSpaceAdapter {
         } else {
             holder.parkingSpaceLocationLine1.setText("");
         }
-        parkingSpace.setDistance(Integer.toString(30));
+        
         // Show parking lot distance.
         if (parkingSpace.getDistance() != null) {
             holder.parkingSpaceDistance.setText(parkingSpace.getDistance() + " meters");
@@ -96,13 +96,6 @@ public class ParkingSpaceListAdapter extends BaseParkingSpaceAdapter {
         holder.parkingSpaceSpaces.setText(Integer.toString(parkingSpace.getSpaces()));        
         holder.parkingPrice.setText(Integer.toString(parkingSpace.getPrice())+"$");       
         
-        // If we have a reservation here, show the corner folded over.
-     /*   if (parkingSpace.getHasReservation()) {
-            holder.reservationHere.setVisibility(View.VISIBLE);
-        } else {
-            holder.reservationHere.setVisibility(View.INVISIBLE);
-        }
-*/
         return convertView;
     }
 

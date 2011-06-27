@@ -87,7 +87,9 @@ public class PreferencesActivity extends android.preference.PreferenceActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY
                     | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             sendBroadcast(new Intent(ParkDroid.INTENT_ACTION_LOGGED_OUT));            
-        } 
+        } else if (Preferences.PREFERENCE_RADIUS.equals(key)) {
+        	sendBroadcast(new Intent(ParkingSpacesListActivity.REFRESH_PARKING_SPACES_INTENT));
+        }
   /*      else if (Preferences.PREFERENCE_PROFILE_SETTINGS.equals(key)) { 
             if (DEBUG) Log.d(TAG, "onPreferenceTreeClick profile settings");
             showDialog(DIALOG_PROFILE_SETTINGS);

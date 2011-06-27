@@ -76,7 +76,7 @@ public class ParkDroid extends Application {
     
     private TaskHandler mTaskHandler;
     private HandlerThread mTaskThread;
-    private BestLocationListener mBestLocationListener;
+    private BestLocationListener mBestLocationListener = new BestLocationListener();
     private static boolean isLoggedIn = false;
 
     @Override
@@ -286,13 +286,17 @@ public class ParkDroid extends Application {
 		return user;
     }
     
-    public ParkingSpaces getParkingSpaces(String userId) throws IOException {
+    public ParkingSpaces getParkingSpaces(String userId, Location location, String radius) throws IOException {
 		if (DEBUG) Log.d(TAG, "parkingSpaces()");
 		
-		clientResource = new ClientResource(buildURI(userId, PARKINGSPACES, null));
+		clientResource = new ClientResource(buildURI(userId, PARKINGSPACES, null)+"?geolat="+location.geolat+"&geolong="+location.geolong+"&radius="+radius);
 		clientResource.setChallengeResponse(authentication);
 		parkingSpacesResource = clientResource.wrap(ParkingSpacesResource.class);
-		ParkingSpaces parkingSpaces = parkingSpacesResource.retrieve();
+/*		Form form = new Form();
+		form.add("geolat", location.geolat);
+		form.add("geolong", location.geolong);
+		form.add("radius", radius);
+*/		ParkingSpaces parkingSpaces = parkingSpacesResource.retrieve();
 		
 		if (clientResource.getStatus().isSuccess()) {
 			return parkingSpaces;

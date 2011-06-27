@@ -269,7 +269,6 @@ public class ActiveReservationActivity extends Activity {
         return mStateHolder;
     }
 
-
 	public void onDeleteReservationComplete(Boolean result) {
 		if (DEBUG) Log.d(TAG, "onDeleteReservationComplete()");
 		mStateHolder.setIsRunning(false);

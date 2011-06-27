@@ -8,6 +8,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
+import com.licenta.parkdroid.ParkDroid;
 import com.licenta.parkdroid.types.ParkTypes;
 
 import android.graphics.drawable.Drawable;
@@ -20,7 +21,7 @@ import android.util.Log;
 abstract class BaseItemizedOverlay<T extends ParkTypes> extends ItemizedOverlay<OverlayItem> {
     
     private static final String TAG = "BaseItemizedOverlay";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = ParkDroid.DEBUG;
 
     List<T> group = null;
     
@@ -31,7 +32,6 @@ abstract class BaseItemizedOverlay<T extends ParkTypes> extends ItemizedOverlay<
    
     @Override
     public int size() {
-        if (DEBUG) Log.d(TAG, "size()");
         if (group == null) {
             return 0;
         }

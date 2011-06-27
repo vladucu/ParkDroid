@@ -69,6 +69,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
     protected void onPause() {
         super.onPause();
         if (DEBUG) Log.d(TAG, "onPause()");
+        mMyLocationOverlay.disableMyLocation();
      //   ((ParkDroid) getApplication()).removeLocationUpdates(mSearchLocationObserver);
 
         /*if (isFinishing()) {
@@ -81,6 +82,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
     protected void onResume() {
         super.onResume();
         if (DEBUG) Log.d(TAG, "onResume()");
+        mMyLocationOverlay.enableMyLocation();
         
     }
 
@@ -115,9 +117,9 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         mMapController = mMapView.getController();
         mMapView.setSatellite(false);
         
-        /*mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
-        mMapView.getOverlays().add(mMyLocationOverlay);*/
-        initMyLocation();
+        mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
+        mMapView.getOverlays().add(mMyLocationOverlay);
+        //initMyLocation();
         
         mOverlay = new ParkingSpaceItemizedOverlayIcons(this, getResources().getDrawable(R.drawable.pin), mParkingSpaceOverlayTapListener);        
         List<ParkingSpace> g = new ArrayList<ParkingSpace>();

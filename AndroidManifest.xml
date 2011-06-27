@@ -17,10 +17,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-        			<action android:name="com.licenta.parkdroid.intent.action.REFRESH_INTENT"/>
-        		</intent-filter>
+            </intent-filter>           
         </activity>
         
         <activity android:name=".MapActivity">
@@ -36,9 +33,10 @@
         		  </intent-filter>
         </activity>
 
-		<activity android:name=".ParkingSpacesListActivity">
-			<intent-filter>
-        		<action android:name="com.licenta.parkdroid.intent.action.LOGGED_OUT" />
+				<activity android:name=".ParkingSpacesListActivity">
+					<intent-filter>
+        		<action android:name="com.licenta.parkdroid.intent.action.LOGGED_OUT" />        	
+	        	<action android:name="com.licenta.parkdroid.intent.action.REFRESH_PARKING_SPACES_INTENT" />	        
         	</intent-filter>        		  
         </activity>
         
@@ -67,9 +65,9 @@
         </activity>
         
         <activity android:name=".ActiveReservationsListActivity">
-        <intent-filter>
-        	<action android:name="com.licenta.parkdroid.intent.action.REFRESH_INTENT"/>
-        </intent-filter>
+	        <intent-filter>
+	        	<action android:name="com.licenta.parkdroid.intent.action.REFRESH_INTENT"/>
+	        </intent-filter>
         </activity>
         
         <activity android:name=".ActiveReservationActivity">
