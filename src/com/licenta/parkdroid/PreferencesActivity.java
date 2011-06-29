@@ -31,7 +31,7 @@ public class PreferencesActivity extends android.preference.PreferenceActivity {
 
     public static final String TAG = "PreferencesActivity";
     //debug mode
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = ParkDroid.DEBUG;
     
     private static final int DIALOG_PROFILE_SETTINGS = 1;
     

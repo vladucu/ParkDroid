@@ -1,8 +1,6 @@
 package com.licenta.parkdroid.utils;
 
 import com.licenta.parkdroid.R;
-import com.licenta.parkdroid.R.id;
-import com.licenta.parkdroid.R.layout;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;

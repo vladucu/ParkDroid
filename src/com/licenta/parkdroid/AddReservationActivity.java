@@ -39,7 +39,7 @@ import java.util.Date;
 public class AddReservationActivity extends Activity implements OnClickListener {
 
     private static final String TAG = "AddReservationActivity";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = ParkDroid.DEBUG;
     
     public static final String INTENT_EXTRA_PARKING_SPACE = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_PARKING_SPACE";
     public static final String INTENT_EXTRA_RESERVATION = ParkDroid.PACKAGE_NAME + ".AddReservationActivity.INTENT_EXTRA_RESERVATION";

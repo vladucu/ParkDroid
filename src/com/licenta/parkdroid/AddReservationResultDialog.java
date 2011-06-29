@@ -18,7 +18,7 @@ import android.widget.TextView;
 public class AddReservationResultDialog extends Dialog {
 	
 	private static final String TAG = "AddReservationResultDialog";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = ParkDroid.DEBUG;
     
     private Reservation mReservationResult;
     

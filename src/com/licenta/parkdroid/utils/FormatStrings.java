@@ -3,24 +3,15 @@
  */
 package com.licenta.parkdroid.utils;
 
-import android.text.format.DateFormat;
-import android.text.format.DateUtils;
-import android.util.Log;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-
-import com.licenta.parkdroid.ParkDroid;
 
 /**
  * @author vladucu
  *
  */
 public class FormatStrings {
-    private static final String TAG = "FormatStrings";
-    private static boolean DEBUG = ParkDroid.DEBUG;
 
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
             "HH:mm, EEE, dd MMM yy");

@@ -55,6 +55,10 @@
         		  android:launchMode="singleInstance">
         </activity>
         
+        <activity android:name=".RegisterActivity"
+        			android:launchMode="singleInstance">
+        </activity>
+        
         <activity android:name=".AddReservationActivity">
         </activity>
         

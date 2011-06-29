@@ -26,7 +26,7 @@ import android.util.Log;
 public class MapActivity extends com.google.android.maps.MapActivity {
 
     private static final String TAG = "MapActivity";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = ParkDroid.DEBUG;
     
     private MapView mMapView;
     private MapController mMapController;
@@ -223,34 +223,40 @@ public class MapActivity extends com.google.android.maps.MapActivity {
             if (DEBUG) Log.d(TAG, "StateHolder()");
             ParkingSpace mPark1 = new ParkingSpace();
             ParkingSpace mPark2 = new ParkingSpace();
+            ParkingSpace mPark3 = new ParkingSpace();
             mPark1.setId(1);
-            mPark1.setName("Parcarea principala");
+            mPark1.setName("Shopper's Parking");
             //mPark1.setPhone("0733683111");
-            mPark1.setAddress("Bulevardul Regina Elisabeta 23 si o iei pe acolo pe unde vezi cu ochii");
-            //mPark1.setCity("Bucuresti");
-            //mPark1.setZip("050012");
-            mPark1.setGeoLat("44.43472");
-            mPark1.setGeoLong("26.09704");
+            mPark1.setAddress("833 Mission Street, San Francisco, CA 94103");
+            mPark1.setGeoLat("37.78362");
+            mPark1.setGeoLong("-122.40508");
             //mPark1.setDistance("100");
-            mPark1.setSpaces(150);
-            //mPark1.setTotalSpaces("500");
-            //mPark1.setPrice("25");
+            mPark1.setSpaces(20);
+            mPark1.setPrice(100);
             //mPark1.setOpenHours("09-20");
             mPark2.setId(2);
-            mPark2.setName("Parcarea secundara");
+            mPark2.setName("Civic Center Plaza Garage");
             //mPark2.setPhone("0733683444");
-            mPark2.setAddress("Bulevardul Carol 76");
-            //mPark2.setCity("Bucuresti");
-            //mPark2.setZip("020926");
-            mPark2.setGeoLat("44.43797");
-            mPark2.setGeoLong("26.11576");
+            mPark2.setAddress("355 McAllister Street, San Francisco, CA 94102");
+            mPark2.setGeoLat("37.780398");
+            mPark2.setGeoLong("-122.417823");
             //mPark2.setDistance("500");
-            mPark2.setSpaces(550);
-            ///mPark2.setTotalSpaces("1500");
-            //mPark2.setPrice("125");
+            mPark2.setSpaces(150);
+            mPark2.setPrice(25);
+            mPark3.setId(2);
+            mPark3.setName("Japan Center Garage");
+            //mPark2.setPhone("0733683444");
+            mPark3.setAddress("1610 Geary Boulevard, San Francisco, CA 94115");
+            mPark3.setGeoLat("37.78500");
+            mPark3.setGeoLong("-122.43004");
+            //mPark2.setDistance("500");
+            mPark3.setSpaces(250);
+
+            mPark3.setPrice(50);
             //mPark2.setOpenHours("09-20"); 
             mParkingSpaces = new ArrayList<ParkingSpace>();
-            mParkingSpaces.add(mPark1);mParkingSpaces.add(mPark2);       
+            mParkingSpaces.add(mPark1);mParkingSpaces.add(mPark2);   
+            mParkingSpaces.add(mPark3);    
            /* Log.d(TAG, "p1="+mParkingSpaces.get(0).getName());
             Log.d(TAG, "p1="+mParkingSpaces.get(1).getName());*/
         }

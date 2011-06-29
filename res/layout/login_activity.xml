@@ -21,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:minWidth="300dip"
         android:layout_marginTop="5dip"
         android:layout_marginLeft="20dip"
         android:layout_marginRight="20dip"
@@ -36,13 +37,6 @@
             android:textAppearance="@android:style/TextAppearance.Large"
             android:textColor="#FFF"
             android:text="@string/login_get_started" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingBottom="2dip"
-            android:textColor="#FFF"
-            android:text="@string/login_get_started_more" />
         <EditText
             android:id="@+id/userNameEditText"
             android:layout_width="fill_parent"

@@ -31,7 +31,7 @@ public class ParkingSpaceActivity extends Activity {
     
     public static final String TAG = "ParkingSpaceActivity";
     //debug mode
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = ParkDroid.DEBUG;
     
     private Handler mHandler;
     private StateHolder mStateHolder;

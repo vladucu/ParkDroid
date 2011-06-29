@@ -15,14 +15,12 @@ import com.licenta.parkdroid.types.User;
 import com.licenta.parkdroid.types.UserResource;
 import com.licenta.parkdroid.types.UsersResource;
 import com.licenta.parkdroid.utils.LocationUtils;
-
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -93,7 +91,7 @@ public class ParkDroid extends Application {
         
         Engine.getInstance().getRegisteredClients().clear();
 		Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
-		Engine.getInstance().getRegisteredConverters().clear();
+		//Engine.getInstance().getRegisteredConverters().clear();
 		Engine.getInstance().getRegisteredConverters().add(new JacksonConverter());
 		
         // Catch logins or logouts.
@@ -106,10 +104,10 @@ public class ParkDroid extends Application {
     
     public boolean isReady() {
     	if (DEBUG) Log.d(TAG, "isReady()");
-        if (isLoggedIn) return true;
-        else return false;
+      /*  if (isLoggedIn) return true;
+        else return false;*/
         
-        /*return hasCredentials() && !TextUtils.isEmpty(getUserId());*/
+        return hasCredentials() && !TextUtils.isEmpty(getUserId());
     }
     
     public String getRadius() {
@@ -197,7 +195,7 @@ public class ParkDroid extends Application {
                 case MESSAGE_UPDATE_USER:
                     try {
                         // Update user info
-                        Log.d(TAG, "Updating user.");
+                        if (DEBUG) Log.d(TAG, "Updating user.");
 
              /*
                         //User user = getPark().createUser(login, password);
@@ -268,22 +266,25 @@ public class ParkDroid extends Application {
 		return user;
     }
     
-    public User createUser(String login, String password, String name) {
+    public boolean createUser(String login, String password, String name) {
 
     	//Prepare the request
-    	clientResource = new ClientResource(buildURI(login, null, null));
+    	clientResource = new ClientResource(buildURI(null, null, null));
     	
-    	clientResource.setChallengeResponse(authentication);
+    	//clientResource.setChallengeResponse(authentication);
     	
     	usersResource = clientResource.wrap(UsersResource.class);
     	Form form = new Form();
     	form.add("name", name);
     	form.add("email", login);
     	form.add("password", password);
-    	User user = usersResource.createUser(form.getWebRepresentation());
-    	clientResource.release();
+    	try {
+    		usersResource.createUser(form.getWebRepresentation());
+    	} catch (Exception e) {}
     	
-		return user;
+    	clientResource.release();
+    	if (clientResource.getStatus().isSuccess()) return true;
+    	return false;
     }
     
     public ParkingSpaces getParkingSpaces(String userId, Location location, String radius) throws IOException {

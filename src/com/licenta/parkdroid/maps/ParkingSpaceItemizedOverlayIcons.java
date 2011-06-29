@@ -6,6 +6,7 @@ package com.licenta.parkdroid.maps;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
+import com.licenta.parkdroid.ParkDroid;
 import com.licenta.parkdroid.R;
 import com.licenta.parkdroid.types.ParkingSpace;
 
@@ -24,7 +25,7 @@ import android.util.Log;
 public class ParkingSpaceItemizedOverlayIcons extends BaseItemizedOverlay<ParkingSpace> {
 
     private static final String TAG = "ParkingSpaceItemizedOverlayIcons";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = ParkDroid.DEBUG;
         
     private Context mContext;
     private OverlayItem mLastSelected;

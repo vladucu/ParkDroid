@@ -16,7 +16,7 @@ import android.util.Log;
  */
 public class Preferences {
     private static final String TAG = "Preferences";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = ParkDroid.DEBUG;
     
     // Hacks for preference activity extra UI elements.
     public static final String PREFERENCE_ADVANCED_SETTINGS = "advanced_settings";

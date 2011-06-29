@@ -15,6 +15,6 @@ import com.licenta.parkdroid.types.User;
 public interface UsersResource {
 	
 	@Post("json")
-	public User createUser(Representation entity);
+	public void createUser(Representation entity);
 
 }

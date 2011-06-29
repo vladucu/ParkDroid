@@ -19,7 +19,7 @@ public class ParkDroidActivity extends TabActivity {
     
     public static final String TAG = "ParkDroidActivity";
     //debug mode
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = ParkDroid.DEBUG;
     
     private TabHost mTabHost;
     
@@ -35,7 +35,7 @@ public class ParkDroidActivity extends TabActivity {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("DSADS", "receiving refresh broadcast");
+			Log.d(TAG, "receiving refresh broadcast");
 			if (intent.getAction().equals(ActiveReservationsListActivity.REFRESH_INTENT)) {
 				mTabHost.setCurrentTab(2);
             }
@@ -49,7 +49,6 @@ public class ParkDroidActivity extends TabActivity {
         super.onCreate(savedInstanceState);
         
         if (DEBUG) Log.d(TAG, "onCreate()");
-        //setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL);
         registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));
         registerReceiver(mRefreshReservations, new IntentFilter(ActiveReservationsListActivity.REFRESH_INTENT));
         // Don't start the main activity if we don't have credentials
@@ -67,6 +66,7 @@ public class ParkDroidActivity extends TabActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (DEBUG) Log.d(TAG, "onDestroy()");
         unregisterReceiver(mLoggedOutReceiver);
         unregisterReceiver(mRefreshReservations);
     }
@@ -74,10 +74,11 @@ public class ParkDroidActivity extends TabActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//registerReceiver(mLoggedOutReceiver);
+		if (DEBUG) Log.d(TAG, "onResume()");
 	}
 
 	private void initTabHost() {
+		if (DEBUG) Log.d(TAG, "initTabHost()");
     	if (mTabHost != null) {
             throw new IllegalStateException("Trying to intialize already initializd TabHost");
         }

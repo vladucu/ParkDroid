@@ -87,7 +87,13 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //TODO implement "Need an account" link
-                Toast.makeText(LoginActivity.this, "Creating account", Toast.LENGTH_LONG);        
+            	Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            	intent.setAction(Intent.ACTION_MAIN);
+            	intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            	startActivity(intent);
+            	//finish();
+                Toast.makeText(LoginActivity.this, "Creating account", Toast.LENGTH_LONG).show();        
             }
         });
 

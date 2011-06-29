@@ -22,7 +22,7 @@ import android.widget.TextView;
  */
 public class ActiveReservationsAdapter extends BaseReservationsAdapter {
     private static final String TAG = "ActiveReservationsAdapter";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = ParkDroid.DEBUG;
     
     private Handler mHandler;
     private LayoutInflater mInflater;

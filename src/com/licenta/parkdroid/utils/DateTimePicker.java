@@ -1,5 +1,6 @@
 package com.licenta.parkdroid.utils;
 
+import com.licenta.parkdroid.ParkDroid;
 import com.licenta.parkdroid.R;
 
 import java.util.Calendar;
@@ -20,7 +21,7 @@ import android.widget.TimePicker.OnTimeChangedListener;
 public class DateTimePicker extends RelativeLayout implements View.OnClickListener, OnDateChangedListener, OnTimeChangedListener {
 
     private static final String TAG = "DateTimePicker";
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = ParkDroid.DEBUG;
     
 	// DatePicker reference
 	private DatePicker datePicker;

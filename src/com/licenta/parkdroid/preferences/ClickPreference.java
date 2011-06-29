@@ -3,6 +3,8 @@
  */
 package com.licenta.parkdroid.preferences;
 
+import com.licenta.parkdroid.ParkDroid;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcelable;
@@ -19,7 +21,7 @@ public class ClickPreference extends Preference {
     
     public static final String TAG = "PreferencesActivity";
     //debug mode
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = ParkDroid.DEBUG;
     
 
     /**
