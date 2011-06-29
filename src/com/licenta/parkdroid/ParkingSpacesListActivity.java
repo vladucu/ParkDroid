@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -235,23 +236,22 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
     
     private void onTaskComplete(List<ParkingSpace> result, Exception ex) {
         if (DEBUG) Log.d(TAG, "onTaskComplete()");
+          
         Location location = GeoUtils.getBestLastGeolocation(this);
-        for (ParkingSpace it: result) {
-        	Location to = new Location("ParkDroid");
-        	to.setLatitude(Double.parseDouble(it.getGeoLat()));
-        	to.setLongitude(Double.parseDouble(it.getGeoLong()));
-        	it.setDistance(Integer.toString((int) location.distanceTo(to)));
-        }
         if (result != null) {
-            mStateHolder.setResults(result);
-       } else {
-            mStateHolder.setResults(new ArrayList<ParkingSpace>());
-            //notification of failure ?
-        }
-        
-        putResultsInAdapter(result);
-        setProgressBarIndeterminateVisibility(false);       
-
+        	for (ParkingSpace it: result) {	        		
+	        	Location to = new Location("ParkDroid");
+	        	to.setLatitude(Double.parseDouble(it.getGeoLat()));
+	        	to.setLongitude(Double.parseDouble(it.getGeoLong()));
+	        	it.setDistance(Integer.toString((int) location.distanceTo(to)));
+	        }
+        	mStateHolder.setResults(result);
+        	putResultsInAdapter(result);
+        } else {
+        	Toast.makeText(this, "Sorry cannot acquire location. Please fix the problem and try again.", Toast.LENGTH_LONG).show();
+        	setEmptyView();
+        }            
+        setProgressBarIndeterminateVisibility(false); 
         mStateHolder.cancelAllTasks();
     }
 /*
@@ -287,7 +287,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         
         private ParkingSpacesListActivity mActivity;
         private ParkDroid mParkDroid;
-        private ParkingSpaces results = null;
+        private ParkingSpaces results = new ParkingSpaces();
         
         public ParkingSpacesListTask(ParkingSpacesListActivity activity) {           
             super();            
@@ -298,13 +298,12 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
         
         @Override
         public void onPreExecute() {
-            Log.d(TAG, "onPreExecute()");
+        	if (DEBUG) Log.d(TAG, "onPreExecute()");
         }
 
         @Override
         public ParkingSpaces doInBackground(Void... params) {
-            Log.d(TAG, "doInBackground()");
-            System.out.println(mParkDroid.getRadius());
+            if (DEBUG) Log.d(TAG, "doInBackground()");
             
             try {      
             	//Thread.sleep(5000);
@@ -312,20 +311,22 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
             	// Get last known location.
                 Location location = mParkDroid.getLastKnownLocation();
                 System.out.println("Location="+location);                
+                if (location != null) {
+                	results = mParkDroid.getParkingSpaces(mParkDroid.getUserId(), LocationUtils.createParkDroidLocation(location),
+                			mParkDroid.getRadius());
+                }
                 
-            	results = mParkDroid.getParkingSpaces(mParkDroid.getUserId(), LocationUtils.createParkDroidLocation(location),
-            			mParkDroid.getRadius());
             } catch (Exception e) {
-               
+               e.printStackTrace();
             }
             return results;
         }
     
         @Override
         public void onPostExecute(ParkingSpaces results) {
-            Log.d(TAG, "onPostExecute()");
-            if (mActivity != null) {
-                mActivity.onTaskComplete(results.getParkingSpaces(), null);
+        	if (DEBUG) Log.d(TAG, "onPostExecute()");
+            if (mActivity != null) {            	
+            	mActivity.onTaskComplete(results.getParkingSpaces(), null);            	
             }
         }
 

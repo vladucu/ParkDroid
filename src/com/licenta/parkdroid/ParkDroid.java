@@ -40,7 +40,7 @@ import org.restlet.ext.jackson.JacksonConverter;
 import org.restlet.ext.ssl.HttpsClientHelper;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
-
+//TODO check if no parkings exist
 /**
  * @author vladucu
  *
