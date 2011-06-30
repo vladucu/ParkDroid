@@ -4,9 +4,9 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="/home/vladucu/local/restlet-android-2.1m4/lib/org.restlet.ext.jackson.jar"/>
-	<classpathentry kind="lib" path="/home/vladucu/local/restlet-android-2.1m4/lib/org.restlet.ext.httpclient.jar" sourcepath="/home/vladucu/local/restlet-android-2.1m4/src/org.restlet.ext.httpclient"/>
 	<classpathentry kind="lib" path="/home/vladucu/local/restlet-android-2.1m4/lib/org.restlet.jar" sourcepath="/home/vladucu/local/restlet-android-2.1m4/src/org.restlet"/>
-	<classpathentry kind="lib" path="/home/vladucu/local/restlet-android-2.1m4/lib/org.restlet.ext.ssl.jar"/>
+	<classpathentry kind="lib" path="/home/vladucu/local/restlet-android-2.1m4/lib/org.restlet.ext.ssl.jar" sourcepath="/home/vladucu/local/restlet-android-2.1m4/src/org.restlet.ext.ssl"/>
 	<classpathentry kind="lib" path="/home/vladucu/Downloads/jackson-all-1.7.7.jar"/>
+	<classpathentry kind="lib" path="/home/vladucu/local/restlet-android-2.1m4/lib/org.restlet.ext.httpclient.jar" sourcepath="/home/vladucu/local/restlet-android-2.1m4/src/org.restlet.ext.httpclient"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

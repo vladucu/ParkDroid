@@ -77,8 +77,7 @@ public class ParkingSpacesListActivity extends LoadableListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (DEBUG) Log.d(TAG, "onCreate()");
-        
-        setDefaultKeyMode(Activity.DEFAULT_KEYS_SEARCH_LOCAL);        
+         
         registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));  
         registerReceiver(mRefreshParkingSpaces, new IntentFilter(ParkingSpacesListActivity.REFRESH_PARKING_SPACES_INTENT));
         

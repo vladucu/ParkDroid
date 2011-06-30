@@ -14,6 +14,7 @@ import com.licenta.parkdroid.types.ReservationsResource;
 import com.licenta.parkdroid.types.User;
 import com.licenta.parkdroid.types.UserResource;
 import com.licenta.parkdroid.types.UsersResource;
+import com.licenta.parkdroid.utils.CustomHttpClientHelper;
 import com.licenta.parkdroid.utils.LocationUtils;
 import android.app.Application;
 import android.content.BroadcastReceiver;
@@ -54,8 +55,8 @@ public class ParkDroid extends Application {
     public static final String INTENT_ACTION_LOGGED_OUT = "com.licenta.parkdroid.intent.action.LOGGED_OUT";
     public static final String INTENT_ACTION_LOGGED_IN = "com.licenta.parkdroid.intent.action.LOGGED_IN";
     public static final String PACKAGE_NAME = "com.licenta.parkdroid";;
-    public static final String DOMAIN = "10.0.2.2:8080";
-    public static final String PROTOCOL = "http://";
+    public static final String DOMAIN = "192.168.1.2:8443";
+    public static final String PROTOCOL = "https://";
     public static final String USERS = "/users";
     public static final String RESERVATIONS = "/reservations";
     public static final String PARKINGSPACES = "/parkingspaces";
@@ -90,7 +91,7 @@ public class ParkDroid extends Application {
         mTaskHandler = new TaskHandler(mTaskThread.getLooper());
         
         Engine.getInstance().getRegisteredClients().clear();
-		Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
+		Engine.getInstance().getRegisteredClients().add(new CustomHttpClientHelper(null));
 		//Engine.getInstance().getRegisteredConverters().clear();
 		Engine.getInstance().getRegisteredConverters().add(new JacksonConverter());
 		

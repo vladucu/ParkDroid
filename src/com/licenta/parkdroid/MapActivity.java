@@ -9,15 +9,23 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
+import com.licenta.parkdroid.maps.CrashFixMyLocationOverlay;
 import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons;
 import com.licenta.parkdroid.maps.ParkingSpaceItemizedOverlayIcons.ParkingSpaceItemizedOverlayTapListener;
 import com.licenta.parkdroid.types.ParkingSpace;
+import com.licenta.parkdroid.types.ParkingSpaces;
 import com.licenta.parkdroid.utils.GeoUtils;
+import com.licenta.parkdroid.utils.LocationUtils;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * @author vladucu
@@ -32,36 +40,87 @@ public class MapActivity extends com.google.android.maps.MapActivity {
     private MapController mMapController;
     private MyLocationOverlay mMyLocationOverlay = null;
     private ParkingSpaceItemizedOverlayIcons mOverlay = null; 
-   // private SearchLocationObserver mSearchLocationObserver = new SearchLocationObserver();
+    private SearchLocationObserver mSearchLocationObserver = new SearchLocationObserver();
     
     private String mTappedParkingSpace;
     private StateHolder mStateHolder;
     private Handler mHandler;
     
+    private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (DEBUG) Log.d(TAG, "onReceive: " + intent);
+            finish();
+        }
+    };
+    
+    private BroadcastReceiver mRefreshParkingSpaces = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (DEBUG) Log.d(TAG, "onReceive: " + intent);
+			if (intent.getAction().equals(ParkingSpacesListActivity.REFRESH_PARKING_SPACES_INTENT)) {
+                startTask();                
+            }
+			
+		}
+	};
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         if (DEBUG) Log.d(TAG, "onCreate()");
-        
+        registerReceiver(mLoggedOutReceiver, new IntentFilter(ParkDroid.INTENT_ACTION_LOGGED_OUT));  
+        registerReceiver(mRefreshParkingSpaces, new IntentFilter(ParkingSpacesListActivity.REFRESH_PARKING_SPACES_INTENT));
         setContentView(R.layout.map_activity);
         
         mHandler = new Handler();
         
-        Object retained = getLastNonConfigurationInstance();
+        /*Object retained = getLastNonConfigurationInstance();
         if (retained != null && retained instanceof StateHolder) {
             mStateHolder = (StateHolder) retained;
         }
         else {
             mStateHolder = new StateHolder();            
+        }*/
+        
+        // Check if we're returning from a configuration change.
+        if (getLastNonConfigurationInstance() != null) {
+            if (DEBUG) Log.d(TAG, "Restoring state.");
+            mStateHolder = (StateHolder) getLastNonConfigurationInstance();
+            mStateHolder.setActivity(this);
+        } else {
+            if (DEBUG) Log.d(TAG, "Creating new StateHolder instance.");
+            mStateHolder = new StateHolder();
         }
-
+        
+        // Start a new search if one is not running or we have no results.
+        if (mStateHolder.getIsRunningTask()) {
+            if (DEBUG) Log.d(TAG, "mIsRunning true.");
+            setProgressBarIndeterminateVisibility(true);            
+        } else if (mStateHolder.getParkingSpaces().size() == 0) {    
+            if (DEBUG) Log.d(TAG, "mIsRunning not running but no results.");
+            startTask();
+        } else {
+            if (DEBUG) Log.d(TAG, "mIsRunning false.");
+            onTaskComplete(mStateHolder.getParkingSpaces(), null);
+        }
+        
         ensureUi();        
     }
-
+    
+    @Override
+    protected void onDestroy() {        
+        super.onDestroy();
+        unregisterReceiver(mLoggedOutReceiver);
+        unregisterReceiver(mRefreshParkingSpaces);
+    }
+    
 	@Override
 	public Object onRetainNonConfigurationInstance() {
+		mStateHolder.setActivity(null);
 		return mStateHolder;
 	}
 
@@ -70,12 +129,11 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         super.onPause();
         if (DEBUG) Log.d(TAG, "onPause()");
         mMyLocationOverlay.disableMyLocation();
-     //   ((ParkDroid) getApplication()).removeLocationUpdates(mSearchLocationObserver);
+        ((ParkDroid) getApplication()).removeLocationUpdates(mSearchLocationObserver);
 
-        /*if (isFinishing()) {
-            mStateHolder.cancelAllTasks();
-            mListAdapter.removeObserver();
-        }*/
+        if (isFinishing()) {
+            mStateHolder.cancelAllTasks();            
+        }
     }
 
     @Override
@@ -83,7 +141,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         super.onResume();
         if (DEBUG) Log.d(TAG, "onResume()");
         mMyLocationOverlay.enableMyLocation();
-        
+        ((ParkDroid) getApplication()).requestLocationUpdates(mSearchLocationObserver);
     }
 
     @Override
@@ -109,7 +167,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
     }
     
     private void ensureUi() {
-        if (DEBUG) Log.d(TAG, "ensureUi()="+(List<ParkingSpace>)mStateHolder.getParkingSpaces());
+        if (DEBUG) Log.d(TAG, "ensureUi()");
         
         mMapView = (MapView) findViewById(R.id.mapView);
         // Display zoom controls (+/-)
@@ -117,11 +175,17 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         mMapController = mMapView.getController();
         mMapView.setSatellite(false);
         
-        mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
+        //mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
+        mMyLocationOverlay = new CrashFixMyLocationOverlay(this, mMapView);
+        mMyLocationOverlay.enableMyLocation();
         mMapView.getOverlays().add(mMyLocationOverlay);
         //initMyLocation();
+        updateMap();       
         
-        mOverlay = new ParkingSpaceItemizedOverlayIcons(this, getResources().getDrawable(R.drawable.pin), mParkingSpaceOverlayTapListener);        
+    }
+    
+    private void updateMap() {
+    	mOverlay = new ParkingSpaceItemizedOverlayIcons(this, getResources().getDrawable(R.drawable.pin), mParkingSpaceOverlayTapListener);        
         List<ParkingSpace> g = new ArrayList<ParkingSpace>();
         for (ParkingSpace it:mStateHolder.getParkingSpaces()) {
             g.add(it);
@@ -130,9 +194,6 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         mMapView.getOverlays().add(mOverlay);       
         if (mOverlay != null && mOverlay.size()>0) {
             reCenterMap();
-        }
-        else {
-            finish();
         }
     }
     
@@ -184,7 +245,7 @@ public class MapActivity extends com.google.android.maps.MapActivity {
             
         }
     };
-/*
+
     // If location changes, auto-start a nearby parkingspaces search.
     private class SearchLocationObserver implements Observer {
 
@@ -194,25 +255,144 @@ public class MapActivity extends com.google.android.maps.MapActivity {
         public void update(Observable observable, Object data) {
             Location location = (Location) data;
             // Fire a search if we haven't done so yet.
-            if (!mRequestedFirstSearch
-                    && ((BestLocationListener) observable).isAccurateEnough(location)) {
+            //if (!mRequestedFirstSearch)
+                    //&& ((BestLocationListener) observable).isAccurateEnough(location)) 
+            {
                 mRequestedFirstSearch = true;
-                //if (mStateHolder.getIsRunningTask() == false) {
+                if (mStateHolder.getIsRunningTask() == false) {
                     // Since we were told by the system that location has
                     // changed, no need to make the
                     // task wait before grabbing the current location.
                     mHandler.post(new Runnable() {
                         public void run() {
-                           // startTask(0L);
+                            startTask();
                         }
                     });
-                //}
+                }
             }
         }
     }
-*/
+    
+    private void startTask() {
+        if (DEBUG) Log.d(TAG, "startTask");
+        if (mStateHolder.getIsRunningTask() == false) {
+            if (DEBUG) Log.d(TAG, "startTask mIsRunning false");
+            setProgressBarIndeterminateVisibility(true);
+            if (DEBUG) Log.d(TAG, "startTask()");
+            mStateHolder.startTask(this);
+        }
+    }
 
-    private class StateHolder {
+    private void onTaskComplete(List<ParkingSpace> result, Exception ex) {
+        if (DEBUG) Log.d(TAG, "onTaskComplete()");
+          
+        if (result != null) {        	
+        	mStateHolder.setParkingSpaces(result);
+        } else {
+        	Toast.makeText(this, "Sorry cannot acquire location. Please fix the problem and try again.", Toast.LENGTH_LONG).show();
+        }            
+        setProgressBarIndeterminateVisibility(false); 
+        mStateHolder.cancelAllTasks();
+        updateMap();
+    }
+    
+    private static class ParkingSpacesListTask extends AsyncTask<Void, Void, ParkingSpaces> {
+        private static final String TAG = "ParkingSpacesListTask";
+        private static boolean DEBUG = false;
+        
+        private MapActivity mActivity;
+        private ParkDroid mParkDroid;
+        private ParkingSpaces results = new ParkingSpaces();
+        
+        public ParkingSpacesListTask(MapActivity activity) {           
+            super();            
+            Log.d(TAG, "ParkingSpacesListTask()");
+            mActivity = activity;
+            mParkDroid = (ParkDroid) mActivity.getApplication();
+        }
+        
+        @Override
+        public void onPreExecute() {
+        	if (DEBUG) Log.d(TAG, "onPreExecute()");
+        }
+
+        @Override
+        public ParkingSpaces doInBackground(Void... params) {
+            if (DEBUG) Log.d(TAG, "doInBackground()");
+            
+            try {      
+            	Thread.sleep(5000);
+            	
+            	// Get last known location.
+                Location location = mParkDroid.getLastKnownLocation();
+                System.out.println("Location="+location);                
+                if (location != null) {
+                	results = mParkDroid.getParkingSpaces(mParkDroid.getUserId(), LocationUtils.createParkDroidLocation(location),
+                			mParkDroid.getRadius());
+                }
+                
+            } catch (Exception e) {
+               e.printStackTrace();
+            }
+            return results;
+        }
+    
+        @Override
+        public void onPostExecute(ParkingSpaces results) {
+        	if (DEBUG) Log.d(TAG, "onPostExecute()");
+            if (mActivity != null) {            	
+            	mActivity.onTaskComplete(results.getParkingSpaces(), null);            	
+            }
+        }
+
+        public void setActivity(MapActivity activity) {
+            mActivity = activity;            
+        }
+        
+    }
+    
+    private static class StateHolder {
+        private List<ParkingSpace> mParkingSpaces;
+        private ParkingSpacesListTask mTask;        
+
+        public StateHolder() {            
+        	mParkingSpaces = new ArrayList<ParkingSpace>();
+            mTask = null;           
+        }
+
+        public void startTask(MapActivity activity) {
+        	mTask = new ParkingSpacesListTask(activity);
+        	mTask.execute();            
+        }
+
+        public void setActivity(MapActivity activity) {
+           if (mTask != null) {
+        	   mTask.setActivity(activity);
+           }
+            
+        }
+
+        public List<ParkingSpace> getParkingSpaces() {
+            return mParkingSpaces;
+        }
+
+        public void setParkingSpaces(List<ParkingSpace> parkingSpaces) {
+        	mParkingSpaces = parkingSpaces;
+        }
+        
+        public boolean getIsRunningTask() {
+            return mTask != null;
+        }
+
+        public void cancelAllTasks() {
+            if (mTask != null) {
+            	mTask.cancel(true);
+            	mTask = null;
+            }
+        }
+   } 
+    
+  /*  private class StateHolder {
         
         private static final String TAG = "MapActivity - StateHolder";
         private static final boolean DEBUG = true;
@@ -257,8 +437,8 @@ public class MapActivity extends com.google.android.maps.MapActivity {
             mParkingSpaces = new ArrayList<ParkingSpace>();
             mParkingSpaces.add(mPark1);mParkingSpaces.add(mPark2);   
             mParkingSpaces.add(mPark3);    
-           /* Log.d(TAG, "p1="+mParkingSpaces.get(0).getName());
-            Log.d(TAG, "p1="+mParkingSpaces.get(1).getName());*/
+            Log.d(TAG, "p1="+mParkingSpaces.get(0).getName());
+            Log.d(TAG, "p1="+mParkingSpaces.get(1).getName());
         }
 
         public List<ParkingSpace> getParkingSpaces() {
@@ -266,5 +446,5 @@ public class MapActivity extends com.google.android.maps.MapActivity {
             return mParkingSpaces;
         }
         
-    }
+    }*/
 }

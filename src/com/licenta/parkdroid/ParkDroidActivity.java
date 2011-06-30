@@ -38,8 +38,7 @@ public class ParkDroidActivity extends TabActivity {
 			Log.d(TAG, "receiving refresh broadcast");
 			if (intent.getAction().equals(ActiveReservationsListActivity.REFRESH_INTENT)) {
 				mTabHost.setCurrentTab(2);
-            }
-			
+            }			
 		}
 	};
 	
@@ -55,12 +54,12 @@ public class ParkDroidActivity extends TabActivity {
         if (!((ParkDroid) getApplication()).isReady()) {
             if (DEBUG) Log.d(TAG, "Not ready for user.");
             redirectToLoginActivity();
+        } else {	        
+	        if (DEBUG) Log.d(TAG, "Setting up main activity layout.");
+	        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+	        setContentView(R.layout.main_activity);
+	        initTabHost();
         }
-        
-        if (DEBUG) Log.d(TAG, "Setting up main activity layout.");
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.main_activity);
-        initTabHost();
     }
     
     @Override

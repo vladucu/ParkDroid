@@ -35,9 +35,9 @@ public class BestLocationListener extends Observable implements LocationListener
     public static final long SLOW_LOCATION_UPDATE_MIN_DISTANCE = 50;
     
     public static final float REQUESTED_SEARCH_ACCURACY_IN_METERS = 100.0f;
-    public static final int REQUESTED_SEARCH_MAX_DELTA_THRESHOLD = 1000 * 60 * 5;
+    public static final int REQUESTED_SEARCH_MAX_DELTA_THRESHOLD = 1000 * 60 * 500;
     
-    public static final long LOCATION_UPDATE_MAX_DELTA_THRESHOLD = 1000 * 60 * 5;
+    public static final long LOCATION_UPDATE_MAX_DELTA_THRESHOLD = 1000 * 60 * 500;
     
     @Override
     public void onLocationChanged(Location location) {
