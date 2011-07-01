@@ -6,7 +6,7 @@
     android:layout_height="fill_parent"
     android:gravity="center"
     android:isScrollContainer="true"
-    android:background="@drawable/foursquare_gradient"
+    android:background="@drawable/gradient"
 > 
     <ImageView
         android:layout_width="fill_parent"

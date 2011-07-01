@@ -27,7 +27,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -439,7 +438,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
     
     public static class ReservationTask extends AsyncTask<Void, Void, Reservation> {
         private static final String TAG = "ReservationTask";
-        private static boolean DEBUG = true;
         
         private AddReservationActivity mActivity;
         private ParkDroid mParkDroid;
@@ -509,7 +507,6 @@ public class AddReservationActivity extends Activity implements OnClickListener 
 
     private class StateHolder {
         private static final String TAG = "StateHolder";
-        private boolean DEBUG = true;
         
         private ParkingSpace mParkingSpace;
         private boolean mIsRunning;

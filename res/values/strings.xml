@@ -60,11 +60,11 @@
     <string name="preferences_profile_settings_summary">Information about your ParkDroid account</string>    
     <string name="reservation_activity_price">Price/hour</string>
     <string name="reservation_activity_time_title">Selected time</string>
-	<string name="reservation_activity_total_price_title">Total Price</string>
-	<string name="reservation_activity_id_label">Reservation ID</string>	
-	<string name="reservation_activity_starting_time_label">Starting time</string>	
-	<string name="reservation_activity_ending_time_label">Ending time</string>
-	<string name="reservation_activity_navigation_label">Get directions</string>	
+		<string name="reservation_activity_total_price_title">Total Price</string>
+		<string name="reservation_activity_id_label">Reservation ID</string>	
+		<string name="reservation_activity_starting_time_label">Starting time</string>	
+		<string name="reservation_activity_ending_time_label">Ending time</string>
+		<string name="reservation_activity_navigation_label">Get directions</string>	
     <string name="reservation_activity_cancel_button">Delete reservation</string>
     <string name="reservation_activity_modify_button">Modify reservation</string>
     <string name="add_reservation_execute_activity_action_label">Please wait!</string>

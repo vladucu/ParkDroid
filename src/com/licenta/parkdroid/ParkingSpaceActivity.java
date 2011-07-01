@@ -4,8 +4,6 @@
 package com.licenta.parkdroid;
 
 import com.licenta.parkdroid.types.ParkingSpace;
-import com.licenta.parkdroid.types.Reservation;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +12,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -53,9 +52,6 @@ public class ParkingSpaceActivity extends Activity {
 
     //TODO add image to the view
     
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +77,6 @@ public class ParkingSpaceActivity extends Activity {
         } else {
             if (DEBUG) Log.d(TAG, "mStateHolder != null");
             mStateHolder = holder;
-            //mStateHolder.setActivityForTasks(this);
-           // prepareResultIntent();
         }
         
         ensureUI();
@@ -114,7 +108,7 @@ public class ParkingSpaceActivity extends Activity {
         
         btnReserveNow.setText(R.string.parking_lot_activity_reserve_now_button);
         btnBack.setText(R.string.parking_lot_activity_button_back);
-        setTitle(getTitle()+ " - " + parkingSpace.getName());        
+        setTitle("View ParkingSpace - " + parkingSpace.getName());        
             
         if (parkingSpace.getPhone() != null) {
             tvPhoneText.setText(parkingSpace.getPhone());
@@ -185,73 +179,12 @@ public class ParkingSpaceActivity extends Activity {
     public Object onRetainNonConfigurationInstance() {
         return mStateHolder;
     }
-/*    
-    private void prepareResultIntent() {
-        if (DEBUG) Log.d(TAG, "prepareResultIntent()");
-        ParkingSpace parkingSpace = mStateHolder.getParkingSpace();
-
-        Intent intent = new Intent();
-        if (parkingSpace != null) {
-            //intent.putExtra(EXTRA_PARKKING_SPACE_RETURNED, parkingSpace);
-        }
-        setResult(Activity.RESULT_OK, intent);
-    }    
-    */
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // TODO vazut ce facem cu meniul pana la urma
-        super.onCreateOptionsMenu(menu);
-        
-        menu.add(Menu.NONE, MENU_CALL, 1, R.string.parking_lot_activity_menu_call).setIcon(R.drawable.ic_menu_call);
-        
-        return true;
-    }    
-
-  /*   (non-Javadoc)
-     * @see android.app.Activity#onPrepareOptionsMenu(android.view.Menu)
-     
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean callEnabled = mStateHolder.getParkingSpace() != null && !TextUtils.isEmpty(mStateHolder.getParkingSpace().getPhone());
-        menu.findItem(MENU_CALL).setEnabled(callEnabled);
-        
-        return super.onPrepareOptionsMenu(menu);
-    }
-*/
-    /* (non-Javadoc)
-     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-     */
- /*   @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_CALL:
-                try {
-                    Intent dial = new Intent();
-                    dial.setAction(Intent.ACTION_DIAL);
-                    dial.setData(Uri.parse("tel:" + mStateHolder.getParkingSpace().getPhone()));
-                    startActivity(dial);
-                } catch (Exception ex) {
-                    Log.e(TAG, "Error starting phone dialer intent.", ex);
-                    Toast.makeText(this, "Sorry, we couldn't find any app to place a phone call!",
-                            Toast.LENGTH_SHORT).show();
-                }
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
 
     private static final class StateHolder {
         
-        public static final String TAG = "StateHolder";
-        //debug mode
-        public static final boolean DEBUG = true;
-        
-        private boolean mReservationHere;
-        private ParkingSpace mParkingSpace;
-        
+        public static final String TAG = "StateHolder - ParkingSpaceActivity";
+
+        private ParkingSpace mParkingSpace;        
         
         public StateHolder() {
             if (DEBUG) Log.d(TAG, "StateHolder()");        
@@ -265,14 +198,6 @@ public class ParkingSpaceActivity extends Activity {
         public ParkingSpace getParkingSpace() {
             if (DEBUG) Log.d(TAG, "getParkingSpace()");
             return mParkingSpace;
-        }
-        
-        public void setReservationHere(boolean reservation) {
-            mReservationHere = reservation;
-        }
-        
-        public boolean getReservation() {
-            return mReservationHere;
-        }        
+        }       
     }
 }

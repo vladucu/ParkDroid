@@ -50,12 +50,14 @@ public class ParkDroid extends Application {
 
     private static final String TAG = "ParkDroidApp";
     //debug mode
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     
     public static final String INTENT_ACTION_LOGGED_OUT = "com.licenta.parkdroid.intent.action.LOGGED_OUT";
     public static final String INTENT_ACTION_LOGGED_IN = "com.licenta.parkdroid.intent.action.LOGGED_IN";
+    public static final String INTENT_ACTION_REFRESH_UI = "com.licenta.parkdroid.intent.action.REFRESH_UI";
+    public static final String INTENT_ACTION_REFRESH_PARKING_SPACES = "com.licenta.parkdroid.intent.action.REFRESH_PARKING_SPACES";
     public static final String PACKAGE_NAME = "com.licenta.parkdroid";;
-    public static final String DOMAIN = "192.168.1.2:8443";
+    public static final String DOMAIN = "10.0.2.2:8443";
     public static final String PROTOCOL = "https://";
     public static final String USERS = "/users";
     public static final String RESERVATIONS = "/reservations";

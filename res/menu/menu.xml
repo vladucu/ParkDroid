@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/refresh" android:icon="@android:drawable/ic_menu_add"
+	<!-- <item android:id="@+id/refresh" android:icon="@android:drawable/"
 		android:title="Add" />
 	<item android:id="@+id/list_res" android:icon="@android:drawable/ic_menu_recent_history"
 		android:title="View reservations" />
 	<item android:id="@+id/list_park" android:icon="@android:drawable/ic_menu_search"
-		android:title="View parkings" />
+		android:title="View parkings" /> -->
 	<item android:id="@+id/preferences" android:icon="@android:drawable/ic_menu_preferences"
 		android:title="Preferences" />
 </menu>

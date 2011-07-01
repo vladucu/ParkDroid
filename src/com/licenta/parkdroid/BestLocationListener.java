@@ -35,9 +35,9 @@ public class BestLocationListener extends Observable implements LocationListener
     public static final long SLOW_LOCATION_UPDATE_MIN_DISTANCE = 50;
     
     public static final float REQUESTED_SEARCH_ACCURACY_IN_METERS = 100.0f;
-    public static final int REQUESTED_SEARCH_MAX_DELTA_THRESHOLD = 1000 * 60 * 500;
+    public static final int REQUESTED_SEARCH_MAX_DELTA_THRESHOLD = 1000 * 60 * 5;
     
-    public static final long LOCATION_UPDATE_MAX_DELTA_THRESHOLD = 1000 * 60 * 500;
+    public static final long LOCATION_UPDATE_MAX_DELTA_THRESHOLD = 1000 * 60 * 5;
     
     @Override
     public void onLocationChanged(Location location) {
@@ -101,8 +101,7 @@ public class BestLocationListener extends Observable implements LocationListener
         }
 
         // Update location if its more accurate and w/in time threshold or if
-        // the old location is
-        // too old and this update is newer.
+        // the old location is too old and this update is newer.
         if (accuracyComparable && locationIsMostAccurate && locationIsInTimeThreshold) {
             onBestLocationChanged(location);
         } else if (locationIsInTimeThreshold && !lastLocationIsInTimeThreshold) {
@@ -156,6 +155,7 @@ public class BestLocationListener extends Observable implements LocationListener
         int providersCount = providers.size();
         for (int i = 0; i < providersCount; i++) {
             String providerName = providers.get(i);
+            // check for user settings if providers are enabled 
             if (locationManager.isProviderEnabled(providerName)) {
                 updateLocation(locationManager.getLastKnownLocation(providerName));
             }
@@ -169,9 +169,8 @@ public class BestLocationListener extends Observable implements LocationListener
     }
 
     public boolean isAccurateEnough(Location location) {
-        if (location != null)// && location.hasAccuracy()
-                //&& location.getAccuracy() <= REQUESTED_SEARCH_ACCURACY_IN_METERS) 
-        	{
+    	return true;
+      /*  if (location != null && location.hasAccuracy() && location.getAccuracy() <= REQUESTED_SEARCH_ACCURACY_IN_METERS) {
             long locationUpdateDelta = new Date().getTime() - location.getTime();
             if (locationUpdateDelta < REQUESTED_SEARCH_MAX_DELTA_THRESHOLD) {
                 if (DEBUG) Log.d(TAG, "Location is accurate: " + location.toString());
@@ -179,7 +178,7 @@ public class BestLocationListener extends Observable implements LocationListener
             }
         }
         if (DEBUG) Log.d(TAG, "Location is not accurate: " + String.valueOf(location));
-        return false;
+        return false;*/
     }
 
     public void unregister(LocationManager locationManager) {
@@ -187,14 +186,14 @@ public class BestLocationListener extends Observable implements LocationListener
         locationManager.removeUpdates(this);        
     }
     
-
-    /**
+/*
+    *//**
      * Updates the current location with the last known location without
      * registering any location listeners.
      * 
      * @param locationManager the LocationManager instance from which to
      *            retrieve the latest known location
-     */
+     *//*
     synchronized public void updateLastKnownLocation(LocationManager locationManager) {
         List<String> providers = locationManager.getProviders(true);
         for (int i = 0, providersCount = providers.size(); i < providersCount; i++) {
@@ -203,6 +202,6 @@ public class BestLocationListener extends Observable implements LocationListener
                 updateLocation(locationManager.getLastKnownLocation(providerName));
             }
         }
-    }
+    }*/
 
 }

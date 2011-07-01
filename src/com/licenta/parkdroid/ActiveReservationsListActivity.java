@@ -54,8 +54,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
                 mStateHolder.startActiveReservationsTask(ActiveReservationsListActivity.this);
                 mListAdapter.notifyDataSetChanged();
                 ensureUi();
-            }
-			
+            }			
 		}
 	};
 
@@ -171,7 +170,6 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
     private static class ActiveReservationsTask extends AsyncTask<Void, Void, Reservations> {
 
         private static final String TAG = "ActiveReservationsTask";
-        private static boolean DEBUG = true;
         
         private ActiveReservationsListActivity mActivity;
         private Reservations reservations;
@@ -216,8 +214,7 @@ public class ActiveReservationsListActivity extends LoadableListActivity {
     }
     
     private static class StateHolder {
-        private static final String TAG = "StateHolder";
-        private static boolean DEBUG = true;
+        private static final String TAG = "StateHolder - ActiveReservationsListActivity";
         
         private List<Reservation> mReservations;
         private Reservation mActiveReservation;
